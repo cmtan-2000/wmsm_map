@@ -6,6 +6,7 @@ A new Flutter project.
 
 Project Structure:
 
+``
 project/
 |- lib/
     |- model/
@@ -48,7 +49,7 @@ project/
     |- images/
 
 |- pubspec.yaml
-
+``
 
 This project is a starting point for a Flutter application.
 
