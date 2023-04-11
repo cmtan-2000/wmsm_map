@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wmsm_flutter/view/custom/widgets/custom_button.dart';
 
 import '../../viewmodel/user_auth/authentication_model.dart';
 
@@ -10,14 +11,23 @@ class WidgetSignUp extends StatefulWidget {
 }
 
 class _WidgetSignUpState extends State<WidgetSignUp> {
-
   final AuthenticationViewModel auth = AuthenticationViewModel();
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: ()=> auth.login(), 
-      child: const Text('login Button'),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text("Don't have an account? "),
+        CustomTextButton(
+          text: 'Sign up',
+          context: context,
+          onPressed: () {},
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }

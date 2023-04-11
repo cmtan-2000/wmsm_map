@@ -118,6 +118,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/routes.dart';
+import 'package:wmsm_flutter/view/custom/themes/custom_theme.dart';
 import 'viewmodel/user_view_model.dart';
 
 void main() {
@@ -135,10 +136,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'My App',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+        theme: customTheme,
         initialRoute: '/',
         routes: routes,
       ),
