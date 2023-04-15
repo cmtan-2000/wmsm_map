@@ -131,13 +131,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_)=> UserViewModel())
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => UserViewModel())],
       child: MaterialApp(
         title: 'My App',
         theme: customTheme,
-        initialRoute: '/',
+        initialRoute: '/f3',
         routes: routes,
       ),
     );

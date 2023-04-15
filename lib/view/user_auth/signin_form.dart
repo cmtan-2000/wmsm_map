@@ -19,6 +19,7 @@ class WidgetSignIn extends StatefulWidget {
 class _WidgetSignInState extends State<WidgetSignIn> {
   final AuthenticationViewModel auth = AuthenticationViewModel();
   final TextEditingController _phoneController = TextEditingController();
+  final AuthenticationViewModel authfunc = AuthenticationViewModel();
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +81,7 @@ class _WidgetSignInState extends State<WidgetSignIn> {
             children: [
               Expanded(
                 child: CustomElevatedButton(
-                  onPressed: () => print('login'),
+                  onPressed: () => authfunc.login(),
                   child: const Text('Login'),
                 ),
               ),

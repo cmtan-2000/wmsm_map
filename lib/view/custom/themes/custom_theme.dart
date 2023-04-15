@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 // Define your custom theme data
 final customTheme = ThemeData(
-  primaryColor: Colors.blue,
+  primaryColor: Colors.green,
   accentColor: Colors.orange,
   fontFamily: 'Roboto',
   textTheme: const TextTheme(
