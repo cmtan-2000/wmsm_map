@@ -36,6 +36,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   provider: ^6.0.5
+  pin_code_fields: ^7.4.0
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -47,6 +49,16 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+  flutter_native_splash: ^2.2.19
+
+# Run commands to generate splash screen
+# 1) flutter clean
+# 2) flutter pub get
+# 3) flutter pub run flutter_native_splash:create
+flutter_native_splash: 
+  color: "#f5cb42"
+  image: assets/images/etika.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
