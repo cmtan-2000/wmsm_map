@@ -10,7 +10,8 @@ Map<String, WidgetBuilder> routes = {
   '/': (context) => const MainPage(),
   '/widget': (context) => WidgetPage(),
   '/intro': (context) => const IntroPage(),
-  '/home': (context) => const HomePage(),
+  '/home': (context) => HomePage(),
+  '/testing': (context) => BottomNavScreen(),
   '/f3': (context) => const SignUpForm3()
 
   // '/profile': (context) => ProfileScreen(),
