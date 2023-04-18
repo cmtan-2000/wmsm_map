@@ -3,19 +3,19 @@ import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/routes.dart';
 import 'package:wmsm_flutter/view/custom/themes/custom_theme.dart';
 import 'viewmodel/user_view_model.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+// import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
 
-  // Keep Splash Screen until initialization has completed!
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(
-      widgetsBinding:
-          widgetsBinding); // FlutterNativeSplash.removeAfter(initialization);
+  // // Keep Splash Screen until initialization has completed!
+  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // FlutterNativeSplash.preserve(
+  //     widgetsBinding:
+  //         widgetsBinding); // FlutterNativeSplash.removeAfter(initialization);
 
   runApp(const MyApp());
-  FlutterNativeSplash.remove();
+  // FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'My App',
         theme: customTheme,
-        initialRoute: '/',
+        initialRoute: '/intro',
         routes: routes,
       ),
     );

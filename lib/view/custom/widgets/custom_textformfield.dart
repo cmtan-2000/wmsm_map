@@ -60,6 +60,7 @@ class CustomTextFormField extends TextFormField {
     required bool isNumberOnly,
     required TextEditingController controller,
     String? hintText,
+    labelText,
     IconData? icon,
     Widget? suffixicon,
     int? maxLength,
@@ -74,7 +75,8 @@ class CustomTextFormField extends TextFormField {
           decoration: InputDecoration(
             // hintText: hintText ?? 'Default_Hint',
             contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            labelText: hintText,
+            labelText: labelText,
+            hintText: hintText,
             filled: true,
             fillColor: Color.fromARGB(255, 250, 250, 250),
             border: OutlineInputBorder(
@@ -91,7 +93,7 @@ class CustomTextFormField extends TextFormField {
           ],
           validator: (value) {
             if (value!.isEmpty) {
-              return 'Please Enter Parameter';
+              return 'Please Enter ' + labelText;
             }
             return null;
           },

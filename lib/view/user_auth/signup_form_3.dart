@@ -107,6 +107,18 @@ class _contentState extends State<content> {
     emailEC = TextEditingController();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    nameEC.dispose();
+    nickEC.dispose();
+    typeEC.dispose();
+    noEC.dispose();
+    dobEC.dispose();
+    phoneEC.dispose();
+    emailEC.dispose();
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -142,7 +154,8 @@ class _contentState extends State<content> {
             CustomTextFormField(
                 context: context,
                 isNumberOnly: false,
-                hintText: 'Name (as per IC)',
+                labelText: 'Name (as per IC)',
+                hintText: 'JOHN DOE',
                 controller: nameEC),
             const SizedBox(
               height: 10,
@@ -151,7 +164,8 @@ class _contentState extends State<content> {
                 context: context,
                 isNumberOnly: false,
                 maxLength: 10,
-                hintText: 'Nickname',
+                labelText: 'Nickname',
+                hintText: 'John',
                 controller: nickEC),
             const SizedBox(
               height: 10,
@@ -167,7 +181,8 @@ class _contentState extends State<content> {
             CustomTextFormField(
                 context: context,
                 isNumberOnly: true,
-                hintText: 'ID Number',
+                labelText: 'ID Number',
+                hintText: 'xxxxxx00xxxx',
                 controller: noEC),
             const SizedBox(
               height: 10,
@@ -175,7 +190,7 @@ class _contentState extends State<content> {
             CustomTextFormField(
                 context: context,
                 isNumberOnly: true,
-                hintText: 'Date of Birth',
+                labelText: 'Date of Birth',
                 onTap: () => _selectDate(context),
                 readOnly: true,
                 suffixicon: const Icon(Icons.calendar_month),
@@ -186,7 +201,8 @@ class _contentState extends State<content> {
             CustomTextFormField(
                 context: context,
                 isNumberOnly: true,
-                hintText: 'Mobile',
+                labelText: 'Phone Number',
+                hintText: '60187797789',
                 controller: phoneEC),
             const SizedBox(
               height: 10,
@@ -194,7 +210,8 @@ class _contentState extends State<content> {
             CustomTextFormField(
                 context: context,
                 isNumberOnly: false,
-                hintText: 'Email Address',
+                labelText: 'Email Address',
+                hintText: 'john_doe@graduate.utm.my',
                 controller: emailEC),
             const SizedBox(
               height: 10,
@@ -249,8 +266,23 @@ class _contentState extends State<content> {
               children: [
                 Expanded(
                   child: CustomElevatedButton(
-                      onPressed: () => print('next page'),
-                      child: Text('CONTINUE')),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          print('Validate data');
+                          var profile = {
+                            "name": nameEC.text.trim(),
+                            "nick": nickEC.text.trim(),
+                            "idType": typeEC.text.trim(),
+                            "idno": noEC.text.trim(),
+                            "dob": dobEC.text.trim(),
+                            "phone": phoneEC.text.trim(),
+                            "email": emailEC.text.trim(),
+                          };
+
+                          print(profile);
+                        }
+                      },
+                      child: const Text('CONTINUE')),
                 ),
               ],
             )
