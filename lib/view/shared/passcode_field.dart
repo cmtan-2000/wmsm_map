@@ -3,11 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class passCodeField extends StatelessWidget {
-  const passCodeField({super.key});
+  passCodeField({super.key, required this.passcodeController, Null Function(dynamic value)? onChanged});
+  TextEditingController passcodeController;
+  
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       PinCodeTextField(
+        controller: passcodeController,
         length: 6,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         showCursor: false,

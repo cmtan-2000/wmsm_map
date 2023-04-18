@@ -19,6 +19,7 @@ class WidgetSignIn extends StatefulWidget {
 class _WidgetSignInState extends State<WidgetSignIn> {
   final AuthenticationViewModel auth = AuthenticationViewModel();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passcode = TextEditingController();
   final AuthenticationViewModel authfunc = AuthenticationViewModel();
 
   @override
@@ -60,7 +61,7 @@ class _WidgetSignInState extends State<WidgetSignIn> {
                 const SizedBox(
                   height: 10,
                 ),
-                const passCodeField(),
+                passCodeField(passcodeController: _passcode,),
               ],
             ),
           ),
@@ -70,7 +71,7 @@ class _WidgetSignInState extends State<WidgetSignIn> {
               CustomTextButton(
                 context: context,
                 text: "Reset Password",
-                onPressed: () => print('Rest Password'),
+                onPressed: () => print(_passcode.text.trim()),
               )
             ],
           ),
