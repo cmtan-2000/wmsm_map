@@ -35,9 +35,8 @@ class SignUpForm5 extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'Digital Passcode',
-                    style: Theme.of(context).textTheme.headlineMedium,
-
+                    'Digit Passcode',
+                    style: Theme.of(context).textTheme.displayMedium,
                   ),
                   const SizedBox(
                     height: 10,
@@ -74,7 +73,7 @@ class WidgetSignUp5 extends StatefulWidget {
   State<WidgetSignUp5> createState() => _WidgetSignUp5State();
 }
 
-class _WidgetSignUp5State extends State<WidgetSignUp5>{
+class _WidgetSignUp5State extends State<WidgetSignUp5> {
   final TextEditingController _passcode = TextEditingController();
   final TextEditingController _passcodeConfirm = TextEditingController();
   late String passcode;
@@ -83,67 +82,68 @@ class _WidgetSignUp5State extends State<WidgetSignUp5>{
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Set Up Passcode',
+          style: Theme.of(context).textTheme.displayLarge,
+        ),
+        const Text(
+          'Help us to understand you better by filling up your Profile Information below. ',
+          textAlign: TextAlign.justify,
+        ),
+        const SizedBox(
+          height: 40,
+        ),
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-              Text(
-              'Set Up Passcode',
-              style: Theme.of(context).textTheme.headlineMedium,
+            Text(
+              'Set your passcode',
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
-              const Text(
-                  'Help us to understand you better by filling up your Profile Information below. ',
-                  textAlign: TextAlign.justify,
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Set your passcode',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  passCodeField(
-                    passcodeController: _passcode,
-                  ),
-                ],
-              ),
-              const SizedBox(
-                    height: 30,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Confirm your passcode',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  passCodeField(
-                    passcodeController: _passcodeConfirm,
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomElevatedButton(
-                        onPressed: () {
-                          print(validatePasscode(_passcode.text.trim(), _passcodeConfirm.text.trim()));
-                        },
-                        child: const Text('COMPLETE')),
-                  ),
-                ],
-              ),
+            const SizedBox(
+              height: 30,
+            ),
+            passCodeField(
+              passcodeController: _passcode,
+            ),
           ],
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Confirm your passcode',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            passCodeField(
+              passcodeController: _passcodeConfirm,
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 40,
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: CustomElevatedButton(
+                  onPressed: () {
+                    print(validatePasscode(
+                        _passcode.text.trim(), _passcodeConfirm.text.trim()));
+                  },
+                  child: const Text('COMPLETE')),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -151,8 +151,7 @@ class _WidgetSignUp5State extends State<WidgetSignUp5>{
 String validatePasscode(String passcode, String confirmPasscode) {
   if (passcode != confirmPasscode) {
     return 'Passcodes do not match';
-  }
-  else {
+  } else {
     return "";
   }
 }

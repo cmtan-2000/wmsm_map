@@ -73,10 +73,11 @@ class CustomTextFormField extends TextFormField {
               isNumberOnly == true ? TextInputType.number : TextInputType.text,
           decoration: InputDecoration(
             // hintText: hintText ?? 'Default_Hint',
-            contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             labelText: hintText,
             filled: true,
-            fillColor: Color.fromARGB(255, 250, 250, 250),
+            fillColor: const Color.fromARGB(255, 250, 250, 250),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide.none,

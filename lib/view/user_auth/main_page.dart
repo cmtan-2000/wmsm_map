@@ -1,6 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, camel_case_types, avoid_print, prefer_const_constructors, unnecessary_null_comparison
 
-/* 
+/*
 consist of:
   sign-in.dart
   sign-up.dart
@@ -9,7 +9,6 @@ consist of:
 
 import 'package:flutter/material.dart';
 import 'package:wmsm_flutter/view/user_auth/signin_form.dart';
-import 'package:wmsm_flutter/view/user_auth/signup_form.dart';
 
 import '../custom/widgets/custom_outlinedbutton.dart';
 
@@ -104,6 +103,7 @@ class WidgetBottom extends StatelessWidget {
                 onPressed: () => print('Outline_1'),
                 iconData: null,
                 text: 'Outline_1',
+                context: context,
               ),
             ),
             SizedBox(
@@ -114,6 +114,7 @@ class WidgetBottom extends StatelessWidget {
                 onPressed: () => print('Outline_2'),
                 iconData: Icons.time_to_leave,
                 text: 'Outline_2',
+                context: context,
               ),
             ),
           ],
@@ -121,7 +122,10 @@ class WidgetBottom extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        Text('Version 5.3.7 +766')
+        Padding(
+          padding: const EdgeInsets.only(bottom: 25.0),
+          child: Text('Version 5.3.7 +766'),
+        )
       ],
     );
   }

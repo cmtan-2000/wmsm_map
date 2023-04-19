@@ -1,15 +1,38 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:intl/intl.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
-import 'package:wmsm_flutter/view/shared/phone_number_field.dart';
 
-class SignUpForm3 extends StatelessWidget {
+final ScrollController _controller = ScrollController();
+
+class SignUpForm3 extends StatefulWidget {
   const SignUpForm3({super.key});
+
+  @override
+  State<SignUpForm3> createState() => _SignUpForm3State();
+}
+
+class _SignUpForm3State extends State<SignUpForm3> {
+  bool isExpanded = false;
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      setState(() {
+        //if the scrolling position reaches maxium scrolling extent, expand
+        isExpanded =
+            _controller.position.pixels >= _controller.position.maxScrollExtent;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,39 +54,47 @@ class SignUpForm3 extends StatelessWidget {
             ),
           ),
         ),
+        //*White container
         Positioned(
           left: 0,
           right: 0,
           bottom: 0,
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.8,
-            child: FractionallySizedBox(
-              child: Column(
-                children: [
-                  Text(
-                    'Personal Information',
-                    style: Theme.of(context).textTheme.headlineMedium,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 30.0),
+                  child: Text(
+                    'Personal Information'.toUpperCase(),
+                    style: Theme.of(context).textTheme.displayMedium,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      // padding: const EdgeInsets.symmetric(
-                      //     vertical: 55, horizontal: 30),
-                      padding: const EdgeInsets.fromLTRB(30, 55, 30, 0),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(30),
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 500),
+                  height: isExpanded
+                      ? MediaQuery.of(context).size.height
+                      : MediaQuery.of(context).size.height * 0.7,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          // padding: const EdgeInsets.symmetric(
+                          //     vertical: 55, horizontal: 30),
+                          padding: const EdgeInsets.fromLTRB(30, 55, 30, 0),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(30),
+                            ),
+                          ),
+                          child: const content(),
                         ),
                       ),
-                      child: const content(),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -125,6 +156,8 @@ class _contentState extends State<content> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller: _controller,
+      physics: const BouncingScrollPhysics(),
       child: Form(
         key: _formKey,
         child: Column(
@@ -132,10 +165,10 @@ class _contentState extends State<content> {
           children: [
             Text(
               'Set Up Profile',
-              style: Theme.of(context).textTheme.headlineLarge,
+              style: Theme.of(context).textTheme.displayLarge,
             ),
             const Text(
-                'help us to understand you better by filling up your Profile Information below.'),
+                'Help us to understand you better by filling up your Profile Information below.'),
             const SizedBox(
               height: 20,
             ),
@@ -249,8 +282,11 @@ class _contentState extends State<content> {
               children: [
                 Expanded(
                   child: CustomElevatedButton(
-                      onPressed: () => print('next page'),
-                      child: Text('CONTINUE')),
+                      onPressed: () {
+                        print('CONTINUE');
+                        Navigator.pushNamed(context, '/f4');
+                      },
+                      child: const Text('CONTINUE')),
                 ),
               ],
             )

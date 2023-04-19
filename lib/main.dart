@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => UserViewModel())],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'My App',
         theme: customTheme,
         initialRoute: '/',

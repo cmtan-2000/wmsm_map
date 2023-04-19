@@ -22,7 +22,9 @@ class _WidgetSignUpState extends State<WidgetSignUp> {
         CustomTextButton(
           text: 'Sign up',
           context: context,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/f1');
+          },
           textStyle: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
