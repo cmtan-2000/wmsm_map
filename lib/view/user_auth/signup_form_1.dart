@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
-
-import '../shared/phone_number_field.dart';
+import 'package:wmsm_flutter/view/user_auth/widgets/signup_form1_widget.dart';
 
 final ScrollController _controller = ScrollController();
 
@@ -15,12 +13,6 @@ class SignUpForm1 extends StatefulWidget {
 class _SignUpForm1State extends State<SignUpForm1> {
   //check animated container open 70% of screen by default
   bool isExpanded = false;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   void initState() {
@@ -37,6 +29,8 @@ class _SignUpForm1State extends State<SignUpForm1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //*to avoid content push upward when soft keyboard appears
+      resizeToAvoidBottomInset: false,
       body: Stack(children: [
         //*Background linear gradient
         Container(
@@ -63,7 +57,6 @@ class _SignUpForm1State extends State<SignUpForm1> {
           child: SizedBox(
             child: Column(
               children: [
-                //const StepProgressWidget(),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 30.0),
                   child: Text(
@@ -116,123 +109,8 @@ class ContentClass extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          WidgetSignUp(),
-        ],
+        children: const [SignUpForm1Widget()],
       ),
-    );
-  }
-}
-
-class WidgetSignUp extends StatefulWidget {
-  const WidgetSignUp({super.key});
-
-  @override
-  State<WidgetSignUp> createState() => _WidgetSignInState();
-}
-
-class _WidgetSignInState extends State<WidgetSignUp> {
-  final TextEditingController _phoneController = TextEditingController();
-  bool isChecked = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        const SizedBox(
-          height: 10,
-        ),
-        Text(
-          'Sign Up',
-          style: Theme.of(context).textTheme.displayLarge,
-        ),
-        Text(
-          'Signing up is easy. Just fill up the details and you are set to go',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(
-          height: 70,
-        ),
-        Container(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Phone number'.toUpperCase(),
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              phoneNumberField(
-                phoneController: _phoneController,
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  'assets/images/sign_up.png',
-                ),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
-        Row(
-          children: const [
-            Expanded(child: ConsentCheckBox()),
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: CustomElevatedButton(
-                child: Text('Request otp'.toUpperCase()),
-                onPressed: () {
-                  if (isChecked) {
-                    print('isChecked');
-                    Navigator.pushNamed(context, '/f2');
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class ConsentCheckBox extends StatefulWidget {
-  const ConsentCheckBox({super.key});
-  //final void Function(bool isChecked) onCheckedChanged; //callback function
-
-  @override
-  State<ConsentCheckBox> createState() => _ConsentCheckBoxState();
-}
-
-class _ConsentCheckBoxState extends State<ConsentCheckBox> {
-  bool isChecked = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return CheckboxListTile(
-      title: Text(
-        "I consent to processing of my persona data (including sensitive personal data) in accordance with Etiqa's Privacy Notice and I agree to the Terms and Conditions",
-        style: Theme.of(context).textTheme.bodyLarge,
-      ),
-      value: isChecked,
-      onChanged: (bool? value) {
-        setState(() {
-          isChecked = value ?? false;
-          //widget.onCheckedChanged(
-          //    isChecked); //*call the callback func with new value
-        });
-      },
-      controlAffinity: ListTileControlAffinity.leading,
-      activeColor: Theme.of(context).primaryColor,
     );
   }
 }

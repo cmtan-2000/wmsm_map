@@ -26,7 +26,8 @@ class CustomOutlinedButton extends OutlinedButton {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              if (iconData != null) Icon(iconData),
+              if (iconData != null)
+                Icon(iconData, color: Theme.of(context).primaryColor),
               if (iconData != null) const SizedBox(width: 5),
               if (text != null)
                 Text(
