@@ -29,7 +29,7 @@ class _SignUpForm1Widget extends State<SignUpForm1Widget> {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(
-          height: 70,
+          height: 40,
         ),
         Container(
           padding: const EdgeInsets.all(10.0),
@@ -59,10 +59,13 @@ class _SignUpForm1Widget extends State<SignUpForm1Widget> {
         ),
         Row(
           children: const [
-            Expanded(child: CustomCheckBox()),
+            Expanded(
+                child: CustomCheckBox(
+              text:
+                  "I custom to processing of my persona data (including sensitive personal data) in accordance with Etiqa's Privacy Notice and I agree to the Terms and Conditions",
+            )),
           ],
-        ),
-        const SizedBox(height: 30),
+        ), // const SizedBox(height: 20
         Row(
           children: [
             Expanded(
@@ -78,6 +81,7 @@ class _SignUpForm1Widget extends State<SignUpForm1Widget> {
             ),
           ],
         ),
+        const SizedBox(height: 30)
       ],
     );
   }

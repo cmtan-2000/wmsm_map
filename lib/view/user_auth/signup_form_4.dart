@@ -61,6 +61,10 @@ class SignUpForm4 extends StatelessWidget {
             ),
           ),
         ),
+        Positioned(
+            top: MediaQuery.of(context).size.height * 0.15,
+            left: MediaQuery.of(context).size.height * 0.05,
+            child: Image.asset('assets/images/etiqa.png', width: 99)),
       ]),
     );
   }

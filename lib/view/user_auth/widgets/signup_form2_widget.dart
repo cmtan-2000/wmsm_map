@@ -51,7 +51,7 @@ class _SignUpForm2WidgetState extends State<SignUpForm2Widget> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 20.0),
+              padding: const EdgeInsets.only(left: 10.0, right: 10.0),
               child: Text(
                 '+6011-12345678', //TODO: Get phone number from user
                 style: Theme.of(context).textTheme.bodyLarge,

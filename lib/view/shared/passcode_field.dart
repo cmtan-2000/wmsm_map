@@ -3,9 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class passCodeField extends StatelessWidget {
-  passCodeField({super.key, required this.passcodeController, Null Function(dynamic value)? onChanged});
+  passCodeField({super.key, required this.passcodeController});
+
   TextEditingController passcodeController;
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[

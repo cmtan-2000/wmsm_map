@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CustomCheckBox extends StatefulWidget {
-  const CustomCheckBox({super.key});
-  //final void Function(bool isChecked) onCheckedChanged; //callback function
+  const CustomCheckBox({Key? key, required String text})
+      : _text = text,
+        super(key: key);
+  final String _text;
 
   @override
   State<CustomCheckBox> createState() => _CustomCheckBoxState();
@@ -15,15 +17,13 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
   Widget build(BuildContext context) {
     return CheckboxListTile(
       title: Text(
-        "I Custom to processing of my persona data (including sensitive personal data) in accordance with Etiqa's Privacy Notice and I agree to the Terms and Conditions",
+        widget._text,
         style: Theme.of(context).textTheme.bodyLarge,
       ),
       value: isChecked,
       onChanged: (bool? value) {
         setState(() {
           isChecked = value ?? false;
-          //widget.onCheckedChanged(
-          //    isChecked); //*call the callback func with new value
         });
       },
       controlAffinity: ListTileControlAffinity.leading,

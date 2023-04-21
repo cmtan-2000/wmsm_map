@@ -48,7 +48,6 @@ class _WidgetSignUp4State extends State<SignUpForm4Widget> {
             Expanded(
               child: CustomOutlinedButton(
                 iconData: null,
-                context: context,
                 onPressed: () => print('next page'),
                 text: 'RESEND LINK',
               ),

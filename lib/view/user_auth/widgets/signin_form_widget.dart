@@ -61,7 +61,9 @@ class _WidgetSignInState extends State<WidgetSignIn> {
                 const SizedBox(
                   height: 10,
                 ),
-                passCodeField(passcodeController: _passcode,),
+                passCodeField(
+                  passcodeController: _passcode,
+                ),
               ],
             ),
           ),
@@ -82,7 +84,11 @@ class _WidgetSignInState extends State<WidgetSignIn> {
             children: [
               Expanded(
                 child: CustomElevatedButton(
-                  onPressed: () => authfunc.login(),
+                  // onPressed: () => authfunc.login(),
+                  onPressed: () {
+                    print(_passcode.text.trim());
+                    Navigator.of(context).pushNamed('/intro');
+                  },
                   child: const Text('Login'),
                 ),
               ),

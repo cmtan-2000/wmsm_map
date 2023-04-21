@@ -8,12 +8,12 @@ consist of:
 */
 
 import 'package:flutter/material.dart';
-import 'package:wmsm_flutter/view/user_auth/signin_form.dart';
+import 'package:wmsm_flutter/view/user_auth/widgets/signin_form_widget.dart';
 
-import '../custom/widgets/custom_outlinedbutton.dart';
+import 'custom/widgets/custom_outlinedbutton.dart';
 
-class MainPage extends StatelessWidget {
-  const MainPage({super.key});
+class SignInPage extends StatelessWidget {
+  const SignInPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class MainPage extends StatelessWidget {
                           top: Radius.circular(30),
                         ),
                       ),
-                      child: const content(),
+                      child: const ContentClass(),
                     ),
                   ),
                 ],
@@ -64,13 +64,17 @@ class MainPage extends StatelessWidget {
             ),
           ),
         ),
+        Positioned(
+            top: MediaQuery.of(context).size.height * 0.15,
+            left: MediaQuery.of(context).size.height * 0.05,
+            child: Image.asset('assets/images/etiqa.png', width: 99)),
       ]),
     );
   }
 }
 
-class content extends StatelessWidget {
-  const content({
+class ContentClass extends StatelessWidget {
+  const ContentClass({
     super.key,
   });
 
@@ -103,7 +107,6 @@ class WidgetBottom extends StatelessWidget {
                 onPressed: () => print('Outline_1'),
                 iconData: null,
                 text: 'Outline_1',
-                context: context,
               ),
             ),
             SizedBox(
@@ -112,9 +115,8 @@ class WidgetBottom extends StatelessWidget {
             Expanded(
               child: CustomOutlinedButton(
                 onPressed: () => print('Outline_2'),
-                iconData: Icons.time_to_leave,
+                iconData: Icons.car_crash_rounded,
                 text: 'Outline_2',
-                context: context,
               ),
             ),
           ],

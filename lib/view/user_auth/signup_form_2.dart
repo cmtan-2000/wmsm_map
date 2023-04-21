@@ -12,8 +12,6 @@ class _SignUpForm2State extends State<SignUpForm2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //*to avoid content push upward when soft keyboard appears
-      resizeToAvoidBottomInset: false,
       body: Stack(children: [
         Container(
           decoration: BoxDecoration(
@@ -65,6 +63,10 @@ class _SignUpForm2State extends State<SignUpForm2> {
             ),
           ),
         ),
+        Positioned(
+            top: MediaQuery.of(context).size.height * 0.15,
+            left: MediaQuery.of(context).size.height * 0.05,
+            child: Image.asset('assets/images/etiqa.png', width: 99)),
       ]),
     );
   }

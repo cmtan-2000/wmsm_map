@@ -72,6 +72,7 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
             Expanded(
               child: CustomElevatedButton(
                   onPressed: () {
+                    Navigator.of(context).pushNamed('/');
                     print(validatePasscode(
                         _passcode.text.trim(), _passcodeConfirm.text.trim()));
                   },
