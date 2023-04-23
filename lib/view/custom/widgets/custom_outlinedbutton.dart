@@ -5,53 +5,40 @@ class CustomOutlinedButton extends OutlinedButton {
 
   CustomOutlinedButton({
     Key? key,
-    required VoidCallback onPressed,
+    required onPressed,
     required IconData? iconData,
-    Widget? child,
-    String? text,
+    required String text,
+    required bool disabled,
   }) : super(
+          style: OutlinedButton.styleFrom(
+            side: disabled
+                ? const BorderSide(
+                    width: 2,
+                    color: Colors.grey,
+                  )
+                : const BorderSide(color: Colors.black),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               if (iconData != null) Icon(iconData, color: Colors.black),
               if (iconData != null) const SizedBox(width: 5),
-              if (text != null)
-                Text(
-                  text,
-                  style: const TextStyle(color: Colors.black),
-                ),
+              if (text.isNotEmpty)
+                disabled
+                    ? Text(
+                        text,
+                        style: const TextStyle(color: Colors.grey),
+                      )
+                    : Text(
+                        text,
+                        style: const TextStyle(color: Colors.black),
+                      ),
             ],
           ),
           onPressed: onPressed,
           key: key,
         );
-
-  //super(
-  // key: key,
-  // onPressed: onPressed,
-  // style: ButtonStyle(
-  //   // elevation: MaterialStateProperty.all<double>(8),
-  //   padding: MaterialStateProperty.all<EdgeInsets>(
-  //       const EdgeInsets.symmetric(horizontal: 16, vertical: 8)),
-  //   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-  //     RoundedRectangleBorder(
-  //       //borderRadius: BorderRadius.circular(5),
-  //       side: BorderSide(color: Theme.of(context).primaryColor),
-  //     ),
-  //   ),
-  // ),
-  // child: Row(
-  //   mainAxisAlignment: MainAxisAlignment.center,
-  //   children: <Widget>[
-  //     if (iconData != null)
-  //       Icon(iconData, color: Theme.of(context).primaryColor),
-  //     if (iconData != null) const SizedBox(width: 5),
-  //     if (text != null)
-  //       Text(
-  //         text,
-  //         style: TextStyle(color: Theme.of(context).primaryColor),
-  //       ),
-  //   ],
-  // ),
-  //);
 }

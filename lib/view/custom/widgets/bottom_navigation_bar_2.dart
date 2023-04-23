@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
-import '../../article_page.dart';
-import '../../challenge_page.dart';
-import '../../home_page.dart';
-import '../../profile_page.dart';
+import '../../user_article/article_page.dart';
+import '../../user_challenges/challenge_page.dart';
+import '../../user_profile/profile_page.dart';
+import '../../user_dashboard/dashboard.dart';
 
-class BottomNavScreen extends StatefulWidget {
-  const BottomNavScreen({super.key});
+class BottomNavScreen2 extends StatefulWidget {
+  const BottomNavScreen2({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _BottomNavScreenState createState() => _BottomNavScreenState();
+  _BottomNavScreen2State createState() => _BottomNavScreen2State();
 }
 
-class _BottomNavScreenState extends State<BottomNavScreen> {
+class _BottomNavScreen2State extends State<BottomNavScreen2> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
-    HomePage(),
+    const Dashboard(),
     const ChallengePage(),
     const ArticlePage(),
     const ProfilePage(),

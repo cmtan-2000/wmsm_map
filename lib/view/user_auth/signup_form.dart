@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_button.dart';
 
+import '../../main.dart';
 import '../../viewmodel/user_auth/authentication_model.dart';
 
 class WidgetSignUp extends StatefulWidget {
@@ -23,7 +24,7 @@ class _WidgetSignUpState extends State<WidgetSignUp> {
           text: 'Sign up',
           context: context,
           onPressed: () {
-            Navigator.pushNamed(context, '/f1');
+            MyApp.navigatorKey.currentState!.pushNamed('/signup1');
           },
           textStyle: const TextStyle(
             fontWeight: FontWeight.bold,

@@ -86,6 +86,7 @@ class _WidgetSignInState extends State<WidgetSignIn> {
                 child: CustomElevatedButton(
                   // onPressed: () => authfunc.login(),
                   onPressed: () {
+                    // Todo: Authentication
                     print(_passcode.text.trim());
                     Navigator.of(context).pushNamed('/intro');
                   },
@@ -96,76 +97,5 @@ class _WidgetSignInState extends State<WidgetSignIn> {
           ),
           const WidgetSignUp()
         ]);
-  }
-}
-
-class _buildPhoneInputField extends StatelessWidget {
-  const _buildPhoneInputField({required TextEditingController phoneController})
-      : _phoneController = phoneController;
-
-  final TextEditingController _phoneController;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        SizedBox(
-          width: 30,
-          height: 30,
-          child: Image.network(
-            'https://flagsapi.com/MY/flat/64.png',
-            errorBuilder: (BuildContext context, Object exception,
-                StackTrace? stackTrace) {
-              return Image.asset("assets/images/64.png");
-            },
-          ),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Expanded(
-          child: CustomTextFormField(
-            context: context,
-            isNumberOnly: true,
-            controller: _phoneController,
-            icon: Icons.phone,
-          ),
-        )
-      ],
-    );
-  }
-}
-
-// class _buildPhoneInputField extends StatelessWidget {
-//   const _buildPhoneInputField({required TextEditingController phoneController})
-//       : _phoneController = phoneController;
-
-//   final TextEditingController _phoneController;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return CustomTextField(
-//       label: 'Phone No',
-//       controller: _phoneController,
-//       isNumberOnly: true,
-//     );
-//   }
-// }
-
-class _buildCountryCodeSelector extends StatelessWidget {
-  const _buildCountryCodeSelector();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-        width: 30,
-        height: 30,
-        child: Image.network(
-          'https://flagsapi.com/MY/flat/64.png',
-          errorBuilder:
-              (BuildContext context, Object exception, StackTrace? stackTrace) {
-            return Image.asset('assets/images/64.png');
-          },
-        ));
   }
 }

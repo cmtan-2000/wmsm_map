@@ -18,6 +18,7 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
     return CheckboxListTile(
       title: Text(
         widget._text,
+        // textAlign: TextAlign.justify,
         style: Theme.of(context).textTheme.bodyLarge,
       ),
       value: isChecked,

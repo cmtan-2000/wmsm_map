@@ -191,7 +191,7 @@ class ContentClass extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 180,
+            height: 100,
             child: Wrap(
               children: [
                 Row(
@@ -204,13 +204,17 @@ class ContentClass extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(
+                  height: 40,
+                ),
                 Row(
                   children: [
                     Expanded(
                       child: CustomOutlinedButton(
                         onPressed: () => print('skip'),
                         iconData: null,
-                        child: Text('SKIP'),
+                        text: 'SKIP',
+                        disabled: false,
                       ),
                     ),
                   ],

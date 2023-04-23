@@ -13,7 +13,7 @@ class CustomTimer extends StatefulWidget {
 class _CustomTimerState extends State<CustomTimer> {
   final int duration = 30; //*set timer duration
   final CountdownController _controller = CountdownController(autoStart: true);
-
+  bool isResend = false;
   @override
   Widget build(BuildContext context) {
     return Countdown(
@@ -23,20 +23,24 @@ class _CustomTimerState extends State<CustomTimer> {
       interval: const Duration(milliseconds: 100),
       build: (_, double time) {
         return CustomOutlinedButton(
-            iconData: null,
-            onPressed: () {
-              _controller.restart();
-              print('Pressed resend link');
-            },
-            text: 'Resend (${time.toInt()})');
+          iconData: null,
+          onPressed: isResend
+              ? () {
+                  _controller.restart();
+                  // Todo: Perform resend OTP
+                  setState(() {
+                    isResend = false;
+                  });
+                }
+              : null,
+          text: 'Resend (${time.toInt()})',
+          disabled: !isResend,
+        );
       },
       onFinished: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Timer has ended. Please try register again.'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        setState(() {
+          isResend = true;
+        });
       },
     );
   }

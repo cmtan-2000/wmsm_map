@@ -8,12 +8,12 @@ consist of:
 */
 
 import 'package:flutter/material.dart';
-import 'package:wmsm_flutter/view/user_auth/widgets/signin_form_widget.dart';
+import 'package:wmsm_flutter/view/user_auth/signin_form.dart';
 
-import 'custom/widgets/custom_outlinedbutton.dart';
+import '../custom/widgets/custom_outlinedbutton.dart';
 
-class SignInPage extends StatelessWidget {
-  const SignInPage({super.key});
+class AuthPage extends StatelessWidget {
+  const AuthPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +107,7 @@ class WidgetBottom extends StatelessWidget {
                 onPressed: () => print('Outline_1'),
                 iconData: null,
                 text: 'Outline_1',
+                disabled: false,
               ),
             ),
             SizedBox(
@@ -117,6 +118,7 @@ class WidgetBottom extends StatelessWidget {
                 onPressed: () => print('Outline_2'),
                 iconData: Icons.car_crash_rounded,
                 text: 'Outline_2',
+                disabled: false,
               ),
             ),
           ],
