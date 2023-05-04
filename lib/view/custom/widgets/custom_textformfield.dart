@@ -8,13 +8,17 @@ class CustomTextFormField extends TextFormField {
     bool? readOnly,
     required BuildContext context,
     Key? key,
-    required bool isNumberOnly,
+    bool? isNumberOnly,
     required TextEditingController controller,
     String? hintText,
     labelText,
     IconData? icon,
     Widget? suffixicon,
-    int? maxLength,
+    int? maxLength, 
+    TextInputType? keyboardType, 
+    validator, 
+    bool? obscureText, 
+    suffix,
   }) : super(
           key: key,
           maxLength: maxLength,
@@ -36,6 +40,7 @@ class CustomTextFormField extends TextFormField {
               borderSide: BorderSide.none,
             ),
             prefixIcon: icon?.codePoint != null ? Icon(icon) : null,
+            suffix: suffix,
             suffixIcon: suffixicon,
           ),
           inputFormatters: [
@@ -43,12 +48,13 @@ class CustomTextFormField extends TextFormField {
                 ? FilteringTextInputFormatter.digitsOnly
                 : FilteringTextInputFormatter.singleLineFormatter
           ],
-          validator: (value) {
+          validator: validator ?? (value) {
             if (value!.isEmpty) {
               return 'Please Enter ' + labelText;
             }
             return null;
           },
+          obscureText: obscureText ?? false,
           cursorColor: Theme.of(context).primaryColor,
         );
 }

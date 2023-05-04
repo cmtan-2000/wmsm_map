@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "403665029389",
+    "firebase_url": "https://map-project-36dd7-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "map-project-36dd7",
+    "storage_bucket": "map-project-36dd7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:403665029389:android:9f64a6195486dbe81a4844",
+        "android_client_info": {
+          "package_name": "com.example.wmsm_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "403665029389-rijfvdakekg2oletr15lr8pnhed1h7fi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABxF4PGbFzSNAt1bymNWtsjDrUkm9eC4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "403665029389-rijfvdakekg2oletr15lr8pnhed1h7fi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "403665029389-imredn2c54jhhbpbrjp1mnvo89hu8ksl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.wmsmFlutter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
