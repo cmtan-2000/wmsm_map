@@ -15,5 +15,5 @@ class _DashboardState extends State<Dashboard> {
     return const Center(
       child: Text('This is dashboard page'),
     );
-  }
+  } 
 }

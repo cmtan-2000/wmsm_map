@@ -21,6 +21,7 @@ class emailField extends StatelessWidget {
         Expanded(
           child: CustomTextFormField(
             hintText: 'Email',
+            labelText: 'Email',
             context: context,
             keyboardType: TextInputType.emailAddress,
             controller: _emailController,

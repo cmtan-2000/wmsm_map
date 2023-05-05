@@ -1,6 +1,8 @@
 // ignore_for_file: deprecated_member_use, camel_case_types, avoid_print
 
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_button.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
@@ -94,8 +96,8 @@ class _WidgetSignInState extends State<WidgetSignIn> {
                     onPressed: () {
                       // Todo: Authentication
                       if(_formKey.currentState!.validate()) {
-                        print(_passwordController.text.trim());
-                        Navigator.of(context).pushNamed('/intro');
+                        signIn();
+                        //Navigator.of(context).pushNamed('/intro');
                       }
                     },
                     child: const Text('Login'),
@@ -105,6 +107,13 @@ class _WidgetSignInState extends State<WidgetSignIn> {
             ),
             const WidgetSignUp()
           ]),
+    );
+  }
+
+  Future signIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
     );
   }
 }

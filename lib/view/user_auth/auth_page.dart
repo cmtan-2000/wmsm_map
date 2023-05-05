@@ -7,7 +7,9 @@ consist of:
   forget-password.dart.
 */
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:wmsm_flutter/view/intro_page.dart';
 import 'package:wmsm_flutter/view/user_auth/signin_form.dart';
 
 import '../custom/widgets/custom_outlinedbutton.dart';
@@ -79,15 +81,26 @@ class ContentClass extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const <Widget>[
-          WidgetSignIn(),
-          WidgetBottom(),
-        ]);
-  }
+  Widget build(BuildContext context) => Scaffold(
+    body : StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if(snapshot.hasData) {
+          return IntroPage();
+        }
+        else {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const <Widget>[
+              WidgetSignIn(),
+              WidgetBottom(),
+            ]
+          );
+        }
+      },
+    ),
+  );
 }
 
 class WidgetBottom extends StatelessWidget {
