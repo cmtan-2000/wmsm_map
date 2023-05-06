@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/routes.dart';
 import 'package:wmsm_flutter/view/custom/themes/custom_theme.dart';
 import 'viewmodel/user_view_model.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 Future main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +31,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'My App',
         theme: customTheme,
-        initialRoute: '/',
+        initialRoute: '/btmNav',
         routes: routes,
       ),
     );

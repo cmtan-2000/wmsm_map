@@ -38,6 +38,8 @@ dependencies:
   pin_code_fields: ^7.4.0
   intl: ^0.17.0
   timer_count_down: ^2.2.2 #for timer OTP
+  line_awesome_flutter: ^2.0.0 #for icon
+  syncfusion_flutter_gauges: ^21.2.3 #for BMI gauge
 
 dev_dependencies:
   flutter_test:
