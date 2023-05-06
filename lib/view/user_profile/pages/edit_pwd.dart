@@ -33,6 +33,7 @@ class EditPwdPageWidget extends StatefulWidget {
 class _EditPwdPageWidgetState extends State<EditPwdPageWidget> {
   late String _password;
   late TextEditingController pwdEC;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -52,64 +53,70 @@ class _EditPwdPageWidgetState extends State<EditPwdPageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Old password',
-          style: Theme.of(context)
-              .textTheme
-              .displaySmall
-              ?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 20.0),
-        ListTile(
-          leading: Container(
-            padding: const EdgeInsets.all(5.0),
-            decoration: BoxDecoration(
-                shape: BoxShape.circle, color: Theme.of(context).primaryColor),
-            child: const Icon(LineAwesomeIcons.lock, color: Colors.black),
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Old password',
+            style: Theme.of(context)
+                .textTheme
+                .displaySmall
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
-          title: Text(
-            _password,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ),
-        const SizedBox(height: 50.0),
-        Text(
-          'New password',
-          style: Theme.of(context)
-              .textTheme
-              .displaySmall
-              ?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 25.0),
-        CustomTextFormField(
-          context: context,
-          isNumberOnly: false,
-          labelText: 'Please enter new password',
-          hintText: '******',
-          controller: pwdEC,
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: CustomElevatedButton(
-                  onPressed: () {
-                    snackBar("Update successfully!");
-                    setState(() {
-                      _password = pwdEC.text;
-                      //TODO: but not yet update into database
-                    });
-                  },
-                  child: const Text('UPDATE')),
+          const SizedBox(height: 20.0),
+          ListTile(
+            leading: Container(
+              padding: const EdgeInsets.all(5.0),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).primaryColor),
+              child: const Icon(LineAwesomeIcons.lock, color: Colors.black),
             ),
-          ],
-        ),
-      ],
+            title: Text(
+              _password,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+          const SizedBox(height: 50.0),
+          Text(
+            'New password',
+            style: Theme.of(context)
+                .textTheme
+                .displaySmall
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 25.0),
+          CustomTextFormField(
+            context: context,
+            isNumberOnly: false,
+            labelText: 'New Password',
+            hintText: '******',
+            controller: pwdEC,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: CustomElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        snackBar("Update successfully!");
+                        setState(() {
+                          _password = pwdEC.text;
+                          //TODO: but not yet update into database
+                        });
+                      }
+                    },
+                    child: const Text('UPDATE')),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

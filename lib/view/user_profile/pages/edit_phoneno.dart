@@ -28,6 +28,7 @@ class EditPhonePageWidget extends StatefulWidget {
 class _EditPhonePageWidgetState extends State<EditPhonePageWidget> {
   late String _phoneno;
   late TextEditingController phoneNoEC;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -47,64 +48,73 @@ class _EditPhonePageWidgetState extends State<EditPhonePageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Old phone number',
-          style: Theme.of(context)
-              .textTheme
-              .displaySmall
-              ?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 20.0),
-        ListTile(
-          leading: Container(
-            padding: const EdgeInsets.all(5.0),
-            decoration: BoxDecoration(
-                shape: BoxShape.circle, color: Theme.of(context).primaryColor),
-            child: const Icon(LineAwesomeIcons.phone, color: Colors.black),
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Old phone number',
+            style: Theme.of(context)
+                .textTheme
+                .displaySmall
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
-          title: Text(
-            _phoneno,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ),
-        const SizedBox(height: 50.0),
-        Text(
-          'New phone number',
-          style: Theme.of(context)
-              .textTheme
-              .displaySmall
-              ?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 25.0),
-        CustomTextFormField(
-          context: context,
-          isNumberOnly: true,
-          labelText: 'Please enter new phone number',
-          hintText: '011-1234567',
-          controller: phoneNoEC,
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: CustomElevatedButton(
-                  onPressed: () {
-                    snackBar("Update successfully!");
-                    setState(() {
-                      _phoneno = phoneNoEC.text;
-                      //TODO: but not yet update into database
-                    });
-                  },
-                  child: const Text('UPDATE')),
+          const SizedBox(height: 20.0),
+          ListTile(
+            leading: Container(
+              padding: const EdgeInsets.all(5.0),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).primaryColor),
+              child: const Icon(LineAwesomeIcons.phone, color: Colors.black),
             ),
-          ],
-        ),
-      ],
+            title: Text(
+              _phoneno,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+          const SizedBox(height: 50.0),
+          Text(
+            'New phone number',
+            style: Theme.of(context)
+                .textTheme
+                .displaySmall
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 25.0),
+          CustomTextFormField(
+            context: context,
+            isNumberOnly: true,
+            labelText: 'New Phone Number',
+            hintText: '',
+            controller: phoneNoEC,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: CustomElevatedButton(
+                  child: const Text('UPDATE'),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      snackBar("Update successfully!");
+                      print(phoneNoEC.text);
+
+                      //TODO: but not yet update into database
+                      setState(() {
+                        _phoneno = phoneNoEC.text;
+                      });
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

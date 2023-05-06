@@ -33,6 +33,7 @@ class EditEmailPageWidget extends StatefulWidget {
 class _EditEmailPageWidgetState extends State<EditEmailPageWidget> {
   late String _email;
   late TextEditingController emailEC;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -58,64 +59,70 @@ class _EditEmailPageWidgetState extends State<EditEmailPageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Old email',
-          style: Theme.of(context)
-              .textTheme
-              .displaySmall
-              ?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 20.0),
-        ListTile(
-          leading: Container(
-            padding: const EdgeInsets.all(5.0),
-            decoration: BoxDecoration(
-                shape: BoxShape.circle, color: Theme.of(context).primaryColor),
-            child: const Icon(LineAwesomeIcons.envelope, color: Colors.black),
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Old email',
+            style: Theme.of(context)
+                .textTheme
+                .displaySmall
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
-          title: Text(
-            _email,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ),
-        const SizedBox(height: 50.0),
-        Text(
-          'New email',
-          style: Theme.of(context)
-              .textTheme
-              .displaySmall
-              ?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 25.0),
-        CustomTextFormField(
-          context: context,
-          isNumberOnly: false,
-          labelText: 'Please enter your new email',
-          hintText: 'abc@gmail.com',
-          controller: emailEC,
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: CustomElevatedButton(
-                  onPressed: () {
-                    snackBar("Update successfully!");
-                    setState(() {
-                      _email = emailEC.text;
-                      //TODO: but not yet update into database
-                    });
-                  },
-                  child: const Text('UPDATE')),
+          const SizedBox(height: 20.0),
+          ListTile(
+            leading: Container(
+              padding: const EdgeInsets.all(5.0),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).primaryColor),
+              child: const Icon(LineAwesomeIcons.envelope, color: Colors.black),
             ),
-          ],
-        ),
-      ],
+            title: Text(
+              _email,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+          const SizedBox(height: 50.0),
+          Text(
+            'New email',
+            style: Theme.of(context)
+                .textTheme
+                .displaySmall
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 25.0),
+          CustomTextFormField(
+            context: context,
+            isNumberOnly: false,
+            labelText: 'New Email',
+            hintText: 'abc@gmail.com',
+            controller: emailEC,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: CustomElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        snackBar("Update successfully!");
+                        setState(() {
+                          _email = emailEC.text;
+                          //TODO: but not yet update into database
+                        });
+                      }
+                    },
+                    child: const Text('UPDATE')),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
