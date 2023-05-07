@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "955242094941",
+    "project_id": "wmsm-f773f",
+    "storage_bucket": "wmsm-f773f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:955242094941:android:ebfb2497ad948c3e3308b4",
+        "android_client_info": {
+          "package_name": "com.example.wmsm_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "955242094941-2mdgqqbnqak74i0mtm7ameg863as3vqn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wmsm_flutter",
+            "certificate_hash": "d7d45fc11af423c5f8fc3ff26868489c48ac0f38"
+          }
+        },
+        {
+          "client_id": "955242094941-noova7tccqvgbu24ktpuh2eeu9l2q1hu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCslAGz5Br52zhXdfryyzl9ntP3DwPnjU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "955242094941-noova7tccqvgbu24ktpuh2eeu9l2q1hu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
