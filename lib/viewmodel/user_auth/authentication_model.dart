@@ -3,13 +3,13 @@
 import 'package:flutter/cupertino.dart';
 
 class AuthenticationViewModel extends ChangeNotifier {
-
-  void login(){
+  void login() {
     // Do something with the value
     print("test");
+    //Navigator.pushNamed(context, '/home');
   }
 
-  void register(){
+  void register() {
     // Do something with the value
   }
 }
