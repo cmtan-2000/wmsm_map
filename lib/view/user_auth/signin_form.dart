@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_button.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
-import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/shared/passcode_field.dart';
 import 'package:wmsm_flutter/view/shared/phone_number_field.dart';
 import 'package:wmsm_flutter/view/user_auth/signup_form.dart';
@@ -77,10 +77,12 @@ class _WidgetSignInState extends State<WidgetSignIn> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CustomTextButton(
-                  context: context,
-                  text: "Reset Password",
-                  onPressed: () => print(""),
-                )
+                    context: context,
+                    text: "Reset Password",
+                    onPressed: () {
+                    MyApp.navigatorKey.currentState!.pushNamed('/resetpwd');
+                    print("");
+                    })
               ],
             ),
             const SizedBox(

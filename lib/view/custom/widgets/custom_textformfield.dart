@@ -36,7 +36,7 @@ class CustomTextFormField extends TextFormField {
             fillColor: const Color.fromARGB(255, 250, 250, 250),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none,
+              borderSide: const BorderSide(color: Colors.black),
             ),
             prefixIcon: icon?.codePoint != null ? Icon(icon) : null,
             suffix: suffix,
