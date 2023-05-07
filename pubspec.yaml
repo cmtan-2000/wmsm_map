@@ -36,9 +36,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider: ^6.0.5
   pin_code_fields: ^7.4.0
-  intl: ^0.18.1
+  intl: ^0.17.0
   timer_count_down: ^2.2.2 #for timer OTP
   email_validator: ^2.1.17
+  firebase_core: ^2.11.0
+  firebase_auth: ^4.5.0
+  firebase_storage: ^11.1.2
+  cloud_firestore: ^4.6.0
+  shared_preferences: ^2.1.0
 
 dev_dependencies:
   flutter_test:
