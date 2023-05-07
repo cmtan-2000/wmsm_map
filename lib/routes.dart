@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:wmsm_flutter/view/user_auth/auth_page.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_email.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_phoneno.dart';
-import 'package:wmsm_flutter/view/user_profile/pages/edit_pic.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_pwd.dart';
 import 'package:wmsm_flutter/view/user_profile/profile_page.dart';
 
@@ -30,7 +29,6 @@ Map<String, WidgetBuilder> routes = {
   '/btmNav': (context) => BottomNavScreen(),
   '/bmiInfo': (context) => const BMIPage(),
   '/editEmail': (context) => const EditEmail(),
-  '/editPic': (context) => const EditProfilePicture(),
   '/editPwd': (context) => const EditPassword(),
   '/editPhoneNo': (context) => const EditPhoneNumber(),
   '/profile': (context) => const ProfilePage(),
