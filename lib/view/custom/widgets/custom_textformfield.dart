@@ -1,21 +1,24 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CustomTextFormField extends TextFormField {
-  CustomTextFormField({
-    Function()? onTap,
-    bool? readOnly,
-    required BuildContext context,
-    Key? key,
-    required bool isNumberOnly,
-    required TextEditingController controller,
-    String? hintText,
-    labelText,
-    IconData? icon,
-    Widget? suffixicon,
-    int? maxLength,
-  }) : super(
+  CustomTextFormField(
+      {Function()? onTap,
+      bool? readOnly,
+      required BuildContext context,
+      Key? key,
+      bool? isNumberOnly,
+      required TextEditingController controller,
+      String? hintText,
+      labelText,
+      IconData? icon,
+      Widget? suffixicon,
+      int? maxLength,
+      TextInputType? keyboardType,
+      validator,
+      bool? obscureText,
+      suffix})
+      : super(
           key: key,
           maxLength: maxLength,
           controller: controller,
@@ -36,6 +39,7 @@ class CustomTextFormField extends TextFormField {
               borderSide: BorderSide.none,
             ),
             prefixIcon: icon?.codePoint != null ? Icon(icon) : null,
+            suffix: suffix,
             suffixIcon: suffixicon,
           ),
           inputFormatters: [
@@ -43,12 +47,14 @@ class CustomTextFormField extends TextFormField {
                 ? FilteringTextInputFormatter.digitsOnly
                 : FilteringTextInputFormatter.singleLineFormatter
           ],
-          validator: (value) {
-            if (value!.isEmpty) {
-              return 'Please Enter ' + labelText;
-            }
-            return null;
-          },
+          validator: validator ??
+              (value) {
+                if (value!.isEmpty) {
+                  return 'Please Enter ' + labelText;
+                }
+                return null;
+              },
+          obscureText: obscureText ?? false,
           cursorColor: Theme.of(context).primaryColor,
         );
 }

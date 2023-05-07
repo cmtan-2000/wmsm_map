@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use, camel_case_types, avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_button.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
@@ -8,6 +6,9 @@ import 'package:wmsm_flutter/view/shared/passcode_field.dart';
 import 'package:wmsm_flutter/view/shared/phone_number_field.dart';
 import 'package:wmsm_flutter/view/user_auth/signup_form.dart';
 import 'package:wmsm_flutter/viewmodel/user_auth/authentication_model.dart';
+
+import '../shared/email_field.dart';
+import '../shared/password_field.dart';
 
 class WidgetSignIn extends StatefulWidget {
   const WidgetSignIn({super.key});
@@ -20,7 +21,10 @@ class _WidgetSignInState extends State<WidgetSignIn> {
   final AuthenticationViewModel auth = AuthenticationViewModel();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passcode = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final AuthenticationViewModel authfunc = AuthenticationViewModel();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +93,7 @@ class _WidgetSignInState extends State<WidgetSignIn> {
                     // onPressed: () => authfunc.login(),
                     onPressed: () {
                       // Todo: Authentication
-                      if(_formKey.currentState!.validate()) {
+                      if (_formKey.currentState!.validate()) {
                         print(_passwordController.text.trim());
                         Navigator.of(context).pushNamed('/intro');
                       }
@@ -104,10 +108,10 @@ class _WidgetSignInState extends State<WidgetSignIn> {
     );
   }
 
-  Future signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
-  }
+  // Future signIn() async {
+  //   await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //     email: _emailController.text.trim(),
+  //     password: _passwordController.text.trim(),
+  //   );
+  // }
 }

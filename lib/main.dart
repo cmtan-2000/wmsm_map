@@ -4,11 +4,8 @@ import 'package:wmsm_flutter/routes.dart';
 import 'package:wmsm_flutter/view/custom/themes/custom_theme.dart';
 import 'viewmodel/user_view_model.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
 
   // // Keep Splash Screen until initialization has completed!
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
