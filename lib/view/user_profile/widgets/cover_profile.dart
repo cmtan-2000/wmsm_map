@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:wmsm_flutter/model/user.dart';
@@ -86,7 +87,47 @@ class CoverContent extends StatelessWidget {
                                   //*Press d then edit profile picture
                                   onPressed: () {
                                     print('Edit profile picture');
-                                    _navigateToNextScreen(context);
+                                    showCupertinoModalPopup<void>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CupertinoActionSheet(
+                                            actions: <
+                                                CupertinoActionSheetAction>[
+                                              CupertinoActionSheetAction(
+                                                isDefaultAction: true,
+                                                onPressed: () {
+                                                  //TODO: Take photo
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text(
+                                                  'Take Photo',
+                                                  style: TextStyle(
+                                                      color: Colors.blue),
+                                                ),
+                                              ),
+                                              CupertinoActionSheetAction(
+                                                isDefaultAction: true,
+                                                onPressed: () {
+                                                  //TODO: Choose from gallery
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text(
+                                                  'Choose from Gallery',
+                                                  style: TextStyle(
+                                                      color: Colors.blue),
+                                                ),
+                                              ),
+                                              //*Cancel option
+                                              CupertinoActionSheetAction(
+                                                isDestructiveAction: true,
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('Cancel'),
+                                              ),
+                                            ],
+                                          );
+                                        });
                                   },
                                 ),
                               ),

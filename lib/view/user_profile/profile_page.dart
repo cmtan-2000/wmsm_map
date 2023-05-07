@@ -217,9 +217,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                 icon: LineAwesomeIcons.shoe_prints,
                 color: Colors.red,
                 //TODO: sync google fit
-                onTap: () {
-                  MyApp.navigatorKey.currentState!.pushNamed('/bmiInfo');
-                },
+                onTap: () {},
                 endIcon: true,
               ),
               ProfileMenuWidget(
