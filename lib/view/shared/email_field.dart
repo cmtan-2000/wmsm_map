@@ -19,11 +19,15 @@ class emailField extends StatelessWidget {
         Expanded(
           child: CustomTextFormField(
             hintText: 'Email',
+            labelText: 'Email',
             context: context,
             keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             icon: Icons.email,
             validator: (value) {
+              if(value.isEmpty) {
+                return "Please enter your email address";
+              }
               if (!EmailValidator.validate(value)) {
                 return "Please enter a valid email address";
               }

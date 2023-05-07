@@ -43,6 +43,12 @@ class _passwordFieldState extends State<passwordField> {
                 icon: Icon(passenable == true
                     ? Icons.visibility_off
                     : Icons.visibility)),
+            validator: (value) {
+              if(value.isEmpty) {
+                return "Please enter your password";
+              }
+              return null;
+            },
           ),
         )
       ],

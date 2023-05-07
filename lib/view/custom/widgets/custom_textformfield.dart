@@ -47,10 +47,9 @@ class CustomTextFormField extends TextFormField {
                 ? FilteringTextInputFormatter.digitsOnly
                 : FilteringTextInputFormatter.singleLineFormatter
           ],
-          validator: validator ??
-              (value) {
+          validator: validator ?? (value) {
                 if (value!.isEmpty) {
-                  return 'Please Enter ' + labelText;
+                  return 'Please enter ' + labelText;
                 }
                 return null;
               },
