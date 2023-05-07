@@ -42,7 +42,7 @@ class AuthPage extends StatelessWidget {
           right: 0,
           bottom: 0,
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.75,
+            height: MediaQuery.of(context).size.height * 0.7,
             child: FractionallySizedBox(
               child: Column(
                 children: [

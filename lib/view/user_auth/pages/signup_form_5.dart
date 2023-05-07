@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:wmsm_flutter/main.dart';
 
 import '../../custom/widgets/custom_elevatedbutton.dart';
-import '../../shared/password_field.dart';
+import '../../shared/passcode_field.dart';
 import '../widgets/cover_content.dart';
 
 class SignUpForm5 extends StatelessWidget {
@@ -12,7 +15,7 @@ class SignUpForm5 extends StatelessWidget {
   Widget build(BuildContext context) {
     return const CoverContent(
       content: SignUpForm5Widget(),
-      title: 'Password',
+      title: 'Digit Passcode',
     );
   }
 }
@@ -29,26 +32,31 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
   bool hasSetError = false;
   bool hasCfmError = false;
   bool hasMatchError = false;
+  StreamController<ErrorAnimationType>? errorSetController;
+  StreamController<ErrorAnimationType>? errorConfirmController;
 
-  late TextEditingController _password;
-  late TextEditingController _passwordConfirm;
+  late TextEditingController _passcode;
+  late TextEditingController _passcodeConfirm;
 
-  late String password;
-  late String passwordError;
-  
+  late String passcode;
+  late String passcodeError;
 
   @override
   void initState() {
-    _password = TextEditingController();
-    _passwordConfirm = TextEditingController();
+    _passcode = TextEditingController();
+    _passcodeConfirm = TextEditingController();
+    errorSetController = StreamController<ErrorAnimationType>();
+    errorConfirmController = StreamController<ErrorAnimationType>();
     super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    _password.dispose();
-    _passwordConfirm.dispose();
+    errorSetController!.close();
+    errorConfirmController!.close();
+    _passcode.dispose();
+    _passcodeConfirm.dispose();
     super.dispose();
   }
 
@@ -69,7 +77,7 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Set Up Password For your Account',
+            'Set Up Passcode',
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const Text(
@@ -83,25 +91,26 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Set your password',
+                'Set your passcode',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(
                 height: 30,
               ),
-              passwordField(
-                passwordController: _password,
+              passCodeField(
+                passcodeController: _passcode,
+                errorController: errorSetController,
               ),
             ],
           ),
-          /* Padding(
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30.0),
             child: Text(
-              hasSetError ? "*Please fill up your password." : " ",
+              hasSetError ? "*Please fill up your passcode." : " ",
               style: const TextStyle(
                   color: Colors.red, fontSize: 12, fontWeight: FontWeight.w400),
             ),
-          ), */
+          ),
           const SizedBox(
             height: 30,
           ),
@@ -109,33 +118,34 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Confirm your password',
+                'Confirm your passcode',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(
                 height: 30,
               ),
-              passwordField(
-                passwordController: _passwordConfirm,
+              passCodeField(
+                passcodeController: _passcodeConfirm,
+                errorController: errorConfirmController,
               ),
             ],
           ),
-          /* Padding(
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30.0),
             child: Text(
-              hasCfmError ? "*Please fill up your password." : "",
+              hasCfmError ? "*Please fill up your passcode." : "",
               style: const TextStyle(
                   color: Colors.red, fontSize: 12, fontWeight: FontWeight.w400),
             ),
-          ), */
-          /* Padding(
+          ),
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30.0),
             child: Text(
-              hasMatchError ? "*Password didn't match. Please try again" : "",
+              hasMatchError ? "*Passcode didn't match. Please try again" : "",
               style: const TextStyle(
                   color: Colors.red, fontSize: 12, fontWeight: FontWeight.w400),
             ),
-          ), */
+          ),
           const SizedBox(
             height: 20,
           ),
@@ -145,24 +155,30 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
                 child: CustomElevatedButton(
                     onPressed: () {
                       // print(validatePasscode(_passcode.text.trim(), _passcodeConfirm.text.trim()));
-                      /* _formKey.currentState!.validate();
-                      if (_password.text.length > 0  && _password.text.length != 6) {
+                      _formKey.currentState!.validate();
+                      if (_passcode.text.length != 6) {
+                        errorSetController!.add(ErrorAnimationType.shake);
                         setState(() => hasSetError = true);
                         return;
                       }
                       setState(() => hasSetError = false);
-                      if (_password.text.length > 0  &&_passwordConfirm.text.length != 6) {
+                      if (_passcodeConfirm.text.length != 6) {
+                        errorConfirmController!.add(ErrorAnimationType.shake);
                         setState(() => hasCfmError = true);
                         return;
                       }
-                      setState(() => hasCfmError = false); 
-                      if (_password.text != _passwordConfirm.text) {
+                      setState(() => hasCfmError = false);
+                      if (_passcode.text != _passcodeConfirm.text) {
+                        errorSetController!.add(ErrorAnimationType.shake);
+                        errorConfirmController!.add(ErrorAnimationType.shake);
                         setState(() {
                           hasMatchError = true;
                         });
                         return;
                       }
-                      setState(() => hasMatchError = false); */
+                      setState(() => hasMatchError = false);
+
+                      print(_passcode.text);
 
                       snackBar("submit");
                       MyApp.navigatorKey.currentState!.pushNamed('/');

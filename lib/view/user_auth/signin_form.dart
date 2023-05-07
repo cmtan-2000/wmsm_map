@@ -1,18 +1,13 @@
 // ignore_for_file: deprecated_member_use, camel_case_types, avoid_print
 
-import 'package:email_validator/email_validator.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_button.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/shared/passcode_field.dart';
+import 'package:wmsm_flutter/view/shared/phone_number_field.dart';
 import 'package:wmsm_flutter/view/user_auth/signup_form.dart';
 import 'package:wmsm_flutter/viewmodel/user_auth/authentication_model.dart';
-
-import '../shared/email_field.dart';
-import '../shared/password_field.dart';
 
 class WidgetSignIn extends StatefulWidget {
   const WidgetSignIn({super.key});
@@ -22,10 +17,9 @@ class WidgetSignIn extends StatefulWidget {
 }
 
 class _WidgetSignInState extends State<WidgetSignIn> {
-  final _formKey = GlobalKey<FormState>();
   final AuthenticationViewModel auth = AuthenticationViewModel();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passcode = TextEditingController();
   final AuthenticationViewModel authfunc = AuthenticationViewModel();
 
   @override
@@ -96,8 +90,8 @@ class _WidgetSignInState extends State<WidgetSignIn> {
                     onPressed: () {
                       // Todo: Authentication
                       if(_formKey.currentState!.validate()) {
-                        signIn();
-                        //Navigator.of(context).pushNamed('/intro');
+                        print(_passwordController.text.trim());
+                        Navigator.of(context).pushNamed('/intro');
                       }
                     },
                     child: const Text('Login'),

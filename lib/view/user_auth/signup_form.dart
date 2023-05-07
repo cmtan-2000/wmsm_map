@@ -24,7 +24,7 @@ class _WidgetSignUpState extends State<WidgetSignUp> {
           text: 'Sign up',
           context: context,
           onPressed: () {
-            MyApp.navigatorKey.currentState!.pushNamed('/signup3');
+            MyApp.navigatorKey.currentState!.pushNamed('/signup1');
           },
           textStyle: const TextStyle(
             fontWeight: FontWeight.bold,
