@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../main.dart';
 import '../../custom/widgets/custom_elevatedbutton.dart';
+import '../../custom/widgets/custom_outlinedbutton.dart';
 import '../../custom/widgets/custom_timer.dart';
 import '../../shared/passcode_field.dart';
 import '../widgets/cover_content.dart';
@@ -131,6 +132,14 @@ class _SignUpForm2WidgetState extends State<SignUpForm2Widget> {
                 ),
               ],
             ),
+            CustomOutlinedButton(
+              onPressed: () {
+                MyApp.navigatorKey.currentState!.pop();
+              },
+              disabled: false,
+              iconData: null,
+              text: 'Back',
+            )
           ],
         ),
       ),

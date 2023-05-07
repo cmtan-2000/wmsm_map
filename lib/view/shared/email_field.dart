@@ -3,8 +3,8 @@ import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:email_validator/email_validator.dart';
 
 // ignore: unused_element
-class emailField extends StatelessWidget {
-  const emailField({
+class EmailField extends StatelessWidget {
+  const EmailField({
     super.key,
     required TextEditingController emailController,
   }) : _emailController = emailController;

@@ -34,12 +34,12 @@ class _WidgetSignUp4State extends State<SignUpForm4Widget> {
     _passcode = TextEditingController();
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    _passcode.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // TODO: implement dispose
+  //   super.dispose();
+  //   _passcode.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +78,8 @@ class _WidgetSignUp4State extends State<SignUpForm4Widget> {
                 child: CustomOutlinedButton(
                   iconData: null,
                   onPressed: () => print('next page'),
-                  text: 'RESEND LINK', disabled: false,
+                  text: 'RESEND LINK',
+                  disabled: false,
                 ),
               ),
             ],
@@ -97,6 +98,17 @@ class _WidgetSignUp4State extends State<SignUpForm4Widget> {
                     child: const Text('CONTINUE')),
               ),
             ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          CustomOutlinedButton(
+            onPressed: () {
+              MyApp.navigatorKey.currentState!.pop();
+            },
+            disabled: false,
+            iconData: null,
+            text: 'Back',
           )
         ],
       ),

@@ -30,21 +30,27 @@ class _passwordFieldState extends State<passwordField> {
             controller: widget._passwordController,
             icon: Icons.password,
             obscureText: passenable,
-            suffix: IconButton(
-                onPressed: () {
-                  setState(() {
-                    if (passenable) {
-                      passenable = false;
-                    } else {
-                      passenable = true;
-                    }
-                  });
-                },
-                icon: Icon(passenable == true
-                    ? Icons.visibility_off
-                    : Icons.visibility)),
+            // suffix: Row(
+            //   children: [
+            //     IconButton(
+            //       onPressed: () {
+            //         setState(() {
+            //           if (passenable) {
+            //             passenable = false;
+            //           } else {
+            //             passenable = true;
+            //           }
+            //         });
+            //       },
+            //       icon: Icon(passenable == true
+            //           ? Icons.visibility_off
+            //           : Icons.visibility),
+            //     ),
+            //   ],
+            // ),
+
             validator: (value) {
-              if(value.isEmpty) {
+              if (value.isEmpty) {
                 return "Please enter your password";
               }
               return null;

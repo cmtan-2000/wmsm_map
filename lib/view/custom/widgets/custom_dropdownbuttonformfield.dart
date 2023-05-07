@@ -20,13 +20,11 @@ class CustomDropdownButtonFormField extends DropdownButtonFormField {
           decoration: InputDecoration(
             labelText: labelText,
             hintText: hintText,
-            border: const OutlineInputBorder(
-
-            ),
+            border: const OutlineInputBorder(),
           ),
           validator: (value) {
             if (value == null) {
-              return 'Please Select ' + labelText;
+              return "'Please Select ' + $labelText";
             }
             return null;
           },

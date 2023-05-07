@@ -118,7 +118,8 @@ class _SignUpForm1WidgetState extends State<SignUpForm1Widget> {
               ),
             ],
           ),
-          const SizedBox(height: 30)
+          const SizedBox(height: 30),
+          
         ],
       ),
     );

@@ -5,6 +5,7 @@ import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 
 import '../../../main.dart';
+import '../../custom/widgets/custom_outlinedbutton.dart';
 import '../widgets/cover_content.dart';
 
 class SignUpForm3 extends StatelessWidget {
@@ -51,23 +52,24 @@ class _SignUpForm3WidgetState extends State<SignUpForm3Widget> {
     _selectedIc = _options[0];
     nameEC = TextEditingController();
     usernameEC = TextEditingController();
+    typeEC = TextEditingController();
     noEC = TextEditingController();
     dobEC = TextEditingController();
     phoneEC = TextEditingController();
     emailEC = TextEditingController();
   }
 
-  @override
-  void dispose() {
-    nameEC.dispose();
-    usernameEC.dispose();
-    typeEC.dispose();
-    noEC.dispose();
-    dobEC.dispose();
-    phoneEC.dispose();
-    emailEC.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   nameEC.dispose();
+  //   usernameEC.dispose();
+  //   typeEC.dispose();
+  //   noEC.dispose();
+  //   dobEC.dispose();
+  //   phoneEC.dispose();
+  //   emailEC.dispose();
+  //   super.dispose();
+  // }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -226,7 +228,15 @@ class _SignUpForm3WidgetState extends State<SignUpForm3Widget> {
               ],
             ),
             const SizedBox(
-              height: 30,
+              height: 10,
+            ),
+            CustomOutlinedButton(
+              onPressed: () {
+                MyApp.navigatorKey.currentState!.pop();
+              },
+              disabled: false,
+              iconData: null,
+              text: 'Back',
             )
           ],
         ),

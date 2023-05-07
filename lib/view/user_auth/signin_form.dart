@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_button.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
-import 'package:wmsm_flutter/view/shared/passcode_field.dart';
-import 'package:wmsm_flutter/view/shared/phone_number_field.dart';
 import 'package:wmsm_flutter/view/user_auth/signup_form.dart';
 import 'package:wmsm_flutter/viewmodel/user_auth/authentication_model.dart';
 
@@ -19,8 +17,8 @@ class WidgetSignIn extends StatefulWidget {
 
 class _WidgetSignInState extends State<WidgetSignIn> {
   final AuthenticationViewModel auth = AuthenticationViewModel();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _passcode = TextEditingController();
+  // final TextEditingController _phoneController = TextEditingController();
+  // final TextEditingController _passcode = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthenticationViewModel authfunc = AuthenticationViewModel();
@@ -49,7 +47,7 @@ class _WidgetSignInState extends State<WidgetSignIn> {
                   const SizedBox(
                     height: 10,
                   ),
-                  emailField(
+                  EmailField(
                     emailController: _emailController,
                   ),
                 ],
@@ -80,13 +78,10 @@ class _WidgetSignInState extends State<WidgetSignIn> {
                     context: context,
                     text: "Reset Password",
                     onPressed: () {
-                    MyApp.navigatorKey.currentState!.pushNamed('/resetpwd');
-                    print("");
+                      MyApp.navigatorKey.currentState!.pushNamed('/resetpwd');
+                      print("");
                     })
               ],
-            ),
-            const SizedBox(
-              height: 10,
             ),
             Row(
               children: [
@@ -105,7 +100,7 @@ class _WidgetSignInState extends State<WidgetSignIn> {
                 ),
               ],
             ),
-            const WidgetSignUp()
+            const Center(child: WidgetSignUp())
           ]),
     );
   }

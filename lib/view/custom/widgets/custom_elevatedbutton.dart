@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomElevatedButton extends ElevatedButton {
-  const CustomElevatedButton({
+  CustomElevatedButton({
     Key? key,
     required VoidCallback onPressed,
     required Widget child,
@@ -17,5 +17,15 @@ class CustomElevatedButton extends ElevatedButton {
           autofocus: autofocus,
           clipBehavior: clipBehavior ?? Clip.none,
           child: child,
+          // child: LayoutBuilder(builder: (context, constraint) {
+          //   return SizedBox(
+          //     width: constraint.minWidth < 50 ? 100 : constraint.minWidth,
+          //     height: constraint.minHeight < 50 ? 50 : constraint.minHeight,
+          //     child: FittedBox(
+          //       fit: BoxFit.scaleDown,
+          //       child: child,
+          //     ),
+          //   );
+          // }),
         );
 }

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
+import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/user_auth/widgets/cover_content.dart';
+
+import '../../main.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});
@@ -62,14 +66,12 @@ class _ResetPasswordWidgetState extends State<ResetPasswordWidget> {
           children: <Widget>[
             Text(
               'Reset Password',
-              style: Theme.of(context).textTheme.displayLarge,
+              style: Theme.of(context).textTheme.headlineLarge,
             ),
-            Text(
-              'Enter your email and a link to reset your password will be sent to you via email.',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
+            const Text(
+                'Enter your email and a link to reset your password will be sent to you via email.'),
             const SizedBox(
-              height: 40,
+              height: 20,
             ),
             CustomTextFormField(
               context: context,
@@ -78,21 +80,33 @@ class _ResetPasswordWidgetState extends State<ResetPasswordWidget> {
               controller: _emailEC,
             ),
             const SizedBox(
-              height: 30,
+              height: 50,
             ),
-            Row(
+            Column(
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        snackBar("Sent link to email");
-                        //TODO: sent link to email
-                      }
-                    },
-                    child: const Text('CONFIRM EMAIL'),
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            snackBar("Sent link to email");
+                            //TODO: sent link to email
+                          }
+                        },
+                        child: const Text('CONFIRM EMAIL'),
+                      ),
+                    ),
+                  ],
                 ),
+                CustomOutlinedButton(
+                  onPressed: () {
+                    MyApp.navigatorKey.currentState!.pop();
+                  },
+                  disabled: false,
+                  iconData: null,
+                  text: 'Back',
+                )
               ],
             )
           ],

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 
+import 'custom/themes/custom_theme.dart';
+
 class IntroPage extends StatelessWidget {
   const IntroPage({super.key});
 
@@ -89,6 +91,8 @@ class ContentClass extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+
     return SizedBox(
       width: 300,
       // color: Colors.grey,
@@ -120,12 +124,15 @@ class ContentClass extends StatelessWidget {
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text(
                                   'Set your Goal',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text("Choose a level that's right for you"),
+                                Text(
+                                  "Choose a level that's right for you",
+                                  style: TextStyle(fontSize: deviceWidth / 35),
+                                ),
                               ],
                             )
                           ],
@@ -147,11 +154,14 @@ class ContentClass extends StatelessWidget {
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text('Track your steps',
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
-                                Text("Check yout step count daily"),
+                                Text(
+                                  "Check yout step count daily",
+                                  style: TextStyle(fontSize: deviceWidth / 35),
+                                )
                               ],
                             )
                           ],
@@ -173,14 +183,17 @@ class ContentClass extends StatelessWidget {
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text('Redeem rewards',
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                                 SizedBox(
-                                    width: 210,
-                                    child: Text(
-                                        "Stay motivated with these irresistible rewards")),
+                                  width: 200,
+                                  child: Text(
+                                      "Stay motivated with these irresistible rewards",
+                                      style: TextStyle(
+                                          fontSize: deviceWidth / 35)),
+                                )
                               ],
                             )
                           ],
@@ -196,12 +209,29 @@ class ContentClass extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Expanded(
-                      child: CustomElevatedButton(
-                          onPressed: () =>
-                              Navigator.of(context).pushNamed('/btmNav'),
-                          child: Text('CONNECT YOUR TRACKER TO START')),
-                    ),
+                    Expanded(child:
+                        LayoutBuilder(builder: (BuildContext, BoxConstraints) {
+                      if (BoxConstraints.minWidth < Config.minWidth + 30) {
+                        return CustomElevatedButton(
+                            onPressed: () =>
+                                Navigator.of(context).pushNamed('/btmNav'),
+                            child: Text(
+                              'CONNECT YOUR TRACKER TO START',
+                              style: TextStyle(fontSize: 12),
+                            ));
+                      } else {
+                        return CustomElevatedButton(
+                            onPressed: () =>
+                                Navigator.of(context).pushNamed('/btmNav'),
+                            child: Text('CONNECT YOUR TRACKER TO START'));
+                      }
+
+                      //   CustomElevatedButton(
+                      //       onPressed: () =>
+                      //           Navigator.of(context).pushNamed('/btmNav'),
+                      //       child: Text('CONNECT YOUR TRACKER TO START')),
+                      // ),
+                    }))
                   ],
                 ),
                 const SizedBox(
@@ -211,7 +241,7 @@ class ContentClass extends StatelessWidget {
                   children: [
                     Expanded(
                       child: CustomOutlinedButton(
-                        onPressed: () => print('skip'),
+                        onPressed: () => SnackBar(content: Text('SKIP')),
                         iconData: null,
                         text: 'SKIP',
                         disabled: false,

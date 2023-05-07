@@ -5,6 +5,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:wmsm_flutter/main.dart';
 
 import '../../custom/widgets/custom_elevatedbutton.dart';
+import '../../custom/widgets/custom_outlinedbutton.dart';
 import '../../shared/passcode_field.dart';
 import '../../shared/password_field.dart';
 import '../widgets/cover_content.dart';
@@ -67,6 +68,7 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // TODO: change high textformfield
             Text(
               'Set Up Password',
               style: Theme.of(context).textTheme.headlineMedium,
@@ -86,7 +88,7 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 10,
                 ),
                 passwordField(
                   passwordController: _password,
@@ -104,7 +106,7 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 10,
                 ),
                 passwordField(
                   passwordController: _passwordConfirm,
@@ -119,7 +121,9 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
               child: Text(
                 hasMatchError ? "*Password didn't match. Please try again" : "",
                 style: const TextStyle(
-                    color: Colors.red, fontSize: 12, fontWeight: FontWeight.w400),
+                    color: Colors.red,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400),
               ),
             ),
             const SizedBox(
@@ -131,7 +135,7 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
                   child: CustomElevatedButton(
                       onPressed: () {
                         // print(validatePasscode(_passcode.text.trim(), _passcodeConfirm.text.trim()));
-                        if(!_formKey.currentState!.validate()) {
+                        if (!_formKey.currentState!.validate()) {
                           return;
                         }
                         if (_password.text != _passwordConfirm.text) {
@@ -152,6 +156,17 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
                 ),
               ],
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            CustomOutlinedButton(
+              onPressed: () {
+                MyApp.navigatorKey.currentState!.pop();
+              },
+              disabled: false,
+              iconData: null,
+              text: 'Back',
+            )
           ],
         ),
       ),

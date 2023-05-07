@@ -55,3 +55,8 @@ final customTheme = ThemeData(
     backgroundColor: Colors.white,
   ),
 );
+
+class Config{
+
+  static var minWidth = 270;
+}
