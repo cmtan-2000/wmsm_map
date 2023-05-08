@@ -1,10 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
-import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
-import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/user_auth/widgets/cover_content.dart';
 
 import '../../main.dart';
+import '../shared/email_field.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});
@@ -40,10 +39,16 @@ class _ResetPasswordWidgetState extends State<ResetPasswordWidget> {
     _emailEC = TextEditingController();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _emailEC.dispose();
+  Future passwordReset() async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: _emailEC.text.trim(),
+      );
+      snackBar("Sent link to email");
+      MyApp.navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    } on FirebaseAuthException catch (e) {
+      snackBar("Invalid email entered");
+    }
   }
 
   snackBar(String? message) {
@@ -73,40 +78,24 @@ class _ResetPasswordWidgetState extends State<ResetPasswordWidget> {
             const SizedBox(
               height: 20,
             ),
-            CustomTextFormField(
-              context: context,
-              isNumberOnly: false,
-              labelText: 'Email',
-              controller: _emailEC,
+            EmailField(
+              emailController: _emailEC,
             ),
             const SizedBox(
               height: 50,
             ),
-            Column(
+            Row(
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            snackBar("Sent link to email");
-                            //TODO: sent link to email
-                          }
-                        },
-                        child: const Text('CONFIRM EMAIL'),
-                      ),
-                    ),
-                  ],
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        passwordReset();
+                      }
+                    },
+                    child: const Text('CONFIRM EMAIL'),
+                  ),
                 ),
-                CustomOutlinedButton(
-                  onPressed: () {
-                    MyApp.navigatorKey.currentState!.pop();
-                  },
-                  disabled: false,
-                  iconData: null,
-                  text: 'Back',
-                )
               ],
             )
           ],

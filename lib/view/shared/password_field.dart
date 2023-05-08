@@ -4,7 +4,7 @@ import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 
 // ignore: unused_element
 class passwordField extends StatefulWidget {
-  passwordField({
+  const passwordField({
     super.key,
     required TextEditingController passwordController,
   }) : _passwordController = passwordController;
@@ -28,6 +28,7 @@ class _passwordFieldState extends State<passwordField> {
             labelText: 'Password',
             context: context,
             controller: widget._passwordController,
+            textInputAction: TextInputAction.done,
             icon: Icons.password,
             obscureText: passenable,
             // suffix: Row(

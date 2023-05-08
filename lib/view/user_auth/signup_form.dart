@@ -13,7 +13,6 @@ class WidgetSignUp extends StatefulWidget {
 }
 
 class _WidgetSignUpState extends State<WidgetSignUp> {
-  final AuthenticationViewModel auth = AuthenticationViewModel();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class _WidgetSignUpState extends State<WidgetSignUp> {
                   text: 'Sign up',
                   context: context,
                   onPressed: () {
-                    MyApp.navigatorKey.currentState!.pushNamed('/signup3');
+                    MyApp.navigatorKey.currentState!.pushNamed('/userdetails');
                   },
                   textStyle: const TextStyle(
                     fontWeight: FontWeight.bold,

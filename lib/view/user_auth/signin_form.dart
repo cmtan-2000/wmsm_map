@@ -1,10 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_button.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/user_auth/signup_form.dart';
-import 'package:wmsm_flutter/viewmodel/user_auth/authentication_model.dart';
-
 import '../shared/email_field.dart';
 import '../shared/password_field.dart';
 
@@ -16,13 +15,18 @@ class WidgetSignIn extends StatefulWidget {
 }
 
 class _WidgetSignInState extends State<WidgetSignIn> {
-  final AuthenticationViewModel auth = AuthenticationViewModel();
-  // final TextEditingController _phoneController = TextEditingController();
-  // final TextEditingController _passcode = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final AuthenticationViewModel authfunc = AuthenticationViewModel();
   final _formKey = GlobalKey<FormState>();
+
+  snackBar(String? message) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message!),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +82,7 @@ class _WidgetSignInState extends State<WidgetSignIn> {
                     context: context,
                     text: "Reset Password",
                     onPressed: () {
-                      MyApp.navigatorKey.currentState!.pushNamed('/resetpwd');
-                      print("");
+                    MyApp.navigatorKey.currentState!.pushNamed('/resetpwd');
                     })
               ],
             ),
@@ -87,12 +90,9 @@ class _WidgetSignInState extends State<WidgetSignIn> {
               children: [
                 Expanded(
                   child: CustomElevatedButton(
-                    // onPressed: () => authfunc.login(),
                     onPressed: () {
-                      // Todo: Authentication
                       if (_formKey.currentState!.validate()) {
-                        print(_passwordController.text.trim());
-                        Navigator.of(context).pushNamed('/intro');
+                        signIn();
                       }
                     },
                     child: const Text('Login'),
@@ -105,10 +105,43 @@ class _WidgetSignInState extends State<WidgetSignIn> {
     );
   }
 
-  // Future signIn() async {
-  //   await FirebaseAuth.instance.signInWithEmailAndPassword(
-  //     email: _emailController.text.trim(),
-  //     password: _passwordController.text.trim(),
-  //   );
-  // }
+  Future signIn() async {
+    showDialog(
+      context: context, 
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    //wrong email message popup
+    void wrongEmailMessage() {
+      snackBar("Incorrect Email");
+      MyApp.navigatorKey.currentState!.pushNamed('/');
+
+    }
+
+    //wrong password message popup
+    void wrongPasswordMessage() {
+      snackBar("Incorrect Password");
+       MyApp.navigatorKey.currentState!.pushNamed('/');
+    }
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (e) {
+      //WRONG EMAIL
+      if(e.code == 'user-not-found') {
+        //show error to user
+        wrongEmailMessage();
+      }
+      else if(e.code == 'wrong-password') {
+        //show error to user
+        wrongPasswordMessage();
+      } 
+    }
+
+    MyApp.navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
 }

@@ -7,6 +7,7 @@ class EmailField extends StatelessWidget {
   const EmailField({
     super.key,
     required TextEditingController emailController,
+    required 
   }) : _emailController = emailController;
 
   final TextEditingController _emailController;
@@ -24,6 +25,7 @@ class EmailField extends StatelessWidget {
             keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             icon: Icons.email,
+            textInputAction: TextInputAction.next,
             validator: (value) {
               if(value.isEmpty) {
                 return "Please enter your email address";

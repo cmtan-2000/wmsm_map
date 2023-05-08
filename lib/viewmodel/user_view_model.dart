@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../model/user.dart';
+import '../model/users.dart';
 
 class UserViewModel with ChangeNotifier {
-  late User _user;
+  late Users _user;
 
   UserViewModel() {
-    _user = User(
+    _user = Users(
       fullname: '',
       username: '',
-      password: '',
+      //password: '',
       email: '',
       phoneNumber: '',
       dateOfBirth: '',
@@ -34,7 +34,7 @@ class UserViewModel with ChangeNotifier {
   void setUser(
       String fullname,
       String username,
-      String password,
+      //String password,
       String email,
       String phoneNumber,
       String dateOfBirth,
@@ -42,10 +42,10 @@ class UserViewModel with ChangeNotifier {
       double? height,
       String? gender,
       double? bmi) {
-    _user = User(
+    _user = Users(
       fullname: fullname,
       username: username,
-      password: password,
+      //password: password,
       email: email,
       phoneNumber: phoneNumber,
       dateOfBirth: dateOfBirth,

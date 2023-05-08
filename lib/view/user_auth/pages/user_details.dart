@@ -1,42 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:wmsm_flutter/view/custom/widgets/custom_dropdownbuttonformfield.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 
 import '../../../main.dart';
-import '../../custom/widgets/custom_outlinedbutton.dart';
+import '../../../model/users.dart';
+import '../../../viewmodel/shared/shared_pref.dart';
+import '../../shared/email_field.dart';
+import '../../shared/phone_number_field.dart';
 import '../widgets/cover_content.dart';
 
-class SignUpForm3 extends StatelessWidget {
-  const SignUpForm3({super.key});
+class UserDetails extends StatelessWidget {
+  const UserDetails({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const CoverContent(
-      content: SignUpForm3Widget(),
+      content: UserDetailsWidget(),
       title: 'Personal Information',
     );
   }
 }
 
-class SignUpForm3Widget extends StatefulWidget {
-  const SignUpForm3Widget({
+class UserDetailsWidget extends StatefulWidget {
+  const UserDetailsWidget({
     super.key,
   });
 
   @override
-  State<SignUpForm3Widget> createState() => _SignUpForm3WidgetState();
+  State<UserDetailsWidget> createState() => _UserDetailsWidgetState();
 }
 
-class _SignUpForm3WidgetState extends State<SignUpForm3Widget> {
+class _UserDetailsWidgetState extends State<UserDetailsWidget> {
   bool _selectedValue = false;
-  late String _selectedIc;
-
-  final List<String> _options = ['Identity Card', 'Passport', 'Others'];
 
   final _formKey = GlobalKey<FormState>();
-
+  late SharedPref sharedPref = SharedPref();
   late TextEditingController nameEC;
   late TextEditingController usernameEC;
   late TextEditingController typeEC;
@@ -47,29 +46,15 @@ class _SignUpForm3WidgetState extends State<SignUpForm3Widget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _selectedIc = _options[0];
     nameEC = TextEditingController();
     usernameEC = TextEditingController();
-    typeEC = TextEditingController();
     noEC = TextEditingController();
     dobEC = TextEditingController();
     phoneEC = TextEditingController();
     emailEC = TextEditingController();
+    typeEC = TextEditingController();
   }
-
-  // @override
-  // void dispose() {
-  //   nameEC.dispose();
-  //   usernameEC.dispose();
-  //   typeEC.dispose();
-  //   noEC.dispose();
-  //   dobEC.dispose();
-  //   phoneEC.dispose();
-  //   emailEC.dispose();
-  //   super.dispose();
-  // }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -81,9 +66,13 @@ class _SignUpForm3WidgetState extends State<SignUpForm3Widget> {
     if (picked != null) {
       setState(() {
         dobEC.text = DateFormat('yyyy-MM-dd').format(picked);
-        print(dobEC);
       });
     }
+  }
+
+  Future<void> storeData() async {
+    Users user = Users(fullname: nameEC.text, username: usernameEC.text, email: emailEC.text.trim(), phoneNumber: phoneEC.text, dateOfBirth: dobEC.text);
+    sharedPref.save("userData", user);
   }
 
   @override
@@ -108,7 +97,8 @@ class _SignUpForm3WidgetState extends State<SignUpForm3Widget> {
                 isNumberOnly: false,
                 labelText: 'Name (as per IC)',
                 hintText: 'TAN CHEE MING',
-                controller: nameEC),
+                controller: nameEC,
+            ),
             const SizedBox(
               height: 10,
             ),
@@ -118,29 +108,8 @@ class _SignUpForm3WidgetState extends State<SignUpForm3Widget> {
                 maxLength: 10,
                 labelText: 'Username',
                 hintText: 'John',
-                controller: usernameEC),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomDropdownButtonFormField(
-                labelText: 'Ic Type',
-                hintText: '',
-                selectedValue: _selectedIc,
-                items: _options,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedIc = newValue!;
-                  });
-                }),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomTextFormField(
-                context: context,
-                isNumberOnly: true,
-                labelText: 'IC number',
-                hintText: '',
-                controller: noEC),
+                controller: usernameEC,   
+              ),
             const SizedBox(
               height: 10,
             ),
@@ -148,26 +117,24 @@ class _SignUpForm3WidgetState extends State<SignUpForm3Widget> {
                 context: context,
                 isNumberOnly: true,
                 hintText: 'Date of Birth',
+                labelText: 'Date of Birth',
                 onTap: () => _selectDate(context),
                 readOnly: true,
                 suffixicon: const Icon(Icons.calendar_month),
-                controller: dobEC),
+                controller: dobEC,   
+              ),
             const SizedBox(
               height: 10,
             ),
-            CustomTextFormField(
-                context: context,
-                isNumberOnly: true,
-                hintText: 'Mobile',
-                controller: phoneEC),
+            phoneNumberField(
+                phoneController: phoneEC,  
+            ),
             const SizedBox(
               height: 10,
             ),
-            CustomTextFormField(
-                context: context,
-                isNumberOnly: false,
-                hintText: 'Email Address',
-                controller: emailEC),
+            EmailField(
+                emailController: emailEC,       
+            ),
             const SizedBox(
               height: 10,
             ),
@@ -221,22 +188,19 @@ class _SignUpForm3WidgetState extends State<SignUpForm3Widget> {
               children: [
                 Expanded(
                   child: CustomElevatedButton(
-                      onPressed: () => MyApp.navigatorKey.currentState!
-                          .pushNamed('/signup4'),
+                      onPressed: () {
+                        if(_formKey.currentState!.validate()) {
+                          sharedPref.remove('userData');
+                          storeData();
+                          MyApp.navigatorKey.currentState!.pushNamed('/setuppassword');
+                        }
+                      },
                       child: const Text('CONTINUE')),
                 ),
               ],
             ),
             const SizedBox(
-              height: 10,
-            ),
-            CustomOutlinedButton(
-              onPressed: () {
-                MyApp.navigatorKey.currentState!.pop();
-              },
-              disabled: false,
-              iconData: null,
-              text: 'Back',
+              height: 30,
             )
           ],
         ),

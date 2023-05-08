@@ -34,6 +34,7 @@ class phoneNumberField extends StatelessWidget {
         Expanded(
           child: CustomTextFormField(
             hintText: 'Phone Number',
+            labelText: 'Phone Number',
             context: context,
             isNumberOnly: true,
             controller: _phoneController,
@@ -44,19 +45,3 @@ class phoneNumberField extends StatelessWidget {
     );
   }
 }
-
-// class _buildPhoneInputField extends StatelessWidget {
-//   const _buildPhoneInputField({required TextEditingController phoneController})
-//       : _phoneController = phoneController;
-
-//   final TextEditingController _phoneController;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return CustomTextField(
-//       label: 'Phone No',
-//       controller: _phoneController,
-//       isNumberOnly: true,
-//     );
-//   }
-// }

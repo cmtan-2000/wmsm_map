@@ -17,9 +17,12 @@ class CustomTextFormField extends TextFormField {
       TextInputType? keyboardType,
       validator,
       bool? obscureText,
-      suffix})
+      suffix,
+      TextInputAction? textInputAction,
+      })
       : super(
           key: key,
+          textInputAction: textInputAction,
           maxLength: maxLength,
           controller: controller,
           onTap: onTap,
@@ -27,7 +30,6 @@ class CustomTextFormField extends TextFormField {
           keyboardType:
               isNumberOnly == true ? TextInputType.number : TextInputType.text,
           decoration: InputDecoration(
-            // hintText: hintText ?? 'Default_Hint',
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             labelText: labelText,

@@ -12,8 +12,8 @@ Future main() async {
   //     widgetsBinding:
   //         widgetsBinding); // FlutterNativeSplash.removeAfter(initialization);
 
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
   runApp(const MyApp());
   // FlutterNativeSplash.remove();
