@@ -7,8 +7,11 @@ class passwordField extends StatefulWidget {
   const passwordField({
     super.key,
     required TextEditingController passwordController,
-  }) : _passwordController = passwordController;
+    String? hintText,
+  })  : _passwordController = passwordController,
+        _hintText = hintText;
   final TextEditingController _passwordController;
+  final String? _hintText;
 
   @override
   State<passwordField> createState() => _passwordFieldState();
@@ -24,7 +27,7 @@ class _passwordFieldState extends State<passwordField> {
       children: <Widget>[
         Expanded(
           child: CustomTextFormField(
-            hintText: 'Password',
+            hintText: widget._hintText ?? 'Password',
             labelText: 'Password',
             context: context,
             controller: widget._passwordController,

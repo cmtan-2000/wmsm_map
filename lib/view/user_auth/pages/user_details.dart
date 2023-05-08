@@ -15,9 +15,72 @@ class UserDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CoverContent(
-      content: UserDetailsWidget(),
-      title: 'Personal Information',
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Column(children: [
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.white,
+                  Theme.of(context).primaryColor,
+                ],
+                stops: const [
+                  0.1,
+                  1.0,
+                ],
+                begin: FractionalOffset.topCenter,
+                end: FractionalOffset.bottomCenter,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 50,
+                ),
+                Container(
+                    margin: const EdgeInsets.all(16),
+                    width: 100,
+                    height: 100,
+                    child: Image.asset('assets/images/etiqa.png', width: 99)),
+                Expanded(child: SingleChildScrollView(
+                    child: LayoutBuilder(builder: (context, constraints) {
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height * 1.05,
+                    child: Column(
+                      children: [
+                        Text(
+                          'Personal Information',
+                          style: Theme.of(context).textTheme.displayMedium,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            width: MediaQuery.of(context).size.width,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(30),
+                              ),
+                            ),
+                            padding: const EdgeInsets.fromLTRB(30, 55, 30, 0),
+                            child: const UserDetailsWidget(),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                }))),
+              ],
+            ),
+          ),
+        )
+      ]),
     );
   }
 }
@@ -71,7 +134,12 @@ class _UserDetailsWidgetState extends State<UserDetailsWidget> {
   }
 
   Future<void> storeData() async {
-    Users user = Users(fullname: nameEC.text, username: usernameEC.text, email: emailEC.text.trim(), phoneNumber: phoneEC.text, dateOfBirth: dobEC.text);
+    Users user = Users(
+        fullname: nameEC.text,
+        username: usernameEC.text,
+        email: emailEC.text.trim(),
+        phoneNumber: phoneEC.text,
+        dateOfBirth: dobEC.text);
     sharedPref.save("userData", user);
   }
 
@@ -79,64 +147,61 @@ class _UserDetailsWidgetState extends State<UserDetailsWidget> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Form(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Set Up Profile',
-              style: Theme.of(context).textTheme.headlineLarge,
-            ),
             const Text(
-                'help us to understand you better by filling up your Profile Information below.'),
+                'Help us to understand you better by filling up your Profile Information below.'),
             const SizedBox(
-              height: 20,
+              height: 30,
             ),
             CustomTextFormField(
-                context: context,
-                isNumberOnly: false,
-                labelText: 'Name (as per IC)',
-                hintText: 'TAN CHEE MING',
-                controller: nameEC,
+              context: context,
+              isNumberOnly: false,
+              labelText: 'Name (as per IC)',
+              hintText: 'Ex: John Wick',
+              controller: nameEC,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            CustomTextFormField(
+              context: context,
+              isNumberOnly: false,
+              maxLength: 10,
+              labelText: 'Username',
+              hintText: 'Ex: John',
+              controller: usernameEC,
             ),
             const SizedBox(
               height: 10,
             ),
             CustomTextFormField(
-                context: context,
-                isNumberOnly: false,
-                maxLength: 10,
-                labelText: 'Username',
-                hintText: 'John',
-                controller: usernameEC,   
-              ),
-            const SizedBox(
-              height: 10,
+              context: context,
+              isNumberOnly: true,
+              hintText: 'Date of Birth',
+              labelText: 'Date of Birth',
+              onTap: () => _selectDate(context),
+              readOnly: true,
+              suffixicon: const Icon(Icons.calendar_month),
+              controller: dobEC,
             ),
-            CustomTextFormField(
-                context: context,
-                isNumberOnly: true,
-                hintText: 'Date of Birth',
-                labelText: 'Date of Birth',
-                onTap: () => _selectDate(context),
-                readOnly: true,
-                suffixicon: const Icon(Icons.calendar_month),
-                controller: dobEC,   
-              ),
             const SizedBox(
               height: 10,
             ),
             phoneNumberField(
-                phoneController: phoneEC,  
+              phoneController: phoneEC,
             ),
             const SizedBox(
               height: 10,
             ),
             EmailField(
-                emailController: emailEC,       
+              emailController: emailEC,
             ),
             const SizedBox(
-              height: 10,
+              height: 30,
             ),
             const Text('Are you a XXX Bank group empolyee? '),
             Row(
@@ -181,7 +246,7 @@ class _UserDetailsWidgetState extends State<UserDetailsWidget> {
                     ),
                     const Text('Yes'),
                   ],
-                )
+                ),
               ],
             ),
             Row(
@@ -189,10 +254,11 @@ class _UserDetailsWidgetState extends State<UserDetailsWidget> {
                 Expanded(
                   child: CustomElevatedButton(
                       onPressed: () {
-                        if(_formKey.currentState!.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           sharedPref.remove('userData');
                           storeData();
-                          MyApp.navigatorKey.currentState!.pushNamed('/setuppassword');
+                          MyApp.navigatorKey.currentState!
+                              .pushNamed('/setuppassword');
                         }
                       },
                       child: const Text('CONTINUE')),

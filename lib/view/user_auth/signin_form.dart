@@ -31,83 +31,76 @@ class _WidgetSignInState extends State<WidgetSignIn> {
   @override
   Widget build(BuildContext context) {
     return Form(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Sign In',
-              style: Theme.of(context).textTheme.headline1,
-            ),
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'EMAIL ADDRESS',
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  EmailField(
-                    emailController: _emailController,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'PASSWORD',
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  passwordField(
-                    passwordController: _passwordController,
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CustomTextButton(
-                    context: context,
-                    text: "Reset Password",
-                    onPressed: () {
-                    MyApp.navigatorKey.currentState!.pushNamed('/resetpwd');
-                    })
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: CustomElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        signIn();
-                      }
-                    },
-                    child: const Text('Login'),
-                  ),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Email Address',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          EmailField(
+            emailController: _emailController,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Text(
+            'Password',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          passwordField(
+            passwordController: _passwordController,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CustomTextButton(
+                context: context,
+                text: "Reset Password",
+                onPressed: () {
+                  MyApp.navigatorKey.currentState!.pushNamed('/resetpwd');
+                },
+                textStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-            const Center(child: WidgetSignUp())
-          ]),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: CustomElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      signIn();
+                    }
+                  },
+                  child: const Text('Login'),
+                ),
+              ),
+            ],
+          ),
+          const Center(child: WidgetSignUp()),
+        ],
+      ),
     );
   }
 
   Future signIn() async {
     showDialog(
-      context: context, 
+      context: context,
       barrierDismissible: false,
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
@@ -116,13 +109,12 @@ class _WidgetSignInState extends State<WidgetSignIn> {
     void wrongEmailMessage() {
       snackBar("Incorrect Email");
       MyApp.navigatorKey.currentState!.pushNamed('/');
-
     }
 
     //wrong password message popup
     void wrongPasswordMessage() {
       snackBar("Incorrect Password");
-       MyApp.navigatorKey.currentState!.pushNamed('/');
+      MyApp.navigatorKey.currentState!.pushNamed('/');
     }
 
     try {
@@ -132,14 +124,13 @@ class _WidgetSignInState extends State<WidgetSignIn> {
       );
     } on FirebaseAuthException catch (e) {
       //WRONG EMAIL
-      if(e.code == 'user-not-found') {
+      if (e.code == 'user-not-found') {
         //show error to user
         wrongEmailMessage();
-      }
-      else if(e.code == 'wrong-password') {
+      } else if (e.code == 'wrong-password') {
         //show error to user
         wrongPasswordMessage();
-      } 
+      }
     }
 
     MyApp.navigatorKey.currentState!.popUntil((route) => route.isFirst);

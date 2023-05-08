@@ -17,7 +17,7 @@ class phoneNumberField extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        SizedBox(
+        /* SizedBox(
           width: 30,
           height: 30,
           child: Image.network(
@@ -30,15 +30,16 @@ class phoneNumberField extends StatelessWidget {
         ),
         const SizedBox(
           width: 10,
-        ),
+        ), */
         Expanded(
           child: CustomTextFormField(
-            hintText: 'Phone Number',
+            hintText: 'Ex: 123456789',
             labelText: 'Phone Number',
             context: context,
             isNumberOnly: true,
             controller: _phoneController,
             icon: Icons.phone,
+            prefixText: '+60 ',
           ),
         )
       ],

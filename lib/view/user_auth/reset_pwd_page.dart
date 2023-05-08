@@ -69,6 +69,50 @@ class _ResetPasswordWidgetState extends State<ResetPasswordWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            /* Text(
+              'Reset Password',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ), */
+            /* const SizedBox(
+              height: 20,
+            ), */
+            const Text(
+                'Enter your email and a link to reset your password will be sent to you via email.'),
+            const SizedBox(
+              height: 20,
+            ),
+            EmailField(
+              emailController: _emailEC,
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        passwordReset();
+                      }
+                    },
+                    child: const Text('CONFIRM EMAIL'),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+
+    /* return SingleChildScrollView(
+      child: Form(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
             Text(
               'Reset Password',
               style: Theme.of(context).textTheme.headlineLarge,
@@ -101,6 +145,6 @@ class _ResetPasswordWidgetState extends State<ResetPasswordWidget> {
           ],
         ),
       ),
-    );
+    ); */
   }
 }
