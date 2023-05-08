@@ -1,36 +1,40 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:wmsm_flutter/main.dart';
+import 'package:wmsm_flutter/viewmodel/shared/shared_pref.dart';
 
+import '../../../model/users.dart';
 import '../../custom/widgets/custom_elevatedbutton.dart';
-import '../../shared/passcode_field.dart';
 import '../../shared/password_field.dart';
 import '../widgets/cover_content.dart';
 
-class SignUpForm5 extends StatelessWidget {
-  const SignUpForm5({super.key});
+class SetupPassword extends StatelessWidget {
+  const SetupPassword({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const CoverContent(
-      content: SignUpForm5Widget(),
+      content: SetupPasswordWidget(),
       title: 'Password',
     );
   }
 }
 
-class SignUpForm5Widget extends StatefulWidget {
-  const SignUpForm5Widget({super.key});
+class SetupPasswordWidget extends StatefulWidget {
+  const SetupPasswordWidget({super.key});
 
   @override
-  State<SignUpForm5Widget> createState() => _WidgetSignUp5State();
+  State<SetupPasswordWidget> createState() => _SetupPasswordState();
 }
 
-class _WidgetSignUp5State extends State<SignUpForm5Widget> {
+class _SetupPasswordState extends State<SetupPasswordWidget> {
   final _formKey = GlobalKey<FormState>();
   bool hasMatchError = false;
+  SharedPref sharedPref = SharedPref();
+  Users userLoad = Users(dateOfBirth: '', email: '', fullname: '', phoneNumber: '', username: '');
 
   late TextEditingController _password;
   late TextEditingController _passwordConfirm;
@@ -40,14 +44,14 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
     _password = TextEditingController();
     _passwordConfirm = TextEditingController();
     super.initState();
+    initialGetSavedData();
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _password.dispose();
-    _passwordConfirm.dispose();
-    super.dispose();
+  void initialGetSavedData() async {
+    Users user = Users.fromJson(await sharedPref.read("userData"));
+    setState(() {
+      userLoad = user;
+    });
   }
 
   snackBar(String? message) {
@@ -59,6 +63,35 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
     );
   }
 
+    Future signUp() async {
+    showDialog(
+      context: context, 
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: userLoad.email, 
+        password: _password.text.trim(),
+      );
+      addUserDetails();
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
+
+  }
+
+  Future addUserDetails() async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'fullname' : userLoad.fullname,
+      'username' : userLoad.username,
+      'email' : userLoad.email,
+      'phoneNumber' : userLoad.phoneNumber,
+      'dateOfBirth' : userLoad.dateOfBirth,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -68,7 +101,7 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Set Up Password',
+              'Set Up Your Password',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const Text(
@@ -82,7 +115,7 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Set your password',
+                  'Password',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(
@@ -100,7 +133,7 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Confirm your password',
+                  'Confirm Password',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(
@@ -130,7 +163,6 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
                 Expanded(
                   child: CustomElevatedButton(
                       onPressed: () {
-                        // print(validatePasscode(_passcode.text.trim(), _passcodeConfirm.text.trim()));
                         if(!_formKey.currentState!.validate()) {
                           return;
                         }
@@ -141,12 +173,11 @@ class _WidgetSignUp5State extends State<SignUpForm5Widget> {
                           return;
                         }
                         setState(() => hasMatchError = false);
-                        snackBar("submit");
-                        MyApp.navigatorKey.currentState!.pushNamed('/');
-                        // Todo: logic
-                        // Data can used:
-                        // _passcode.text
-                        // _passcodeConfirm.text
+                        signUp().then((value){
+                          snackBar("Sign Up Successfully!");
+                          sharedPref.remove('users');
+                          MyApp.navigatorKey.currentState!.popUntil((route) => route.isFirst);
+                        });
                       },
                       child: const Text('COMPLETE')),
                 ),

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:wmsm_flutter/model/user.dart';
+import 'package:wmsm_flutter/model/users.dart';
 
 class CoverContent extends StatelessWidget {
   const CoverContent(
@@ -12,7 +12,7 @@ class CoverContent extends StatelessWidget {
 
   final String title;
   final Widget content;
-  final User user; //*user fullname and username
+  final Users user; //*user fullname and username
 
   // void _navigateToNextScreen(BuildContext context) {
   //   Navigator.of(context).push(

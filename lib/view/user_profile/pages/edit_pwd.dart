@@ -39,7 +39,8 @@ class _EditPwdPageWidgetState extends State<EditPwdPageWidget> {
   void initState() {
     super.initState();
     pwdEC = TextEditingController();
-    _password = user.password; //*Init display user saved dao der password
+    _password = "user.password";
+    //_password = user.password; //*Init display user saved dao der password
   }
 
   snackBar(String? message) {

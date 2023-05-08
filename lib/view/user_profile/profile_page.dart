@@ -1,10 +1,11 @@
 //This is profile page
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:wmsm_flutter/main.dart';
-import 'package:wmsm_flutter/model/user.dart';
+import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/cover_profile.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/profile_menu_widget.dart';
 
@@ -12,11 +13,11 @@ import 'package:wmsm_flutter/view/user_profile/widgets/profile_menu_widget.dart'
 DateTime dob = DateTime(2005, 01, 01);
 
 //*Testing with dummy data (shud use 'get, set')
-User user = User(
+Users user = Users(
   fullname: 'Siew Yu Xuan',
   username: 'swx000',
   email: 'eunicelim1520@gmail.com',
-  password: '******',
+  //password: '******',
   phoneNumber: '011-1234567',
   //*convert the date format to string
   dateOfBirth: DateFormat('MMM d, yyyy').format(dob),
@@ -195,7 +196,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                 endIcon: true,
               ),
               ProfileMenuWidget(
-                titleText: user.password,
+                titleText: "user.password",
                 icon: LineAwesomeIcons.lock,
                 color: Colors.black,
                 onTap: () {
@@ -235,6 +236,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                 color: Colors.black,
                 endIcon: false,
                 onTap: () {
+                  FirebaseAuth.instance.signOut();
                   MyApp.navigatorKey.currentState!.pushNamed('/');
                 },
               ),
