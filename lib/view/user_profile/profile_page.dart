@@ -40,7 +40,7 @@ class ProfilePage extends StatelessWidget {
             print('fullname: $fullname');
             print('username: $username');
             print('phoneNumber: $phoneNumber');
-
+          
             users = Users(
                 dateOfBirth: dob,
                 email: email,
