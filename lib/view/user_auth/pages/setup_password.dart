@@ -100,10 +100,6 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Set Up Your Password',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
             const Text(
               'Help us to understand you better by filling up your Profile Information below. ',
               textAlign: TextAlign.justify,
@@ -119,7 +115,7 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 10,
                 ),
                 passwordField(
                   passwordController: _password,
@@ -127,7 +123,7 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
               ],
             ),
             const SizedBox(
-              height: 30,
+              height: 20,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,10 +133,11 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 10,
                 ),
                 passwordField(
                   passwordController: _passwordConfirm,
+                  hintText: "Confirm your password",
                 ),
               ],
             ),
@@ -156,9 +153,6 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                     fontSize: 12,
                     fontWeight: FontWeight.w400),
               ),
-            ),
-            const SizedBox(
-              height: 20,
             ),
             Row(
               children: [

@@ -9,6 +9,7 @@ consist of:
 
 import 'package:flutter/material.dart';
 import 'package:wmsm_flutter/view/user_auth/signin_form.dart';
+import 'package:wmsm_flutter/view/user_auth/widgets/cover_content.dart';
 
 import '../custom/themes/custom_theme.dart';
 import '../custom/widgets/custom_outlinedbutton.dart';
@@ -44,32 +45,41 @@ class AuthPage extends StatelessWidget {
                   height: 50,
                 ),
                 Container(
-                    margin: EdgeInsets.all(16),
+                    margin: const EdgeInsets.all(16),
                     width: 100,
                     height: 100,
                     child: Image.asset('assets/images/etiqa.png', width: 99)),
-                const SizedBox(
-                  height: 20,
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.8,
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 16),
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(30),
-                          ),
+                Expanded(child: SingleChildScrollView(
+                    child: LayoutBuilder(builder: (context, constraints) {
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.85,
+                    child: Column(
+                      children: [
+                        Text(
+                          'Sign In',
+                          style: Theme.of(context).textTheme.displayMedium,
                         ),
-                        padding: EdgeInsets.fromLTRB(30, 55, 30, 0),
-                        child: const ContentClass(),
-                      ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            width: MediaQuery.of(context).size.width,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(30),
+                              ),
+                            ),
+                            padding: const EdgeInsets.fromLTRB(30, 55, 30, 0),
+                            child: ContentClass(),
+                          ),
+                        )
+                      ],
                     ),
-                  ),
-                )
+                  );
+                }))),
               ],
             ),
           ),

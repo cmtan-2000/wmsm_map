@@ -7,9 +7,13 @@ class passwordField extends StatefulWidget {
   const passwordField({
     super.key,
     required TextEditingController passwordController,
-  }) : _passwordController = passwordController;
+    String? hintText,
+    this.textInputAction,
+  })  : _passwordController = passwordController,
+        _hintText = hintText;
   final TextEditingController _passwordController;
-
+  final String? _hintText;
+  final TextInputAction? textInputAction;
   @override
   State<passwordField> createState() => _passwordFieldState();
 }
@@ -24,13 +28,14 @@ class _passwordFieldState extends State<passwordField> {
       children: <Widget>[
         Expanded(
           child: CustomTextFormField(
-            hintText: 'Password',
+            hintText: widget._hintText ?? 'Password',
             labelText: 'Password',
             context: context,
             controller: widget._passwordController,
-            textInputAction: TextInputAction.done,
+            textInputAction: widget.textInputAction,
             icon: Icons.password,
             obscureText: passenable,
+
             // suffix: Row(
             //   children: [
             //     IconButton(
@@ -53,6 +58,9 @@ class _passwordFieldState extends State<passwordField> {
             validator: (value) {
               if (value.isEmpty) {
                 return "Please enter your password";
+              }
+              if (value.length < 6) {
+                return "Password must be more than 6 characters";
               }
               return null;
             },

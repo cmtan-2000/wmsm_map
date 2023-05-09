@@ -13,13 +13,32 @@ class WidgetSignUp extends StatefulWidget {
 }
 
 class _WidgetSignUpState extends State<WidgetSignUp> {
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth > Config.minWidth) {
-          return Row(
+        //if (constraints.maxWidth > Config.minWidth) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Don't have an account? "),
+            CustomTextButton(
+                text: 'Sign up',
+                context: context,
+                onPressed: () {
+                  MyApp.navigatorKey.currentState!.pushNamed('/userdetails');
+                },
+                textStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+                minimumSize: const Size(0, 0)),
+            const SizedBox(
+              height: 20,
+            ),
+          ],
+        );
+        /* } else {
+          return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text("Don't have an account? "),
@@ -35,24 +54,7 @@ class _WidgetSignUpState extends State<WidgetSignUp> {
                   minimumSize: const Size(0, 0)),
             ],
           );
-        } else {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Don't have an account? "),
-              CustomTextButton(
-                  text: 'Sign up',
-                  context: context,
-                  onPressed: () {
-                    MyApp.navigatorKey.currentState!.pushNamed('/signup3');
-                  },
-                  textStyle: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  minimumSize: const Size(0, 0)),
-            ],
-          );
-        }
+        } */
       },
     );
   }

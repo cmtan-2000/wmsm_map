@@ -5,7 +5,7 @@ import 'package:wmsm_flutter/view/custom/themes/custom_theme.dart';
 import 'viewmodel/user_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-Future main() async {
+void main() async {
   // // Keep Splash Screen until initialization has completed!
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   // FlutterNativeSplash.preserve(
