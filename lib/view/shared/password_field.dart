@@ -9,11 +9,14 @@ class passwordField extends StatefulWidget {
     required TextEditingController passwordController,
     String? hintText,
     this.textInputAction,
+    String? Function(dynamic value)? validator,
   })  : _passwordController = passwordController,
-        _hintText = hintText;
+        _hintText = hintText,
+        _validator = validator;
   final TextEditingController _passwordController;
   final String? _hintText;
   final TextInputAction? textInputAction;
+  final String? Function(dynamic value)? _validator;
   @override
   State<passwordField> createState() => _passwordFieldState();
 }
@@ -55,15 +58,13 @@ class _passwordFieldState extends State<passwordField> {
             //   ],
             // ),
 
-            validator: (value) {
-              if (value.isEmpty) {
-                return "Please enter your password";
-              }
-              if (value.length < 6) {
-                return "Password must be more than 6 characters";
-              }
-              return null;
-            },
+            validator: widget._validator ??
+                (value) {
+                  if (value.isEmpty) {
+                    return "Please enter your password";
+                  }
+                  return null;
+                },
           ),
         )
       ],

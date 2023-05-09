@@ -95,7 +95,8 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
       'gender': '',
       'weight': 0,
       'height': 0,
-      'profilePicture': '',
+      'profile_picture':
+          'https://i1.sndcdn.com/avatars-000307598863-zfe44f-t500x500.jpg',
       'dateOfBirth': userLoad.dateOfBirth,
     });
   }
@@ -126,8 +127,13 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                   height: 10,
                 ),
                 passwordField(
-                  passwordController: _password,
-                ),
+                    passwordController: _password,
+                    validator: (value) {
+                      if (value.length < 6) {
+                        return "Please enter at least 6 characters";
+                      }
+                      return null;
+                    }),
               ],
             ),
             const SizedBox(
@@ -144,9 +150,13 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                   height: 10,
                 ),
                 passwordField(
-                  passwordController: _passwordConfirm,
-                  hintText: "Confirm your password",
-                ),
+                    passwordController: _passwordConfirm,
+                    hintText: "Confirm your password",
+                    validator: (value) {
+                      if (value.length < 6) {
+                        return "Please enter at least 6 characters";
+                      }
+                    }),
               ],
             ),
             const SizedBox(

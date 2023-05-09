@@ -57,7 +57,7 @@ class _EditPhonePageWidgetState extends State<EditPhonePageWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Old phone number',
+            'Current Phone Number',
             style: Theme.of(context)
                 .textTheme
                 .displaySmall
@@ -79,7 +79,7 @@ class _EditPhonePageWidgetState extends State<EditPhonePageWidget> {
           ),
           const SizedBox(height: 50.0),
           Text(
-            'New phone number',
+            'New Phone Number',
             style: Theme.of(context)
                 .textTheme
                 .displaySmall

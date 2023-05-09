@@ -75,7 +75,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
 
   Widget getRadialGauge() {
     if (currentBMIValue == 0) {
-      bmiResult = 'Please enter BMI info to calculate your BMI';
+      bmiResult = 'Please enter your info to calculate your BMI';
       bmitextColor = Colors.grey;
     } else if (currentBMIValue > 0 && currentBMIValue < 18.5) {
       bmiResult = 'Underweight';
@@ -260,7 +260,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                       ),
                       ProfileMenuWidget(
                         //titleText: user.phoneNumber,
-                        titleText: phoneNumber,
+                        titleText: '+60 $phoneNumber',
 
                         icon: LineAwesomeIcons.phone,
                         color: Colors.black,
@@ -279,7 +279,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         endIcon: true,
                       ),
                       ProfileMenuWidget(
-                        titleText: 'Passwordxxx',
+                        titleText: 'Password',
                         icon: LineAwesomeIcons.lock,
                         color: Colors.black,
                         onTap: () {

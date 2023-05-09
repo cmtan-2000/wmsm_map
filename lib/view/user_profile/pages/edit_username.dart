@@ -68,7 +68,7 @@ class _EditUserNamePageWidgetState extends State<EditUserNamePageWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Old username',
+            'Current Username',
             style: Theme.of(context)
                 .textTheme
                 .displaySmall
@@ -90,7 +90,7 @@ class _EditUserNamePageWidgetState extends State<EditUserNamePageWidget> {
           ),
           const SizedBox(height: 50.0),
           Text(
-            'New username',
+            'New Username',
             style: Theme.of(context)
                 .textTheme
                 .displaySmall
@@ -100,7 +100,7 @@ class _EditUserNamePageWidgetState extends State<EditUserNamePageWidget> {
           CustomTextFormField(
             context: context,
             isNumberOnly: false,
-            labelText: 'New username',
+            labelText: 'New Username',
             hintText: '',
             controller: usernameEC,
           ),

@@ -62,7 +62,7 @@ class _EditPwdPageWidgetState extends State<EditPwdPageWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Old password',
+            'Current Password',
             style: Theme.of(context)
                 .textTheme
                 .displaySmall
@@ -84,7 +84,7 @@ class _EditPwdPageWidgetState extends State<EditPwdPageWidget> {
           ),
           const SizedBox(height: 50.0),
           Text(
-            'New password',
+            'New Password',
             style: Theme.of(context)
                 .textTheme
                 .displaySmall
