@@ -42,6 +42,7 @@ class _BMIPageWidgetState extends State<BMIPageWidget> {
   late TextEditingController heightEC;
   late TextEditingController bmiEC;
   final _formKey = GlobalKey<FormState>();
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -60,172 +61,212 @@ class _BMIPageWidgetState extends State<BMIPageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CustomDropdownButtonFormField(
-              labelText: 'Gender',
-              hintText: '',
-              selectedValue: _selectedGender,
-              items: _genderOptions,
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedGender = newValue!;
-                });
-              }),
-          const SizedBox(
-            height: 20,
-          ),
-          //*Weight text field
-          CustomTextFormField(
-              context: context,
-              isNumberOnly: true,
-              maxLength: 5,
-              labelText: 'Weight (kg)',
-              controller: weightEC),
-          const SizedBox(
-            height: 20,
-          ),
-          //*Height text field
-          CustomTextFormField(
-              context: context,
-              isNumberOnly: true,
-              maxLength: 5,
-              labelText: 'Height (cm)',
-              controller: heightEC),
-          const SizedBox(
-            height: 35,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: CustomElevatedButton(
-                    onPressed: () {
-                      //TODO: after that need refine the code here!
-                      String bmiResult;
-                      Color bmiResultColor;
+    return StreamBuilder(
+        stream: db
+            .collection("users")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasData) {
+            final weightSnapshot = snapshot.data!['weight'];
+            final heighSnapshot = snapshot.data!['height'];
+            final genderSnapshot = snapshot.data!['gender'];
+            bool genderIsSet = false;
 
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
+            print("Gender snapshot: $genderSnapshot");
+            print("outside genderIsSet: $genderIsSet");
 
-                        final double weight = double.parse(weightEC.text);
-                        final double height = double.parse(heightEC.text);
-                        FirebaseFirestore db = FirebaseFirestore.instance;
-                        final double bmi = weight / (height * height) * 10000;
-                        bmiEC.text = bmi.toStringAsFixed(2);
-                        double bmiDouble = double.parse(bmiEC.text);
+            if (genderSnapshot != "") {
+              genderIsSet = true;
+              print("genderIsSet: $genderIsSet");
+            }
 
-                        db
-                            .collection("users")
-                            .doc(
-                              FirebaseAuth.instance.currentUser!.uid,
-                            )
-                            .update({
-                          "gender": _selectedGender,
-                          "weight": weight,
-                          "height": height,
-                          "bmi": bmiDouble,
-                        }).then((value) {
-                          print(weight);
-                          print(height);
-                          print(bmi);
-                          print(_selectedGender);
-                          print('weight, height, bmi store success');
-                        }).catchError((error) =>
-                                print('Failed to update bmi: $error'));
+            if (weightSnapshot != 0.0) {
+              weightEC.text = weightSnapshot.toString();
+            }
 
-                        if (bmi < 18.5) {
-                          bmiResult = 'Underweight';
-                          bmiResultColor = Colors.blue;
-                        } else if (bmi >= 18.5 && bmi < 25) {
-                          bmiResult = 'Normal';
-                          bmiResultColor = Colors.green;
-                        } else if (bmi >= 25 && bmi < 30) {
-                          bmiResult = 'Overweight';
-                          bmiResultColor = Colors.yellow;
-                        } else if (bmi >= 30 && bmi < 35) {
-                          bmiResult = 'Obese';
-                          bmiResultColor = Colors.orange;
-                        } else {
-                          bmiResult = 'Extremely Obese';
-                          bmiResultColor = Colors.red;
-                        }
+            if (heighSnapshot != 0.0) {
+              heightEC.text = heighSnapshot.toString();
+            }
 
-                        print('weight: $weight');
-                        print('height: $height');
-                        print('bmi: ${bmiEC.text}');
-                        print('bmi: $bmiResult');
+            return Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomDropdownButtonFormField(
+                      labelText: 'Gender',
+                      hintText: '',
+                      selectedValue:
+                          genderIsSet ? genderSnapshot : _selectedGender,
+                      items: _genderOptions,
+                      onChanged: genderIsSet
+                          ? null
+                          : (newValue) {
+                              setState(() {
+                                _selectedGender = newValue!;
+                              });
+                            }),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  //*Weight text field
+                  CustomTextFormField(
+                      context: context,
+                      isNumberOnly: true,
+                      maxLength: 5,
+                      labelText: 'Weight (kg)',
+                      controller: weightEC),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  //*Height text field
+                  CustomTextFormField(
+                      context: context,
+                      isNumberOnly: true,
+                      maxLength: 5,
+                      labelText: 'Height (cm)',
+                      controller: heightEC),
+                  const SizedBox(
+                    height: 35,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomElevatedButton(
+                            onPressed: () {
+                              String bmiResult;
+                              Color bmiResultColor;
 
-                        //*show modal bmi result
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Container(
-                                padding: const EdgeInsets.all(20.0),
-                                height: 250,
-                                child: Center(
-                                  child: Column(children: [
-                                    const ListTile(
-                                      leading: Icon(
-                                          LineAwesomeIcons.info_circle,
-                                          color: Colors.black),
-                                      title: Text(
-                                        'BMI Result',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+
+                                final double weight =
+                                    double.parse(weightEC.text);
+                                final double height =
+                                    double.parse(heightEC.text);
+                                FirebaseFirestore db =
+                                    FirebaseFirestore.instance;
+                                final double bmi =
+                                    weight / (height * height) * 10000;
+                                bmiEC.text = bmi.toStringAsFixed(2);
+                                double bmiDouble = double.parse(bmiEC.text);
+
+                                db
+                                    .collection("users")
+                                    .doc(
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                    )
+                                    .update({
+                                  "gender": _selectedGender,
+                                  "weight": weight,
+                                  "height": height,
+                                  "bmi": bmiDouble,
+                                }).then((value) {
+                                  print(weight);
+                                  print(height);
+                                  print(bmi);
+                                  print(_selectedGender);
+                                  print('weight, height, bmi store success');
+                                }).catchError((error) =>
+                                        print('Failed to update bmi: $error'));
+
+                                if (bmi < 18.5) {
+                                  bmiResult = 'Underweight';
+                                  bmiResultColor = Colors.blue;
+                                } else if (bmi >= 18.5 && bmi < 25) {
+                                  bmiResult = 'Normal';
+                                  bmiResultColor = Colors.green;
+                                } else if (bmi >= 25 && bmi < 30) {
+                                  bmiResult = 'Overweight';
+                                  bmiResultColor = Colors.yellow;
+                                } else if (bmi >= 30 && bmi < 35) {
+                                  bmiResult = 'Obese';
+                                  bmiResultColor = Colors.orange;
+                                } else {
+                                  bmiResult = 'Extremely Obese';
+                                  bmiResultColor = Colors.red;
+                                }
+
+                                print('weight: $weight');
+                                print('height: $height');
+                                print('bmi: ${bmiEC.text}');
+                                print('bmi: $bmiResult');
+
+                                //*show modal bmi result
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Container(
+                                        padding: const EdgeInsets.all(20.0),
+                                        height: 250,
+                                        child: Center(
+                                          child: Column(children: [
+                                            const ListTile(
+                                              leading: Icon(
+                                                  LineAwesomeIcons.info_circle,
+                                                  color: Colors.black),
+                                              title: Text(
+                                                'BMI Result',
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Text(
+                                              bmiEC.text,
+                                              style: const TextStyle(
+                                                  fontSize: 40,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Text(
+                                              bmiResult,
+                                              style: TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: bmiResultColor),
+                                            ),
+                                          ]),
                                         ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      bmiEC.text,
-                                      style: const TextStyle(
-                                          fontSize: 40,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      bmiResult,
-                                      style: TextStyle(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold,
-                                          color: bmiResultColor),
-                                    ),
-                                  ]),
-                                ),
-                              );
-                            });
-                      }
-                    },
-                    child: const Text('CALCULATE')),
+                                      );
+                                    });
+                              }
+                            },
+                            child: const Text('CALCULATE')),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomOutlinedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          disabled: true,
+                          iconData: null,
+                          text: 'BACK',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: CustomOutlinedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  disabled: true,
-                  iconData: null,
-                  text: 'BACK',
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-        ],
-      ),
-    );
+            );
+          }
+          return const Text('Error');
+        });
   }
 }

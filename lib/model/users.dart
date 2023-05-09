@@ -18,20 +18,20 @@ class Users {
       this.weight,
       this.height,
       this.gender,
-      this.bmi}); 
+      this.bmi});
 
   Users.fromJson(Map<String, dynamic> json)
-    : fullname = json['fullname'],
-      username = json['username'],
-      email = json['email'],
-      phoneNumber = json['phoneNumber'],
-      dateOfBirth = json['dateOfBirth'];
+      : fullname = json['fullname'],
+        username = json['username'],
+        email = json['email'],
+        phoneNumber = json['phoneNumber'],
+        dateOfBirth = json['dateOfBirth'];
 
   Map<String, dynamic> toJson() => {
-    'fullname' : fullname,
-    'username' : username,
-    'email' : email,
-    'phoneNumber' : phoneNumber,
-    'dateOfBirth' : dateOfBirth,
-  };  
+        'fullname': fullname,
+        'username': username,
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'dateOfBirth': dateOfBirth,
+      };
 }
