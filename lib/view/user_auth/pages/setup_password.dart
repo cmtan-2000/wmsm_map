@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/viewmodel/shared/shared_pref.dart';
 
@@ -64,7 +65,7 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
     );
   }
 
-  Future signUp() async {
+  Future<bool> signUp() async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -79,7 +80,13 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
       addUserDetails();
     } on FirebaseAuthException catch (e) {
       print(e);
+      if (e is PlatformException) {
+        if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+          return false;
+        }
+      }
     }
+    return true;
   }
 
   Future addUserDetails() async {
@@ -129,10 +136,11 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                 passwordField(
                     passwordController: _password,
                     validator: (value) {
-                      if (value.length < 6) {
+                      if (value.isEmpty) {
+                        return "Please enter your password";
+                      } else if (value.length < 6) {
                         return "Please enter at least 6 characters";
                       }
-                      return null;
                     }),
               ],
             ),
@@ -153,7 +161,9 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                     passwordController: _passwordConfirm,
                     hintText: "Confirm your password",
                     validator: (value) {
-                      if (value.length < 6) {
+                      if (value.isEmpty) {
+                        return "Please enter your password";
+                      } else if (value.length < 6) {
                         return "Please enter at least 6 characters";
                       }
                     }),
@@ -176,7 +186,7 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
               children: [
                 Expanded(
                   child: CustomElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (!_formKey.currentState!.validate()) {
                           return;
                         }
@@ -187,12 +197,15 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                           return;
                         }
                         setState(() => hasMatchError = false);
-                        signUp().then((value) {
+                        if (!await signUp()) {
                           snackBar("Sign Up Successfully!");
                           sharedPref.remove('users');
                           MyApp.navigatorKey.currentState!
                               .popUntil((route) => route.isFirst);
-                        });
+                        } else {
+                          snackBar("This email already has an account.");
+                          MyApp.navigatorKey.currentState!.pop();
+                        }
                       },
                       child: const Text('COMPLETE')),
                 ),
