@@ -199,13 +199,12 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                         setState(() => hasMatchError = false);
                         if (!await signUp()) {
                           snackBar("Sign Up Successfully!");
-                          sharedPref.remove('users');
-                          MyApp.navigatorKey.currentState!
-                              .popUntil((route) => route.isFirst);
                         } else {
-                          snackBar("This email already has an account.");
-                          MyApp.navigatorKey.currentState!.pop();
+                          snackBar("Email already in use!");
                         }
+                        sharedPref.remove('users');
+                        MyApp.navigatorKey.currentState!
+                            .popUntil((route) => route.isFirst);
                       },
                       child: const Text('COMPLETE')),
                 ),

@@ -173,6 +173,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
+        margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(10.0),

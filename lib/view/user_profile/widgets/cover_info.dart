@@ -60,6 +60,9 @@ class CoverInfo extends StatelessWidget {
               right: 10,
               child: Column(
                 children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Card(
                       color: Colors.white,
                       child: Padding(

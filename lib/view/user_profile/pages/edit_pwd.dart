@@ -79,7 +79,7 @@ class _EditPwdPageWidgetState extends State<EditPwdPageWidget> {
     } catch (e) {
       return false;
     }
-    return false;
+    return true;
   }
 
   @override
@@ -180,16 +180,15 @@ class _EditPwdPageWidgetState extends State<EditPwdPageWidget> {
                             return;
                           }
                           setState(() => hasMatchError = false);
-                          if (!await checkCurrentPassword(
-                              currentpwdEC.text, pwdEC.text)) {
-                            setState(() {
-                              hasPwdError = true;
-                            });
-                            return;
-                          }
-                          setState(() => hasPwdError = false);
-                          snackBar("Update successfully!");
-                          MyApp.navigatorKey.currentState!.pop();
+                          checkCurrentPassword(currentpwdEC.text, pwdEC.text)
+                              .then((value) {
+                            if (!value) {
+                              snackBar("Update successfully!");
+                              MyApp.navigatorKey.currentState!.pop();
+                            } else {
+                              snackBar("Incorrect current password");
+                            }
+                          });
                         }
                       },
                       child: const Text('UPDATE')),
