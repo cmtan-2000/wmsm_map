@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_dropdownbuttonformfield.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
+import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/cover_info.dart';
 
@@ -20,7 +23,7 @@ class _BMIPageState extends State<BMIPage> {
     return CoverInfo(
       content: const BMIPageWidget(),
       title: 'BMI Info',
-      user: user,
+      users: users,
     );
   }
 }
@@ -101,14 +104,37 @@ class _BMIPageWidgetState extends State<BMIPageWidget> {
                 child: CustomElevatedButton(
                     onPressed: () {
                       //TODO: after that need refine the code here!
-                      final double weight = double.parse(weightEC.text);
-                      final double height = double.parse(heightEC.text);
                       String bmiResult;
                       Color bmiResultColor;
 
                       if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+
+                        final double weight = double.parse(weightEC.text);
+                        final double height = double.parse(heightEC.text);
+                        FirebaseFirestore db = FirebaseFirestore.instance;
                         final double bmi = weight / (height * height) * 10000;
                         bmiEC.text = bmi.toStringAsFixed(2);
+                        double bmiDouble = double.parse(bmiEC.text);
+
+                        db
+                            .collection("users")
+                            .doc(
+                              FirebaseAuth.instance.currentUser!.uid,
+                            )
+                            .update({
+                          "gender": _selectedGender,
+                          "weight": weight,
+                          "height": height,
+                          "bmi": bmiDouble,
+                        }).then((value) {
+                          print(weight);
+                          print(height);
+                          print(bmi);
+                          print(_selectedGender);
+                          print('weight, height, bmi store success');
+                        }).catchError((error) =>
+                                print('Failed to update bmi: $error'));
 
                         if (bmi < 18.5) {
                           bmiResult = 'Underweight';
@@ -175,6 +201,23 @@ class _BMIPageWidgetState extends State<BMIPageWidget> {
                       }
                     },
                     child: const Text('CALCULATE')),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: CustomOutlinedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  disabled: true,
+                  iconData: null,
+                  text: 'BACK',
+                ),
               ),
             ],
           ),

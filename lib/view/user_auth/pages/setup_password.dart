@@ -34,7 +34,8 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
   final _formKey = GlobalKey<FormState>();
   bool hasMatchError = false;
   SharedPref sharedPref = SharedPref();
-  Users userLoad = Users(dateOfBirth: '', email: '', fullname: '', phoneNumber: '', username: '');
+  Users userLoad = Users(
+      dateOfBirth: '', email: '', fullname: '', phoneNumber: '', username: '');
 
   late TextEditingController _password;
   late TextEditingController _passwordConfirm;
@@ -63,32 +64,31 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
     );
   }
 
-    Future signUp() async {
+  Future signUp() async {
     showDialog(
-      context: context, 
+      context: context,
       barrierDismissible: false,
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: userLoad.email, 
+        email: userLoad.email,
         password: _password.text.trim(),
       );
       addUserDetails();
     } on FirebaseAuthException catch (e) {
       print(e);
     }
-
   }
 
   Future addUserDetails() async {
     await FirebaseFirestore.instance.collection('users').add({
-      'fullname' : userLoad.fullname,
-      'username' : userLoad.username,
-      'email' : userLoad.email,
-      'phoneNumber' : userLoad.phoneNumber,
-      'dateOfBirth' : userLoad.dateOfBirth,
+      'fullname': userLoad.fullname,
+      'username': userLoad.username,
+      'email': userLoad.email,
+      'phoneNumber': userLoad.phoneNumber,
+      'dateOfBirth': userLoad.dateOfBirth,
     });
   }
 
@@ -152,7 +152,9 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
               child: Text(
                 hasMatchError ? "*Password didn't match. Please try again" : "",
                 style: const TextStyle(
-                    color: Colors.red, fontSize: 12, fontWeight: FontWeight.w400),
+                    color: Colors.red,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400),
               ),
             ),
             const SizedBox(
@@ -163,7 +165,7 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                 Expanded(
                   child: CustomElevatedButton(
                       onPressed: () {
-                        if(!_formKey.currentState!.validate()) {
+                        if (!_formKey.currentState!.validate()) {
                           return;
                         }
                         if (_password.text != _passwordConfirm.text) {
@@ -173,10 +175,11 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                           return;
                         }
                         setState(() => hasMatchError = false);
-                        signUp().then((value){
+                        signUp().then((value) {
                           snackBar("Sign Up Successfully!");
                           sharedPref.remove('users');
-                          MyApp.navigatorKey.currentState!.popUntil((route) => route.isFirst);
+                          MyApp.navigatorKey.currentState!
+                              .popUntil((route) => route.isFirst);
                         });
                       },
                       child: const Text('COMPLETE')),

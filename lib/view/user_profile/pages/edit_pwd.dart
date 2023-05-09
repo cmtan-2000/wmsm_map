@@ -5,6 +5,8 @@ import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/user_profile/profile_page.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/cover_info.dart';
 
+//!rmb to ask them if still need this page
+
 class EditPassword extends StatefulWidget {
   const EditPassword({super.key});
 
@@ -18,7 +20,7 @@ class _EditPasswordState extends State<EditPassword> {
     return CoverInfo(
       content: const EditPwdPageWidget(),
       title: 'Edit Password',
-      user: user,
+      users: users,
     );
   }
 }

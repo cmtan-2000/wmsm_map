@@ -1,7 +1,7 @@
 //This is profile page
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:wmsm_flutter/main.dart';
@@ -9,33 +9,53 @@ import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/cover_profile.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/profile_menu_widget.dart';
 
-//*converting the date to string
-DateTime dob = DateTime(2005, 01, 01);
-
-//*Testing with dummy data (shud use 'get, set')
-Users user = Users(
-  fullname: 'Siew Yu Xuan',
-  username: 'swx000',
-  email: 'eunicelim1520@gmail.com',
-  //password: '******',
-  phoneNumber: '011-1234567',
-  //*convert the date format to string
-  dateOfBirth: DateFormat('MMM d, yyyy').format(dob),
-  height: 100,
-  weight: 50,
-  bmi: 17.0,
-);
+Users users = Users(
+    dateOfBirth: '', email: '', fullname: '', phoneNumber: '', username: '');
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return CoverContent(
-      content: const ProfilePageWidget(),
-      title: 'Profile',
-      user: user,
-    );
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    String dob, email, fullname, phoneNumber, username;
+
+    return StreamBuilder(
+        stream: db
+            .collection("users")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError ||
+              snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasData) {
+            dob = snapshot.data!.data()!['dateOfBirth'];
+            email = snapshot.data!.data()!['email'];
+            fullname = snapshot.data!.data()!['fullname'];
+            phoneNumber = snapshot.data!.data()!['phoneNumber'];
+            username = snapshot.data!.data()!['username'];
+            print('dob: $dob');
+            print('fullname: $fullname');
+            print('username: $username');
+            print('phoneNumber: $phoneNumber');
+
+            users = Users(
+                dateOfBirth: dob,
+                email: email,
+                fullname: fullname,
+                phoneNumber: phoneNumber,
+                username: username);
+
+            return CoverContent(
+              content: const ProfilePageWidget(),
+              title: 'Profile',
+              users: users,
+            );
+          }
+          return const Center(child: Text('Error'));
+        });
   }
 }
 
@@ -47,22 +67,26 @@ class ProfilePageWidget extends StatefulWidget {
 }
 
 class _ProfilePageWidgetState extends State<ProfilePageWidget> {
-  double _currentBMIValue = user.bmi!;
-
   late String bmiResult;
   late Color bmitextColor;
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  double currentBMIValue = 0;
+  String phoneNumber = users.phoneNumber, username = users.username;
 
   Widget getRadialGauge() {
-    if (_currentBMIValue < 18.5) {
+    if (currentBMIValue == 0) {
+      bmiResult = 'Please enter BMI info to calculate your BMI';
+      bmitextColor = Colors.grey;
+    } else if (currentBMIValue > 0 && currentBMIValue < 18.5) {
       bmiResult = 'Underweight';
       bmitextColor = Colors.blue;
-    } else if (_currentBMIValue >= 18.5 && _currentBMIValue < 25) {
+    } else if (currentBMIValue >= 18.5 && currentBMIValue < 25) {
       bmiResult = 'Normal';
       bmitextColor = Colors.green;
-    } else if (_currentBMIValue >= 25 && _currentBMIValue < 30) {
+    } else if (currentBMIValue >= 25 && currentBMIValue < 30) {
       bmiResult = 'Overweight';
       bmitextColor = Colors.yellow;
-    } else if (_currentBMIValue >= 30 && _currentBMIValue < 35) {
+    } else if (currentBMIValue >= 30 && currentBMIValue < 35) {
       bmiResult = 'Obese';
       bmitextColor = Colors.orange;
     } else {
@@ -120,19 +144,21 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
           ],
           pointers: <GaugePointer>[
             NeedlePointer(
-              value: _currentBMIValue,
+              enableAnimation: true,
+              value: currentBMIValue,
               needleLength: 0.3,
               //! take note
               onValueChanged: (double newBMI) {
                 setState(() {
-                  _currentBMIValue = newBMI;
+                  print("onvaluechange: $currentBMIValue");
+                  currentBMIValue = newBMI;
                 });
               },
             )
           ], //*needle pointer for gauge
           annotations: <GaugeAnnotation>[
             GaugeAnnotation(
-                widget: Text('${user.bmi}',
+                widget: Text(currentBMIValue.toStringAsFixed(2),
                     style: const TextStyle(
                         fontSize: 15, fontWeight: FontWeight.bold)),
                 angle: 90,
@@ -150,98 +176,148 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              //*ListView for the profile items
-              ProfileMenuWidget(
-                titleText: 'BMI info',
-                icon: LineAwesomeIcons.user,
-                color: Colors.black,
-                onTap: () {
-                  MyApp.navigatorKey.currentState!.pushNamed('/bmiInfo');
-                },
-                endIcon: true,
-              ),
-              //*To display BMI result
-              Card(
-                color: Colors.white,
-                elevation: 0.5,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-                  child: Column(
+          child: StreamBuilder(
+              stream: db
+                  .collection("users")
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError ||
+                    snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasData) {
+                  username = snapshot.data!['username'];
+                  phoneNumber = snapshot.data!['phoneNumber'];
+
+                  Map<String, dynamic> checkBMiKey =
+                      snapshot.data!.data() as Map<String, dynamic>;
+                  if (checkBMiKey.containsKey('bmi')) {
+                    currentBMIValue = snapshot.data!['bmi'];
+                    print(currentBMIValue);
+                  } else {
+                    currentBMIValue = 0;
+                    print(currentBMIValue);
+                  }
+
+                  return Column(
                     children: [
-                      SizedBox(
-                        height: 180,
-                        width: 180,
-                        child: getRadialGauge(),
+                      Card(
+                        color: Colors.white,
+                        elevation: 0.5,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 180,
+                                width: 180,
+                                child: getRadialGauge(),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 40.0, right: 40.0),
+                                child: Text(
+                                  bmiResult,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                        color: bmitextColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      Text(
-                        bmiResult,
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: bmitextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      //*To display BMI result
+                      ProfileMenuWidget(
+                        titleText: 'BMI info',
+                        icon: LineAwesomeIcons.weight,
+                        color: Colors.black,
+                        onTap: () {
+                          MyApp.navigatorKey.currentState!
+                              .pushNamed('/bmiInfo');
+                        },
+                        endIcon: true,
+                      ),
+
+                      ProfileMenuWidget(
+                        //titleText: user.username,
+                        titleText: username,
+                        icon: LineAwesomeIcons.user,
+                        color: Colors.black,
+                        onTap: () {
+                          MyApp.navigatorKey.currentState!
+                              .pushNamed('/editUserName');
+                        },
+                        endIcon: true,
+                      ),
+                      ProfileMenuWidget(
+                        //titleText: user.phoneNumber,
+                        titleText: phoneNumber,
+
+                        icon: LineAwesomeIcons.phone,
+                        color: Colors.black,
+                        onTap: () {
+                          MyApp.navigatorKey.currentState!
+                              .pushNamed('/editPhoneNo');
+                        },
+                        endIcon: true,
+                      ),
+                      ProfileMenuWidget(
+                        titleText: 'No Sync App',
+                        icon: LineAwesomeIcons.shoe_prints,
+                        color: Colors.red,
+                        //TODO: sync google fit
+                        onTap: () {},
+                        endIcon: true,
+                      ),
+                      ProfileMenuWidget(
+                        titleText: 'Passwordxxx',
+                        icon: LineAwesomeIcons.lock,
+                        color: Colors.black,
+                        onTap: () {
+                          MyApp.navigatorKey.currentState!
+                              .pushNamed('/editPwd');
+                        },
+                        endIcon: true,
+                      ),
+                      ProfileMenuWidget(
+                        titleText: users.email,
+                        icon: LineAwesomeIcons.envelope,
+                        color: Colors.black,
+                        endIcon: false,
+                      ),
+                      ProfileMenuWidget(
+                        titleText: users.dateOfBirth,
+                        icon: LineAwesomeIcons.calendar,
+                        color: Colors.black,
+                        endIcon: false,
+                      ),
+                      const SizedBox(height: 20),
+                      const Divider(),
+                      const SizedBox(height: 20),
+                      ProfileMenuWidget(
+                        titleText: 'Sign Out',
+                        icon: LineAwesomeIcons.alternate_sign_out,
+                        color: Colors.black,
+                        endIcon: false,
+                        onTap: () {
+                          FirebaseAuth.instance.signOut();
+                          MyApp.navigatorKey.currentState!.pushNamed('/');
+                        },
                       ),
                     ],
-                  ),
-                ),
-              ),
-              ProfileMenuWidget(
-                titleText: user.email,
-                icon: LineAwesomeIcons.envelope,
-                color: Colors.black,
-                onTap: () {
-                  MyApp.navigatorKey.currentState!.pushNamed('/editEmail');
-                },
-                endIcon: true,
-              ),
-              ProfileMenuWidget(
-                titleText: "user.password",
-                icon: LineAwesomeIcons.lock,
-                color: Colors.black,
-                onTap: () {
-                  MyApp.navigatorKey.currentState!.pushNamed('/editPwd');
-                },
-                endIcon: true,
-              ),
-              ProfileMenuWidget(
-                titleText: user.phoneNumber,
-                icon: LineAwesomeIcons.phone,
-                color: Colors.black,
-                onTap: () {
-                  MyApp.navigatorKey.currentState!.pushNamed('/editPhoneNo');
-                },
-                endIcon: true,
-              ),
-              ProfileMenuWidget(
-                titleText: 'No Sync App',
-                icon: LineAwesomeIcons.shoe_prints,
-                color: Colors.red,
-                //TODO: sync google fit
-                onTap: () {},
-                endIcon: true,
-              ),
-              ProfileMenuWidget(
-                titleText: user.dateOfBirth,
-                icon: LineAwesomeIcons.calendar,
-                color: Colors.black,
-                endIcon: false,
-              ),
-              const SizedBox(height: 20),
-              const Divider(),
-              const SizedBox(height: 20),
-              ProfileMenuWidget(
-                titleText: 'Sign Out',
-                icon: LineAwesomeIcons.alternate_sign_out,
-                color: Colors.black,
-                endIcon: false,
-                onTap: () {
-                  FirebaseAuth.instance.signOut();
-                  MyApp.navigatorKey.currentState!.pushNamed('/');
-                },
-              ),
-            ],
-          ),
+                  );
+                }
+                return const Text("Test");
+              }),
         ),
       ),
     );

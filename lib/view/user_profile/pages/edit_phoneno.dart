@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/user_profile/profile_page.dart';
@@ -12,8 +15,8 @@ class EditPhoneNumber extends StatelessWidget {
   Widget build(BuildContext context) {
     return CoverInfo(
       content: const EditPhonePageWidget(),
-      title: 'Edit Password',
-      user: user,
+      title: 'Edit Phone Number',
+      users: users,
     );
   }
 }
@@ -34,7 +37,7 @@ class _EditPhonePageWidgetState extends State<EditPhonePageWidget> {
   void initState() {
     super.initState();
     phoneNoEC = TextEditingController();
-    _phoneno = user.phoneNumber; //*Init display user saved dao der password
+    _phoneno = users.phoneNumber; //*Init display user saved dao der password
   }
 
   snackBar(String? message) {
@@ -100,13 +103,25 @@ class _EditPhonePageWidgetState extends State<EditPhonePageWidget> {
                   child: const Text('UPDATE'),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
+                      FirebaseFirestore db = FirebaseFirestore.instance;
+                      db
+                          .collection("users")
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .update({
+                        "phoneNumber": phoneNoEC.text,
+                      }).then((_) {
+                        print("success!");
+                      }).catchError((error) =>
+                              print('Failed to update username: $error'));
+
                       snackBar("Update successfully!");
                       print(phoneNoEC.text);
 
-                      //TODO: but not yet update into database
                       setState(() {
                         _phoneno = phoneNoEC.text;
                       });
+
+                      MyApp.navigatorKey.currentState!.pop();
                     }
                   },
                 ),

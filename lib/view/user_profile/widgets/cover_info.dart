@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:wmsm_flutter/model/users.dart';
+import 'package:wmsm_flutter/view/user_profile/widgets/profile_picture.dart';
 
 class CoverInfo extends StatelessWidget {
   const CoverInfo(
       {super.key,
       required this.title,
       required this.content,
-      required this.user});
+      required this.users});
 
   final String title;
   final Widget content;
-  final Users user; //*user weight, height
+  final Users users; //*user weight, height
 
   @override
   Widget build(BuildContext context) {
@@ -44,57 +44,7 @@ class CoverInfo extends StatelessWidget {
                       alignment: Alignment.topCenter,
                       child: Column(
                         children: [
-                          Stack(children: [
-                            //TODO: Edit Profile Picture
-                            SizedBox(
-                              height: 100,
-                              width: 100,
-                              child: ClipOval(
-                                clipBehavior: Clip.antiAlias,
-                                child: Image.asset('assets/images/profile.png'),
-                              ),
-                            ),
-
-                            //*Edit button UI, beside profile picture
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: SizedBox(
-                                width: 37,
-                                height: 37,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  //*for the black circle
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.black,
-                                  ),
-                                  //*edit icon
-                                  child: IconButton(
-                                    tooltip: 'Edit Profile',
-                                    icon: const Icon(
-                                      LineAwesomeIcons.pen,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    //*Press d then edit profile picture
-                                    onPressed: () {
-                                      print('Edit profile picture');
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ]),
-                          const SizedBox(height: 10),
-                          //*Name
-                          Text(user.fullname,
-                              style: Theme.of(context).textTheme.displaySmall),
-                          //*Username
-                          Text(
-                            '@${user.username}',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          )
+                          ProfilePicture(users: users),
                         ],
                       ),
                     ),
