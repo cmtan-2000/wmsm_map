@@ -22,13 +22,14 @@ class CustomTextFormField extends TextFormField {
     String? prefixText,
   }) : super(
           key: key,
+          autofocus: true,
+          autocorrect: true,
           textInputAction: textInputAction,
           maxLength: maxLength,
           controller: controller,
           onTap: onTap,
           readOnly: readOnly ?? false,
-          keyboardType:
-              isNumberOnly == true ? TextInputType.number : TextInputType.text,
+          keyboardType: keyboardType ?? TextInputType.text,
           decoration: InputDecoration(
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 8, horizontal: 12),

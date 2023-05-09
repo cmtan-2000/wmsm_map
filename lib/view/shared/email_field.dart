@@ -5,10 +5,14 @@ import 'package:email_validator/email_validator.dart';
 // ignore: unused_element
 class EmailField extends StatelessWidget {
   const EmailField(
-      {super.key, required TextEditingController emailController, required})
+      {super.key,
+      required TextEditingController emailController,
+      required,
+      this.textInputAction})
       : _emailController = emailController;
 
   final TextEditingController _emailController;
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class EmailField extends StatelessWidget {
             keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             icon: Icons.email,
-            textInputAction: TextInputAction.next,
+            textInputAction: textInputAction,
             validator: (value) {
               if (value.isEmpty) {
                 return "Please enter your email address";

@@ -92,6 +92,7 @@ class ContentClass extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
+    const double widthGoal = 150;
 
     return SizedBox(
       width: 300,
@@ -129,9 +130,14 @@ class ContentClass extends StatelessWidget {
                                   'Set your Goal',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text(
-                                  "Choose a level that's right for you",
-                                  style: TextStyle(fontSize: deviceWidth / 35),
+                                SizedBox(
+                                  width: widthGoal,
+                                  child: Text(
+                                    "Choose a level that's right for you",
+                                    textAlign: TextAlign.justify,
+                                    style:
+                                        TextStyle(fontSize: deviceWidth / 35),
+                                  ),
                                 ),
                               ],
                             )
@@ -158,9 +164,14 @@ class ContentClass extends StatelessWidget {
                                 Text('Track your steps',
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
-                                Text(
-                                  "Check yout step count daily",
-                                  style: TextStyle(fontSize: deviceWidth / 35),
+                                SizedBox(
+                                  width: widthGoal,
+                                  child: Text(
+                                    "Check yout step count daily",
+                                    textAlign: TextAlign.justify,
+                                    style:
+                                        TextStyle(fontSize: deviceWidth / 35),
+                                  ),
                                 )
                               ],
                             )
@@ -188,11 +199,13 @@ class ContentClass extends StatelessWidget {
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                                 SizedBox(
-                                  width: 200,
+                                  width: widthGoal,
                                   child: Text(
                                       "Stay motivated with these irresistible rewards",
+                                      textAlign: TextAlign.justify,
                                       style: TextStyle(
-                                          fontSize: deviceWidth / 35)),
+                                        fontSize: deviceWidth / 35,
+                                      )),
                                 )
                               ],
                             )

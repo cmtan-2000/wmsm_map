@@ -145,130 +145,147 @@ class _UserDetailsWidgetState extends State<UserDetailsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-                'Help us to understand you better by filling up your Profile Information below.'),
-            const SizedBox(
-              height: 30,
-            ),
-            CustomTextFormField(
-              context: context,
-              isNumberOnly: false,
-              labelText: 'Name (as per IC)',
-              hintText: 'Ex: John Wick',
-              controller: nameEC,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomTextFormField(
-              context: context,
-              isNumberOnly: false,
-              maxLength: 10,
-              labelText: 'Username',
-              hintText: 'Ex: John',
-              controller: usernameEC,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomTextFormField(
-              context: context,
-              isNumberOnly: true,
-              hintText: 'Date of Birth',
-              labelText: 'Date of Birth',
-              onTap: () => _selectDate(context),
-              readOnly: true,
-              suffixicon: const Icon(Icons.calendar_month),
-              controller: dobEC,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            phoneNumberField(
-              phoneController: phoneEC,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            EmailField(
-              emailController: emailEC,
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            const Text('Are you a XXX Bank group empolyee? '),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Wrap(
-                  direction: Axis.horizontal,
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Radio(
-                            value: false,
-                            groupValue: _selectedValue,
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedValue = value!;
-                              });
-                            })
-                      ],
-                    ),
-                    const Text('No'),
-                  ],
-                ),
-                Wrap(
-                  direction: Axis.horizontal,
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Radio(
-                            value: true,
-                            groupValue: _selectedValue,
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedValue = value!;
-                              });
-                            })
-                      ],
-                    ),
-                    const Text('Yes'),
-                  ],
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: CustomElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          sharedPref.remove('userData');
-                          storeData();
-                          MyApp.navigatorKey.currentState!
-                              .pushNamed('/setuppassword');
-                        }
-                      },
-                      child: const Text('CONTINUE')),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 30,
-            )
-          ],
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                  'Help us to understand you better by filling up your Profile Information below.'),
+              const SizedBox(
+                height: 30,
+              ),
+              CustomTextFormField(
+                context: context,
+                isNumberOnly: false,
+                labelText: 'Name (as per IC)',
+                hintText: 'Ex: John Wick',
+                controller: nameEC,
+                textInputAction: TextInputAction.next,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CustomTextFormField(
+                context: context,
+                isNumberOnly: false,
+                maxLength: 10,
+                labelText: 'Username',
+                hintText: 'Ex: John',
+                controller: usernameEC,
+                textInputAction: TextInputAction.next,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CustomTextFormField(
+                context: context,
+                isNumberOnly: true,
+                hintText: 'Date of Birth',
+                labelText: 'Date of Birth',
+                onTap: () => _selectDate(context),
+                readOnly: true,
+                suffixicon: const Icon(Icons.calendar_month),
+                controller: dobEC,
+                textInputAction: TextInputAction.next,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              phoneNumberField(
+                phoneController: phoneEC,
+                textInputAction: TextInputAction.next,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter your phone number';
+                  }
+                  if (value.length < 9) {
+                    return 'Please enter a valid phone number';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              EmailField(
+                emailController: emailEC,
+                textInputAction: TextInputAction.next,
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              const Text('Are you a XXX Bank group empolyee? '),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Wrap(
+                    direction: Axis.horizontal,
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Radio(
+                              value: false,
+                              groupValue: _selectedValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedValue = value!;
+                                });
+                              })
+                        ],
+                      ),
+                      const Text('No'),
+                    ],
+                  ),
+                  Wrap(
+                    direction: Axis.horizontal,
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Radio(
+                              value: true,
+                              groupValue: _selectedValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedValue = value!;
+                                });
+                              })
+                        ],
+                      ),
+                      const Text('Yes'),
+                    ],
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            sharedPref.remove('userData');
+                            storeData();
+                            MyApp.navigatorKey.currentState!
+                                .pushNamed('/setuppassword');
+                          }
+                        },
+                        child: const Text('CONTINUE')),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 30,
+              )
+            ],
+          ),
         ),
       ),
     );

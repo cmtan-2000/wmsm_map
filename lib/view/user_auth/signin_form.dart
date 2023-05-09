@@ -45,6 +45,7 @@ class _WidgetSignInState extends State<WidgetSignIn> {
           ),
           EmailField(
             emailController: _emailController,
+            textInputAction: TextInputAction.next,
           ),
           const SizedBox(
             height: 20,
@@ -58,6 +59,7 @@ class _WidgetSignInState extends State<WidgetSignIn> {
           ),
           passwordField(
             passwordController: _passwordController,
+            textInputAction: TextInputAction.done,
           ),
           const SizedBox(
             height: 10,

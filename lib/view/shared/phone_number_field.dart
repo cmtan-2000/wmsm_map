@@ -8,10 +8,15 @@ class phoneNumberField extends StatelessWidget {
   const phoneNumberField({
     super.key,
     required TextEditingController phoneController,
+    this.textInputAction,
+    this.validator
   }) : _phoneController = phoneController;
 
   final TextEditingController _phoneController;
+  final TextInputAction? textInputAction;
+  final String? Function(String?)? validator;
 
+  
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -40,6 +45,8 @@ class phoneNumberField extends StatelessWidget {
             controller: _phoneController,
             icon: Icons.phone,
             prefixText: '+60 ',
+            textInputAction: textInputAction,
+            validator: validator,
           ),
         )
       ],
