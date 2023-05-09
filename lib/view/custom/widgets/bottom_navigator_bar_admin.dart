@@ -1,31 +1,30 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:wmsm_flutter/view/user_dashboard/dashboard.dart';
+import 'package:wmsm_flutter/view/admin_article/admin_article_page.dart';
+import 'package:wmsm_flutter/view/admin_challenges/admin_challenges_page.dart';
+import 'package:wmsm_flutter/view/admin_dashboard/admin_dashboard_page.dart';
+import 'package:wmsm_flutter/view/admin_profile/admin_profile_page.dart';
 
-import '../../user_article/article_page.dart';
-import '../../user_challenges/challenge_page.dart';
-import '../../user_profile/profile_page.dart';
-
-class BottomNavScreen extends StatefulWidget {
+class AdminBottomNavScreen extends StatefulWidget {
   @override
   // ignore: library_private_types_in_public_api
-  _BottomNavScreenState createState() => _BottomNavScreenState();
+  _AdminBottomNavScreenState createState() => _AdminBottomNavScreenState();
 }
 
-class _BottomNavScreenState extends State<BottomNavScreen> {
+class _AdminBottomNavScreenState extends State<AdminBottomNavScreen> {
   int _currentIndex = 0;
-  final List<Widget> _user_screens = [
-    const Dashboard(),
-    const ChallengePage(),
-    const ArticlePage(),
-    const ProfilePage(),
+  final List<Widget> _admin_screens = [
+    const AdminDashboardPage(),
+    const AdminChallengePage(),
+    const AdminArticlePage(),
+    const AdminProfilePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _user_screens[_currentIndex],
+      body: _admin_screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Theme.of(context).primaryColor,
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
