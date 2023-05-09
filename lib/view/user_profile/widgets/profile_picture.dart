@@ -28,7 +28,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
 
   Future pickImage(ImageSource source) async {
     XFile? image = await ImagePicker().pickImage(source: source);
-    print(image!.path);
+    // print(image!.path);
     if (image == null) return;
 
     Reference refRoot = FirebaseStorage.instance.ref();
@@ -76,7 +76,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasData) {
-            imageUrl = snapshot.data!.data()!['profile_picture'];
+            // imageUrl = snapshot.data!.data()!['profile_picture'];
             username = snapshot.data!.data()!['username'];
             fullname = snapshot.data!.data()!['fullname'];
 
@@ -91,7 +91,8 @@ class _ProfilePictureState extends State<ProfilePicture> {
                       child: ClipOval(
                         clipBehavior: Clip.antiAlias,
                         child: CachedNetworkImage(
-                          imageUrl: imageUrl ?? defaultImgUrl,
+                          imageUrl: snapshot.data!.data()?['profile_picture'] ??
+                              defaultImgUrl,
                           placeholder: (context, url) =>
                               const Center(child: CircularProgressIndicator()),
                           errorWidget: (context, url, error) =>

@@ -83,11 +83,19 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
   }
 
   Future addUserDetails() async {
-    await FirebaseFirestore.instance.collection('users').add({
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({
       'fullname': userLoad.fullname,
       'username': userLoad.username,
       'email': userLoad.email,
       'phoneNumber': userLoad.phoneNumber,
+      'bmi': 0,
+      'gender': '',
+      'weight': 0,
+      'height': 0,
+      'profilePicture': '',
       'dateOfBirth': userLoad.dateOfBirth,
     });
   }

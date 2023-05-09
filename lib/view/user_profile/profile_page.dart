@@ -194,7 +194,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                   Map<String, dynamic> checkBMiKey =
                       snapshot.data!.data() as Map<String, dynamic>;
                   if (checkBMiKey.containsKey('bmi')) {
-                    currentBMIValue = snapshot.data!['bmi'];
+                    currentBMIValue = snapshot.data!['bmi'].toDouble();
                     print(currentBMIValue);
                   } else {
                     currentBMIValue = 0;
