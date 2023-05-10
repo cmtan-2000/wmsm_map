@@ -78,6 +78,7 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
         password: _password.text.trim(),
       );
       addUserDetails();
+      return true;
     } on FirebaseAuthException catch (e) {
       print(e);
       if (e is PlatformException) {
@@ -86,7 +87,7 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
         }
       }
     }
-    return true;
+    return false;
   }
 
   Future addUserDetails() async {
@@ -197,7 +198,7 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                           return;
                         }
                         setState(() => hasMatchError = false);
-                        if (!await signUp()) {
+                        if (await signUp()) {
                           snackBar("Sign Up Successfully!");
                         } else {
                           snackBar("Email already in use!");
