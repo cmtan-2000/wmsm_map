@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wmsm_flutter/view/user_auth/auth_page.dart';
 
+import '../../view/custom/widgets/bottom_navigator_bar_admin.dart';
 import 'verification_model.dart';
 
 class AuthenticationViewModel extends StatelessWidget {
@@ -11,22 +12,23 @@ class AuthenticationViewModel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        else if (snapshot.hasError) {
-          return const Center(child: Text('Something went wrong!'));
-        }
-        else if(snapshot.hasData) {
-          return const VerificationViewModel();
-        }
-        else {
-          return const AuthPage();
-        }
-      })
-    );
+        body: StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return const Center(child: Text('Something went wrong!'));
+              } else if (snapshot.hasData) {
+                if (FirebaseAuth.instance.currentUser!.uid ==
+                    "7Sl3mfbtpna9BayDk6jPsNNDQtc2") {
+                  return AdminBottomNavScreen();
+                } else {
+                  return const VerificationViewModel();
+                }
+              } else {
+                return const AuthPage();
+              }
+            }));
   }
 }

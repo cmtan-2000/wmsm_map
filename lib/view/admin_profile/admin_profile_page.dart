@@ -16,7 +16,7 @@ class AdminProfilePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(1, 255, 123, 1),
+        backgroundColor: const Color(0xFFFF7B01),
         elevation: 0,
         title: Text('Profile',
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
@@ -38,7 +38,7 @@ class AdminProfilePage extends StatelessWidget {
                 ),
                 child: Container(
                   //*background colour of container
-                  color: const Color.fromARGB(1, 255, 123, 1),
+                  color: const Color(0xFFFF7B01),
                   child: const Align(
                     alignment: Alignment.topCenter,
                     //!Admin profile picture
@@ -74,12 +74,13 @@ class AdminProfilePage extends StatelessWidget {
                     ),
                     child: SingleChildScrollView(
                       child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                         color: Colors.white,
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: StreamBuilder(
                               stream: db
-                                  .collection("admin")
+                                  .collection("users")
                                   .doc(FirebaseAuth.instance.currentUser!.uid)
                                   .snapshots(),
                               builder: (context, snapshot) {

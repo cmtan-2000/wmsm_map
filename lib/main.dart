@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'My App',
         theme: customTheme,
-        initialRoute: '/adminBtmNav',
+        initialRoute: '/',
         routes: routes,
       ),
     );

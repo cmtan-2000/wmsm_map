@@ -52,7 +52,7 @@ class AuthPage extends StatelessWidget {
                 Expanded(child: SingleChildScrollView(
                     child: LayoutBuilder(builder: (context, constraints) {
                   return SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.85,
+                    height: MediaQuery.of(context).size.height * 0.9,
                     child: Column(
                       children: [
                         Text(
