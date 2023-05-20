@@ -3,64 +3,74 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:logger/logger.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/cover_profile.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/profile_menu_widget.dart';
 
-Users users = Users(
-    dateOfBirth: '', email: '', fullname: '', phoneNumber: '', username: '');
 
-class ProfilePage extends StatelessWidget {
+
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  String dob = '';
+  String email = '';
+  String fullname = '';
+  String phoneNumber = '';
+  String username = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    String dob, email, fullname, phoneNumber, username;
 
-    return StreamBuilder(
-        stream: db
+    return FutureBuilder<DocumentSnapshot>(
+        future: db
             .collection("users")
             .doc(FirebaseAuth.instance.currentUser!.uid)
-            .snapshots(),
+            .get(),
         builder: (context, snapshot) {
-          if (snapshot.hasError ||
-              snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
           if (snapshot.hasData) {
-            dob = snapshot.data!.data()!['dateOfBirth'];
-            email = snapshot.data!.data()!['email'];
-            fullname = snapshot.data!.data()!['fullname'];
-            phoneNumber = snapshot.data!.data()!['phoneNumber'];
-            username = snapshot.data!.data()!['username'];
-            print('dob: $dob');
-            print('fullname: $fullname');
-            print('username: $username');
-            print('phoneNumber: $phoneNumber');
-          
-            users = Users(
-                dateOfBirth: dob,
-                email: email,
-                fullname: fullname,
-                phoneNumber: phoneNumber,
-                username: username);
+            var userData = Users.fromSnapshot(snapshot.data!);
 
+            Logger().i(snapshot.data!.data());
+            Logger().i(userData.email);
             return CoverContent(
-              content: const ProfilePageWidget(),
+              content: ProfilePageWidget(user: userData),
               title: 'Profile',
-              users: users,
+              users: userData,
+            );
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text('Error'),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
           }
-          return const Center(child: Text('Error'));
         });
   }
 }
 
 class ProfilePageWidget extends StatefulWidget {
-  const ProfilePageWidget({super.key});
+  const ProfilePageWidget({super.key, required this.user});
+
+  final Users user;
 
   @override
   State<ProfilePageWidget> createState() => _ProfilePageWidgetState();
@@ -71,7 +81,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
   late Color bmitextColor;
   FirebaseFirestore db = FirebaseFirestore.instance;
   double currentBMIValue = 0;
-  String phoneNumber = users.phoneNumber, username = users.username;
+  String phoneNumber = '', username = '', fullname = '', email = '', dob = '';
 
   Widget getRadialGauge() {
     if (currentBMIValue == 0) {
@@ -170,36 +180,29 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    Logger().i('user data: ${widget.user.username}');
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
         margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: StreamBuilder(
-              stream: db
-                  .collection("users")
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError ||
-                    snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+            padding: const EdgeInsets.all(10.0),
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                if (widget.user.role == "user") {
+                  username = widget.user.username;
+                  phoneNumber = widget.user.phoneNumber;
 
-                if (snapshot.hasData) {
-                  username = snapshot.data!['username'];
-                  phoneNumber = snapshot.data!['phoneNumber'];
-
-                  Map<String, dynamic> checkBMiKey =
-                      snapshot.data!.data() as Map<String, dynamic>;
-                  if (checkBMiKey.containsKey('bmi')) {
-                    currentBMIValue = snapshot.data!['bmi'].toDouble();
-                    print(currentBMIValue);
+                  if (widget.user.bmi != null) {
+                    currentBMIValue = widget.user.bmi!.toDouble();
                   } else {
                     currentBMIValue = 0;
-                    print(currentBMIValue);
                   }
 
                   return Column(
@@ -243,7 +246,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         color: Colors.black,
                         onTap: () {
                           MyApp.navigatorKey.currentState!
-                              .pushNamed('/bmiInfo');
+                              .pushNamed('/bmiInfo', arguments: widget.user);
                         },
                         endIcon: true,
                       ),
@@ -254,8 +257,9 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         icon: LineAwesomeIcons.user,
                         color: Colors.black,
                         onTap: () {
-                          MyApp.navigatorKey.currentState!
-                              .pushNamed('/editUserName');
+                          MyApp.navigatorKey.currentState!.pushNamed(
+                              '/editUserName',
+                              arguments: widget.user);
                         },
                         endIcon: true,
                       ),
@@ -267,7 +271,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         color: Colors.black,
                         onTap: () {
                           MyApp.navigatorKey.currentState!
-                              .pushNamed('/editPhoneNo');
+                              .pushNamed('/editPhoneNo', arguments: widget.user);
                         },
                         endIcon: true,
                       ),
@@ -285,18 +289,18 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         color: Colors.black,
                         onTap: () {
                           MyApp.navigatorKey.currentState!
-                              .pushNamed('/editPwd');
+                              .pushNamed('/editPwd', arguments: widget.user);
                         },
                         endIcon: true,
                       ),
                       ProfileMenuWidget(
-                        titleText: users.email,
+                        titleText: widget.user.email,
                         icon: LineAwesomeIcons.envelope,
                         color: Colors.black,
                         endIcon: false,
                       ),
                       ProfileMenuWidget(
-                        titleText: users.dateOfBirth,
+                        titleText: widget.user.dateOfBirth,
                         icon: LineAwesomeIcons.calendar,
                         color: Colors.black,
                         endIcon: false,
@@ -316,10 +320,58 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                       ),
                     ],
                   );
+                } else {
+                  phoneNumber = widget.user.phoneNumber;
+                  email = widget.user.email;
+
+                  return Column(
+                    children: [
+                      ProfileMenuWidget(
+                        titleText: email,
+                        icon: LineAwesomeIcons.envelope,
+                        color: Colors.black,
+                        endIcon: false,
+                      ),
+                      ProfileMenuWidget(
+                        titleText: 'Password',
+                        icon: LineAwesomeIcons.lock,
+                        color: Colors.black,
+                        onTap: () {
+                          //TODO: Change password
+                          MyApp.navigatorKey.currentState!
+                              .pushNamed('/editPwd');
+                        },
+                        endIcon: true,
+                      ),
+                      ProfileMenuWidget(
+                        titleText: '+60 $phoneNumber',
+                        icon: LineAwesomeIcons.phone,
+                        color: Colors.black,
+                        onTap: () {
+                          //!Change PHONE NUMBER
+                          MyApp.navigatorKey.currentState!
+                              .pushNamed('/editPhoneNo');
+                        },
+                        endIcon: true,
+                      ),
+                      const SizedBox(height: 20),
+                      const Divider(),
+                      const SizedBox(height: 20),
+                      ProfileMenuWidget(
+                        titleText: 'Sign Out',
+                        icon: LineAwesomeIcons.alternate_sign_out,
+                        color: Colors.black,
+                        endIcon: false,
+                        onTap: () {
+                          FirebaseAuth.instance.signOut();
+                          MyApp.navigatorKey.currentState!.pushNamed('/');
+                        },
+                      ),
+                    ],
+                  );
                 }
-                return const Text("Test");
-              }),
-        ),
+              },
+            )),
       ),
     );
   }

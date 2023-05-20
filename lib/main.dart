@@ -34,7 +34,8 @@ class MyApp extends StatelessWidget {
         title: 'My App',
         theme: customTheme,
         initialRoute: '/',
-        routes: routes,
+        // routes: routes,
+        onGenerateRoute: generateRoute,
       ),
     );
   }

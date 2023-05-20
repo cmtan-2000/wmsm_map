@@ -8,21 +8,33 @@ import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/user_profile/profile_page.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/cover_info.dart';
 
-class EditPhoneNumber extends StatelessWidget {
-  const EditPhoneNumber({super.key});
+import '../../../model/users.dart';
+import '../../custom/widgets/bottom_navigator_bar.dart';
 
+class EditPhoneNumber extends StatefulWidget {
+  const EditPhoneNumber({super.key, required this.user});
+
+  final Users user;
+
+  @override
+  State<EditPhoneNumber> createState() => _EditPhoneNumberState();
+}
+
+class _EditPhoneNumberState extends State<EditPhoneNumber> {
   @override
   Widget build(BuildContext context) {
     return CoverInfo(
-      content: const EditPhonePageWidget(),
+      content: EditPhonePageWidget(user: widget.user),
       title: 'Edit Phone Number',
-      users: users,
+      users: widget.user,
     );
   }
 }
 
 class EditPhonePageWidget extends StatefulWidget {
-  const EditPhonePageWidget({super.key});
+  const EditPhonePageWidget({super.key, required this.user});
+
+  final Users user;
 
   @override
   State<EditPhonePageWidget> createState() => _EditPhonePageWidgetState();
@@ -37,7 +49,8 @@ class _EditPhonePageWidgetState extends State<EditPhonePageWidget> {
   void initState() {
     super.initState();
     phoneNoEC = TextEditingController();
-    _phoneno = users.phoneNumber; //*Init display user saved dao der password
+    _phoneno =
+        widget.user.phoneNumber; //*Init display user saved dao der password
   }
 
   snackBar(String? message) {
@@ -113,15 +126,14 @@ class _EditPhonePageWidgetState extends State<EditPhonePageWidget> {
                         print("success!");
                       }).catchError((error) =>
                               print('Failed to update username: $error'));
-
+                              
                       snackBar("Update successfully!");
-                      print(phoneNoEC.text);
-
-                      setState(() {
-                        _phoneno = phoneNoEC.text;
-                      });
-
-                      MyApp.navigatorKey.currentState!.pop();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BottomNavScreen(),
+                        ),
+                      );
                     }
                   },
                 ),

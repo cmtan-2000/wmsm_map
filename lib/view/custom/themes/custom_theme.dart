@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 final customTheme = ThemeData(
   useMaterial3: true, //upgrade from Material2 to Material3
   primaryColor: const Color.fromRGBO(255, 188, 2, 1),
-  accentColor: const Color.fromARGB(97, 231, 170, 0),
+  // accentColor: const Color.fromARGB(97, 231, 170, 0),
   fontFamily: 'Roboto',
   textTheme: const TextTheme(
     headline1: TextStyle(
@@ -56,7 +56,6 @@ final customTheme = ThemeData(
   ),
 );
 
-class Config{
-
+class Config {
   static var minWidth = 270;
 }

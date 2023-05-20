@@ -1,8 +1,12 @@
 // ignore_for_file: use_key_in_widget_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wmsm_flutter/view/user_dashboard/dashboard.dart';
+import 'package:wmsm_flutter/viewmodel/shared/shared_pref.dart';
 
+import '../../../model/users.dart';
 import '../../user_article/article_page.dart';
 import '../../user_challenges/challenge_page.dart';
 import '../../user_profile/profile_page.dart';
@@ -14,8 +18,35 @@ class BottomNavScreen extends StatefulWidget {
 }
 
 class _BottomNavScreenState extends State<BottomNavScreen> {
+  String role = '';
+  late SharedPref sharedPref = SharedPref();
+  late Users user;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
+      setState(() {
+        user = Users(
+            fullname: value.data()!['fullname'],
+            username: value.data()!['username'],
+            email: value.data()!['email'],
+            phoneNumber: value.data()!['phoneNumber'],
+            dateOfBirth: value.data()!['dateOfBirth'],
+            role: value.data()!['role']);
+        sharedPref.save('user', user);
+
+        role = user.role;
+      });
+    });
+  }
+
   int _currentIndex = 0;
-  final List<Widget> _user_screens = [
+  final List<Widget> screens = [
     const Dashboard(),
     const ChallengePage(),
     const ArticlePage(),
@@ -25,7 +56,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _user_screens[_currentIndex],
+      body: screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Theme.of(context).primaryColor,
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
@@ -34,22 +65,22 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
               TextStyle(color: Theme.of(context).primaryColor),
           currentIndex: _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
-          items: const [
-            BottomNavigationBarItem(
+          items: [
+            const BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.emoji_events),
               label: 'Challenge',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.article),
               label: 'Article',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
+              icon: const Icon(Icons.person),
+              label: role == "admin" ? 'Admin' : 'Profile',
             ),
           ]),
     );

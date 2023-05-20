@@ -2,14 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:logger/logger.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/user_profile/profile_page.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/cover_info.dart';
 
+import '../../../model/users.dart';
+import '../../custom/widgets/bottom_navigator_bar.dart';
+
 class EditUserName extends StatefulWidget {
-  const EditUserName({super.key});
+  const EditUserName({super.key, required this.user});
+
+  final Users user;
 
   @override
   State<EditUserName> createState() => _EditUserNameState();
@@ -18,16 +24,21 @@ class EditUserName extends StatefulWidget {
 class _EditUserNameState extends State<EditUserName> {
   @override
   Widget build(BuildContext context) {
+    Logger().d(widget.user.username);
     return CoverInfo(
-      content: const EditUserNamePageWidget(),
+      content: EditUserNamePageWidget(
+        username: widget.user.username,
+      ),
       title: 'Edit Username',
-      users: users,
+      users: widget.user,
     );
   }
 }
 
 class EditUserNamePageWidget extends StatefulWidget {
-  const EditUserNamePageWidget({super.key});
+  const EditUserNamePageWidget({super.key, required this.username});
+
+  final String username;
 
   @override
   State<EditUserNamePageWidget> createState() => _EditUserNamePageWidgetState();
@@ -42,7 +53,7 @@ class _EditUserNamePageWidgetState extends State<EditUserNamePageWidget> {
   void initState() {
     super.initState();
     usernameEC = TextEditingController();
-    _username = users.username; //*Init display user saved dao der username
+    _username = widget.username; //*Init display user saved dao der username
   }
 
   @override
@@ -121,15 +132,16 @@ class _EditUserNamePageWidgetState extends State<EditUserNamePageWidget> {
                             .update({
                           "username": usernameEC.text,
                         }).then((_) {
-                          print("success!");
-                        }).catchError((error) =>
-                                print('Failed to update username: $error'));
+                          Logger().d("success!");
+                        }).catchError((error) => Logger().d(error));
 
                         snackBar("Update successfully!");
-                        setState(() {
-                          _username = usernameEC.text;
-                        });
-                        MyApp.navigatorKey.currentState!.pop();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BottomNavScreen(),
+                          ),
+                        );
                       }
                     },
                     child: const Text('UPDATE')),

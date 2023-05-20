@@ -15,7 +15,9 @@ import '../../shared/password_field.dart';
 //!rmb to ask them if still need this page
 
 class EditPassword extends StatefulWidget {
-  const EditPassword({super.key});
+  const EditPassword({super.key, required this.user});
+
+  final Users user;
 
   @override
   State<EditPassword> createState() => _EditPasswordState();
@@ -27,7 +29,7 @@ class _EditPasswordState extends State<EditPassword> {
     return CoverInfo(
       content: const EditPwdPageWidget(),
       title: 'Edit Password',
-      users: users,
+      users: widget.user,
     );
   }
 }

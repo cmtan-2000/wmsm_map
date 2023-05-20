@@ -36,7 +36,12 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
   bool hasMatchError = false;
   SharedPref sharedPref = SharedPref();
   Users userLoad = Users(
-      dateOfBirth: '', email: '', fullname: '', phoneNumber: '', username: '');
+      dateOfBirth: '',
+      email: '',
+      fullname: '',
+      phoneNumber: '',
+      username: '',
+      role: '');
 
   late TextEditingController _password;
   late TextEditingController _passwordConfirm;

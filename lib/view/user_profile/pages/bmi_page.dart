@@ -8,10 +8,12 @@ import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/cover_info.dart';
 
+import '../../../model/users.dart';
 import '../profile_page.dart';
 
 class BMIPage extends StatefulWidget {
-  const BMIPage({super.key});
+  const BMIPage({super.key, required this.user});
+  final Users user;
 
   @override
   State<BMIPage> createState() => _BMIPageState();
@@ -23,7 +25,7 @@ class _BMIPageState extends State<BMIPage> {
     return CoverInfo(
       content: const BMIPageWidget(),
       title: 'BMI Info',
-      users: users,
+      users: widget.user,
     );
   }
 }
