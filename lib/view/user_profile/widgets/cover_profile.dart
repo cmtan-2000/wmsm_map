@@ -19,10 +19,9 @@ class CoverContent extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 0,
+        automaticallyImplyLeading: false,
         title: Text(title,
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                )), //*title at app bar
+            style: Theme.of(context).textTheme.bodyLarge), //*title at app bar
       ),
       body: Stack(
         children: [

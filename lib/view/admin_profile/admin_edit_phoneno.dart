@@ -92,7 +92,7 @@ class _AdminEditPhoneNoWidgetState extends State<AdminEditPhoneNoWidget> {
     super.initState();
     phoneNoEC = TextEditingController();
     //!hardcode
-    _phoneno = '0189575682'; //*Init display user saved dao der password
+    _phoneno = '0189575682'; //*Init display user saved dao der phoneno
   }
 
   snackBar(String? message) {
@@ -162,7 +162,7 @@ class _AdminEditPhoneNoWidgetState extends State<AdminEditPhoneNoWidget> {
 
                       //!admin collection
                       db
-                          .collection("admin")
+                          .collection("users")
                           .doc(FirebaseAuth.instance.currentUser!.uid)
                           .update({
                         "phoneNumber": phoneNoEC.text,

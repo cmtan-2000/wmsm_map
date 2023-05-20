@@ -121,7 +121,7 @@ class AdminProfilePage extends StatelessWidget {
                                         onTap: () {
                                           //!Change PHONE NUMBER
                                           MyApp.navigatorKey.currentState!
-                                              .pushNamed('/editPhoneNo');
+                                              .pushNamed('/adminEditPhoneNo');
                                         },
                                         endIcon: true,
                                       ),

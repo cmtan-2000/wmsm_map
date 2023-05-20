@@ -39,7 +39,7 @@ dependencies:
   intl: ^0.17.0
   timer_count_down: ^2.2.2 #for timer OTP
   line_awesome_flutter: ^2.0.0 #for icon
-  syncfusion_flutter_gauges: ^21.2.3 #for BMI gauge
+  syncfusion_flutter_gauges: ^21.2.4 #for BMI gauge
   email_validator: ^2.1.17
   firebase_core: ^2.11.0
   firebase_auth: ^4.5.0
@@ -48,6 +48,8 @@ dependencies:
   shared_preferences: ^2.1.0
   cached_network_image: ^3.2.3
   image_picker: ^0.8.7+4
+  syncfusion_flutter_charts: ^21.2.4
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:
@@ -96,10 +98,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

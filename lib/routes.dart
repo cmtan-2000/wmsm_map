@@ -4,6 +4,9 @@ import 'package:wmsm_flutter/view/admin_challenges/admin_challenges_page.dart';
 import 'package:wmsm_flutter/view/admin_dashboard/admin_dashboard_page.dart';
 import 'package:wmsm_flutter/view/admin_profile/admin_edit_phoneno.dart';
 import 'package:wmsm_flutter/view/custom/widgets/bottom_navigator_bar_admin.dart';
+import 'package:wmsm_flutter/view/user_article/article_detail.dart';
+import 'package:wmsm_flutter/view/user_challenges/join_challenge_page.dart';
+import 'package:wmsm_flutter/view/user_dashboard/notification_page.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_pwd.dart';
 import 'package:wmsm_flutter/viewmodel/user_auth/verification_model.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_username.dart';
@@ -25,13 +28,24 @@ Map<String, WidgetBuilder> routes = {
   '/setuppassword': (context) => const SetupPassword(),
   '/verifyemail': (context) => const VerificationViewModel(),
   '/intro': (context) => const IntroPage(),
-  '/btmNav': (context) => BottomNavScreen(),
+  '/btmNav': (context) => const BottomNavScreen(),
   '/bmiInfo': (context) => const BMIPage(),
   '/editUserName': (context) => const EditUserName(),
   '/editPwd': (context) => const EditPassword(),
   '/editPhoneNo': (context) => const EditPhoneNumber(),
   '/profile': (context) => const ProfilePage(),
   '/resetpwd': (context) => const ResetPassword(),
+
+  //*Article
+  '/articlePage': ((context) => const BottomNavScreen(index: 1)),
+  '/articleDetails': (context) => const ArticleDetails(),
+
+  //*Challenge
+  '/challengePage': ((context) => const BottomNavScreen(index: 2)),
+  '/joinChallenge': ((context) => JoinChallengePage()),
+
+  //*Notification
+  '/notification': ((context) => NotificationPage()),
 
   //*Admin
   '/adminBtmNav': (context) => AdminBottomNavScreen(),
