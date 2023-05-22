@@ -1,7 +1,6 @@
-import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wmsm_flutter/view/example_provider.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_pwd.dart';
 import 'package:wmsm_flutter/viewmodel/user_auth/verification_model.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_username.dart';
@@ -10,6 +9,7 @@ import 'package:wmsm_flutter/view/user_profile/profile_page.dart';
 import 'package:wmsm_flutter/viewmodel/user_auth/authentication_model.dart';
 import 'model/users.dart';
 import 'view/custom/widgets/bottom_navigator_bar.dart';
+import 'view/health_conn/healthPage.dart';
 import 'view/intro_page.dart';
 import 'view/user_auth/reset_pwd_page.dart';
 import 'view/user_auth/pages/user_details.dart';
@@ -44,6 +44,8 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
   final args = settings.arguments;
 
   switch (settings.name) {
+    case '/provider':
+      return MaterialPageRoute(builder: (context) => const ProviderPage());
     case '/editUserName':
       return MaterialPageRoute(
           builder: (context) => EditUserName(user: args as Users));
@@ -77,7 +79,8 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
     case '/bmiInfo':
       return MaterialPageRoute(
           builder: (context) => BMIPage(user: args as Users));
-
+    case '/healthConn':
+      return MaterialPageRoute(builder: (context) => const HeahthPage());
     default:
       return null;
   }
