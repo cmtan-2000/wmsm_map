@@ -1,7 +1,6 @@
-import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wmsm_flutter/view/example_provider.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_pwd.dart';
 import 'package:wmsm_flutter/viewmodel/user_auth/verification_model.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_username.dart';
@@ -45,6 +44,8 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
   final args = settings.arguments;
 
   switch (settings.name) {
+    case '/provider':
+      return MaterialPageRoute(builder: (context) => const ProviderPage());
     case '/editUserName':
       return MaterialPageRoute(
           builder: (context) => EditUserName(user: args as Users));
@@ -79,8 +80,7 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
           builder: (context) => BMIPage(user: args as Users));
     case '/healthConn':
-      return MaterialPageRoute(
-          builder: (context) => const HeahthPage());
+      return MaterialPageRoute(builder: (context) => const HeahthPage());
     default:
       return null;
   }
