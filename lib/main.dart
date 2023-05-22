@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/routes.dart';
 import 'package:wmsm_flutter/view/custom/themes/custom_theme.dart';
+import 'package:wmsm_flutter/viewmodel/health_conn_view/health_conn_view_model.dart';
+import 'view/health_conn/healthPage.dart';
 import 'viewmodel/user_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -27,13 +29,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => UserViewModel())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserViewModel()),
+        ChangeNotifierProvider(
+          create: (_) => HealthConnViewModel(),
+          child: const HeahthPage(),
+        ),
+      ],
       child: MaterialApp(
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'My App',
         theme: customTheme,
-        initialRoute: '/',
+        initialRoute: '/healthConn',
         // routes: routes,
         onGenerateRoute: generateRoute,
       ),

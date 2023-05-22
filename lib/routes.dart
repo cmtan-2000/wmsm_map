@@ -10,6 +10,7 @@ import 'package:wmsm_flutter/view/user_profile/profile_page.dart';
 import 'package:wmsm_flutter/viewmodel/user_auth/authentication_model.dart';
 import 'model/users.dart';
 import 'view/custom/widgets/bottom_navigator_bar.dart';
+import 'view/health_conn/healthPage.dart';
 import 'view/intro_page.dart';
 import 'view/user_auth/reset_pwd_page.dart';
 import 'view/user_auth/pages/user_details.dart';
@@ -77,7 +78,9 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
     case '/bmiInfo':
       return MaterialPageRoute(
           builder: (context) => BMIPage(user: args as Users));
-
+    case '/healthConn':
+      return MaterialPageRoute(
+          builder: (context) => const HeahthPage());
     default:
       return null;
   }
