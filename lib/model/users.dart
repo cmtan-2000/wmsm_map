@@ -30,7 +30,9 @@ class Users {
         email = json['email'],
         phoneNumber = json['phoneNumber'],
         dateOfBirth = json['dateOfBirth'],
-        role = json['role'];
+        role = json['role'],
+        weight = json['weight'],
+        bmi = json['bmi'];
 
   Map<String, dynamic> toJson() => {
         'fullname': fullname,
@@ -39,6 +41,9 @@ class Users {
         'phoneNumber': phoneNumber,
         'dateOfBirth': dateOfBirth,
         'role': role,
+        'weight': weight,
+        'height': height,
+        'bmi': bmi
       };
 
   factory Users.fromSnapshot(DocumentSnapshot snapshot) {
@@ -50,6 +55,9 @@ class Users {
       phoneNumber: data['phoneNumber'],
       username: data['username'],
       role: data['role'],
+      weight: data['weight'],
+      height: data['height'],
+      bmi: data['bmi'],
     );
   }
 }

@@ -2,10 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
-import 'package:wmsm_flutter/view/user_profile/profile_page.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/cover_info.dart';
 
 import '../../../model/users.dart';
@@ -86,7 +84,7 @@ class _EditPhonePageWidgetState extends State<EditPhonePageWidget> {
               child: const Icon(LineAwesomeIcons.phone, color: Colors.black),
             ),
             title: Text(
-              _phoneno,
+              '+60 $_phoneno',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
@@ -126,7 +124,7 @@ class _EditPhonePageWidgetState extends State<EditPhonePageWidget> {
                         print("success!");
                       }).catchError((error) =>
                               print('Failed to update username: $error'));
-                              
+
                       snackBar("Update successfully!");
                       Navigator.pushReplacement(
                         context,

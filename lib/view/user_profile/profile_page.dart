@@ -10,8 +10,6 @@ import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/cover_profile.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/profile_menu_widget.dart';
 
-
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -183,6 +181,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
   void initState() {
     super.initState();
     Logger().i('user data: ${widget.user.username}');
+    Logger().v('user bmi: ${widget.user.bmi}');
   }
 
   @override
@@ -270,8 +269,9 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         icon: LineAwesomeIcons.phone,
                         color: Colors.black,
                         onTap: () {
-                          MyApp.navigatorKey.currentState!
-                              .pushNamed('/editPhoneNo', arguments: widget.user);
+                          MyApp.navigatorKey.currentState!.pushNamed(
+                              '/editPhoneNo',
+                              arguments: widget.user);
                         },
                         endIcon: true,
                       ),

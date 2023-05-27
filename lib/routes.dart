@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/view/example_provider.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_pwd.dart';
 import 'package:wmsm_flutter/viewmodel/user_auth/verification_model.dart';
@@ -44,6 +43,9 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
   final args = settings.arguments;
 
   switch (settings.name) {
+    case '/':
+      return MaterialPageRoute(
+          builder: (context) => const AuthenticationViewModel());
     case '/provider':
       return MaterialPageRoute(builder: (context) => const ProviderPage());
     case '/editUserName':
@@ -62,9 +64,6 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const ProfilePage());
     case '/resetpwd':
       return MaterialPageRoute(builder: (context) => const ResetPassword());
-    case '/':
-      return MaterialPageRoute(
-          builder: (context) => const AuthenticationViewModel());
     case '/userdetails':
       return MaterialPageRoute(builder: (context) => const UserDetails());
     case '/setuppassword':

@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'My App',
         theme: customTheme,
-        initialRoute: '/provider',
+        initialRoute: '/',
         // routes: routes,
         onGenerateRoute: generateRoute,
       ),
