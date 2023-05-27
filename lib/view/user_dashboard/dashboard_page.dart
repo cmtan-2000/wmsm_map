@@ -47,7 +47,7 @@ class _DashboardState extends State<Dashboard> {
     return user.role == 'admin'
         ? const Center(child: Text('This is dashboard page Admin'))
         : user.role == 'user'
-            ? const UserDashboard()
+            ? UserDashboard(user: user)
             : const Center(child: CircularProgressIndicator());
   }
 }
@@ -55,7 +55,10 @@ class _DashboardState extends State<Dashboard> {
 class UserDashboard extends StatelessWidget {
   const UserDashboard({
     super.key,
+    required this.user,
   });
+
+  final Users user;
 
   @override
   Widget build(BuildContext context) {
@@ -96,11 +99,14 @@ class UserDashboard extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              'Welcome back\nSiew Yu Xuan!',
+                              'Welcome back\n${user.fullname}!',
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                              textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 20),
                             //?Step count card

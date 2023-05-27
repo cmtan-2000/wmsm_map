@@ -45,6 +45,23 @@ class _ArticlePageState extends State<ArticlePage> {
 
   @override
   Widget build(BuildContext context) {
+    return user.role == 'admin'
+        ? const Center(child: Text('This is admin aricle page'))
+        : user.role == 'user'
+            ? const UserArticlePage()
+            : const Center(
+                child: CircularProgressIndicator(),
+              );
+  }
+}
+
+class UserArticlePage extends StatelessWidget {
+  const UserArticlePage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[

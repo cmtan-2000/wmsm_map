@@ -46,6 +46,24 @@ class _ChallengePageState extends State<ChallengePage> {
 
   @override
   Widget build(BuildContext context) {
+    return user.role == 'admin'
+        ? const Center(
+            child: Text('This is challenge page for Admin')) // Admin Page
+        : user.role == 'user'
+            ? const UserChallengePage()
+            : const Center(
+                child: CircularProgressIndicator(),
+              );
+  }
+}
+
+class UserChallengePage extends StatelessWidget {
+  const UserChallengePage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
