@@ -1,11 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
-import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
-import 'package:wmsm_flutter/view/user_profile/profile_page.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/cover_info.dart';
 
 import '../../../main.dart';
@@ -15,7 +10,9 @@ import '../../shared/password_field.dart';
 //!rmb to ask them if still need this page
 
 class EditPassword extends StatefulWidget {
-  const EditPassword({super.key});
+  const EditPassword({super.key, required this.user});
+
+  final Users user;
 
   @override
   State<EditPassword> createState() => _EditPasswordState();
@@ -27,7 +24,7 @@ class _EditPasswordState extends State<EditPassword> {
     return CoverInfo(
       content: const EditPwdPageWidget(),
       title: 'Edit Password',
-      users: users,
+      users: widget.user,
     );
   }
 }
@@ -94,7 +91,7 @@ class _EditPwdPageWidgetState extends State<EditPwdPageWidget> {
               'Current Password',
               style: Theme.of(context)
                   .textTheme
-                  .displaySmall
+                  .bodyMedium
                   ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10.0),
@@ -125,7 +122,7 @@ class _EditPwdPageWidgetState extends State<EditPwdPageWidget> {
               'New Password',
               style: Theme.of(context)
                   .textTheme
-                  .displaySmall
+                  .bodyMedium
                   ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10.0),
@@ -136,13 +133,14 @@ class _EditPwdPageWidgetState extends State<EditPwdPageWidget> {
                   if (value.length < 6) {
                     return "Please enter at least 6 characters";
                   }
+                  return null;
                 }),
             const SizedBox(height: 20.0),
             Text(
               'Confirm New Password',
               style: Theme.of(context)
                   .textTheme
-                  .displaySmall
+                  .bodyMedium
                   ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10.0),
@@ -153,6 +151,7 @@ class _EditPwdPageWidgetState extends State<EditPwdPageWidget> {
                   if (value.length < 6) {
                     return "Please enter at least 6 characters";
                   }
+                  return null;
                 }),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),

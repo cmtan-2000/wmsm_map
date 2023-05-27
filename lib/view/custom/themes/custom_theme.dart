@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 final customTheme = ThemeData(
   useMaterial3: true, //upgrade from Material2 to Material3
   primaryColor: const Color.fromRGBO(255, 188, 2, 1),
-  accentColor: const Color.fromARGB(97, 231, 170, 0),
   fontFamily: 'Poppins',
+  // accentColor: const Color.fromARGB(97, 231, 170, 0),
   textTheme: const TextTheme(
     headline1: TextStyle(
         fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black),

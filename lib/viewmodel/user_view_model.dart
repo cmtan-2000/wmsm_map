@@ -16,7 +16,7 @@ class UserViewModel with ChangeNotifier {
       weight: 0.0,
       height: 0.0,
       gender: '',
-      bmi: 0.0,
+      bmi: 0.0, role: '',
     );
   }
 
@@ -52,7 +52,7 @@ class UserViewModel with ChangeNotifier {
       weight: weight!,
       height: height!,
       gender: gender!,
-      bmi: bmi!,
+      bmi: bmi!, role: '',
     );
     notifyListeners();
   }

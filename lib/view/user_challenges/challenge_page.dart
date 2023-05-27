@@ -5,8 +5,44 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 
-class ChallengePage extends StatelessWidget {
+import '../../model/users.dart';
+import '../../viewmodel/shared/shared_pref.dart';
+
+class ChallengePage extends StatefulWidget {
   const ChallengePage({super.key});
+
+  @override
+  State<ChallengePage> createState() => _ChallengePageState();
+}
+
+class _ChallengePageState extends State<ChallengePage> {
+  Users user = Users(
+      dateOfBirth: '',
+      email: '',
+      fullname: '',
+      phoneNumber: '',
+      username: '',
+      role: '');
+  SharedPref sharedPref = SharedPref();
+
+  @override
+  initState() {
+    super.initState();
+    initialGetSavedData();
+  }
+
+  void initialGetSavedData() async {
+    Users response = Users.fromJson(await sharedPref.read("user"));
+    setState(() {
+      user = Users(
+          dateOfBirth: response.dateOfBirth,
+          email: response.email,
+          fullname: response.fullname,
+          phoneNumber: response.phoneNumber,
+          role: response.role,
+          username: response.username);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

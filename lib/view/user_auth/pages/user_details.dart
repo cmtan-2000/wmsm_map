@@ -139,7 +139,8 @@ class _UserDetailsWidgetState extends State<UserDetailsWidget> {
         username: usernameEC.text,
         email: emailEC.text.trim(),
         phoneNumber: phoneEC.text,
-        dateOfBirth: dobEC.text);
+        dateOfBirth: dobEC.text,
+        role: '');
     sharedPref.save("userData", user);
   }
 

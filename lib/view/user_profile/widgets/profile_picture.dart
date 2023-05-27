@@ -28,7 +28,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
 
   Future pickImage(ImageSource source) async {
     XFile? image = await ImagePicker().pickImage(source: source);
-    // print(image!.path);
+
     if (image == null) return;
 
     Reference refRoot = FirebaseStorage.instance.ref();
