@@ -19,18 +19,10 @@ class AdminJoinChallengePage extends StatefulWidget {
 }
 
 class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
-  NewChallenge challenge = NewChallenge(
-      newChallengeTitle: '',
-      newChallengeDesc: '',
-      newChallengeEventDuration: '',
-      newChallengeImgPath: '',
-      newChallengeSteps: 0,
-      newChallengeVoucher: []);
   int voucherCount = 0;
   FirebaseFirestore db = FirebaseFirestore.instance;
-
-  //push all challenge here into a list
-  final List<NewChallenge> listOfNewChallenge = [];
+  String id = '';
+  List<NewChallenge> listOfNewChallenge = [];
   String defaultUrl =
       'https://i1.sndcdn.com/avatars-000307598863-zfe44f-t500x500.jpg';
 
@@ -41,8 +33,8 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: db.collection("challenges").get(),
+    return StreamBuilder(
+        stream: db.collection("challenges").snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<String> documentIds =
@@ -69,23 +61,6 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                 ),
               );
             } else {
-              for (var doc in snapshot.data!.docs) {
-                List<dynamic> voucherList = doc['voucher'];
-                List<String> newChallengeVoucher = voucherList.cast<String>();
-
-                NewChallenge challenge = NewChallenge(
-                    //get the data from firestore and store in a list
-                    newChallengeTitle: doc['title'],
-                    newChallengeDesc: doc['description'],
-                    newChallengeEventDuration: doc['duration'],
-                    newChallengeImgPath: doc['imageUrl'],
-                    newChallengeSteps: doc['stepGoal'],
-                    newChallengeVoucher: newChallengeVoucher);
-                listOfNewChallenge.add(challenge);
-              }
-
-              Logger().i(listOfNewChallenge);
-
               return Scaffold(
                 body: CustomScrollView(
                   slivers: <Widget>[
@@ -106,127 +81,145 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                               child: ListView.builder(
                                   padding: const EdgeInsets.only(
                                       top: 10, left: 20, right: 20),
-                                  itemCount: listOfNewChallenge.length,
+                                  itemCount: documentIds.length,
                                   itemBuilder: (context, index) {
-                                    if (index >= 0 &&
-                                        index < listOfNewChallenge.length) {
-                                      NewChallenge challenge =
-                                          listOfNewChallenge[index];
+                                    List<dynamic> voucherList =
+                                        snapshot.data!.docs[index]['voucher'];
+                                    List<String> newChallengeVoucher =
+                                        voucherList
+                                            .map(
+                                                (voucher) => voucher.toString())
+                                            .toList();
 
-                                      //* loop voucher length
-                                      int voucherLength =
-                                          challenge.newChallengeVoucher.length;
+                                    NewChallenge challenge = NewChallenge(
+                                      //get the data from firestore and store in a list
+                                      newChallengeTitle:
+                                          snapshot.data!.docs[index]['title'],
+                                      newChallengeDesc: snapshot
+                                          .data!.docs[index]['description'],
+                                      newChallengeEventDuration: snapshot
+                                          .data!.docs[index]['duration'],
+                                      newChallengeImgPath: snapshot
+                                          .data!.docs[index]['imageUrl'],
+                                      newChallengeSteps: snapshot
+                                          .data!.docs[index]['stepGoal'],
+                                      newChallengeVoucher: newChallengeVoucher,
+                                    );
 
-                                      return Dismissible(
-                                        //*cannot use the same key for dismissible, must be unique for each
-                                        key: UniqueKey(),
-                                        background: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          child: Container(
-                                            alignment:
-                                                AlignmentDirectional.centerEnd,
-                                            color: Colors.red[400],
-                                            padding: const EdgeInsets.only(
-                                                right: 10),
-                                            child: const Icon(
-                                                LineAwesomeIcons.trash,
-                                                color: Colors.white),
-                                          ),
+                                    listOfNewChallenge.add(challenge);
+
+                                    //* get the document id
+                                    String id = documentIds[index];
+
+                                    Logger().wtf(index);
+                                    Logger().i(challenge.newChallengeImgPath);
+                                    Logger().i(challenge);
+
+                                    //* loop voucher length
+                                    int voucherLength =
+                                        challenge.newChallengeVoucher.length;
+
+                                    return Dismissible(
+                                      //*cannot use the same key for dismissible, must be unique for each
+                                      key: UniqueKey(),
+                                      background: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Container(
+                                          alignment:
+                                              AlignmentDirectional.centerEnd,
+                                          color: Colors.red[400],
+                                          padding:
+                                              const EdgeInsets.only(right: 10),
+                                          child: const Icon(
+                                              LineAwesomeIcons.trash,
+                                              color: Colors.white),
                                         ),
-                                        onDismissed: (direction) {
-                                          //* Remove the challenge from list
-                                          //!once remove, challenge shud be deleted from firebase
-                                          db
-                                              .collection('challenges')
-                                              .doc(challenge.newChallengeTitle)
-                                              .delete()
-                                              .then((value) => Logger().i(
-                                                  'Challenge deleted successfully'))
-                                              .catchError((error) => Logger().e(
-                                                  'Failed to delete challenge: $error'));
+                                      ),
+                                      onDismissed: (direction) {
+                                        //* Remove the challenge from list
+                                        db
+                                            .collection('challenges')
+                                            .doc(id)
+                                            .delete()
+                                            .then((value) => Logger().i(
+                                                'Challenge deleted successfully'))
+                                            .catchError((error) => Logger().e(
+                                                'Failed to delete challenge: $error'));
 
-                                          setState(() {
-                                            listOfNewChallenge.removeAt(index);
-                                          });
+                                        setState(() {
+                                          listOfNewChallenge.removeAt(index);
+                                        });
 
-                                          direction ==
-                                                  DismissDirection.endToStart
-                                              ? ScaffoldMessenger.of(context)
-                                                  .showSnackBar(const SnackBar(
-                                                  content: Text(
-                                                      'Deleted successfully'),
-                                                  duration:
-                                                      Duration(seconds: 1),
-                                                ))
-                                              : null;
-                                        },
-                                        child: Card(
-                                          elevation: 2,
-                                          child: ListTile(
-                                            onTap: () {
-                                              MyApp.navigatorKey.currentState!
-                                                  .push(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      JoinChallengeDetails(
-                                                    challengeTitle: challenge
-                                                        .newChallengeTitle,
-                                                    challengeDesc: challenge
-                                                        .newChallengeDesc,
-                                                    challengeEventDuration:
-                                                        challenge
-                                                            .newChallengeEventDuration,
-                                                    challengeImgPath: challenge
-                                                        .newChallengeImgPath,
+                                        direction == DismissDirection.endToStart
+                                            ? ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                content: Text(
+                                                    'Deleted successfully'),
+                                                duration: Duration(seconds: 1),
+                                              ))
+                                            : null;
+                                      },
+                                      child: Card(
+                                        elevation: 2,
+                                        child: ListTile(
+                                          onTap: () {
+                                            MyApp.navigatorKey.currentState!
+                                                .push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    JoinChallengeDetails(
+                                                  challengeTitle: challenge
+                                                      .newChallengeTitle,
+                                                  challengeDesc: challenge
+                                                      .newChallengeDesc,
+                                                  challengeEventDuration: challenge
+                                                      .newChallengeEventDuration,
+                                                  challengeImgPath: challenge
+                                                      .newChallengeImgPath,
 
-                                                    //*Challenge steps -> int
-                                                    challengeSteps: challenge
-                                                        .newChallengeSteps
-                                                        .toString(),
-                                                    challengeVoucher: challenge
-                                                            .newChallengeVoucher[
-                                                        voucherCount %
-                                                            voucherLength],
+                                                  //*Challenge steps -> int
+                                                  challengeSteps: challenge
+                                                      .newChallengeSteps
+                                                      .toString(),
+                                                  challengeVoucher: challenge
+                                                          .newChallengeVoucher[
+                                                      voucherCount %
+                                                          voucherLength],
 
-                                                    user: widget.user,
-                                                  ),
+                                                  user: widget.user,
                                                 ),
-                                              );
-                                            },
+                                              ),
+                                            );
+                                          },
 
-                                            //* image icon for challenge
-                                            leading: CircleAvatar(
-                                              foregroundImage:
-                                                  CachedNetworkImageProvider(
-                                                      challenge
-                                                              .newChallengeImgPath ??
-                                                          defaultUrl),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              radius: 25,
-                                            ),
-
-                                            //* title for challenge
-                                            title: Text(
-                                                challenge.newChallengeTitle),
-
-                                            //* duration for challenge
-                                            subtitle: Text(
-                                                challenge
-                                                    .newChallengeEventDuration,
-                                                style: const TextStyle(
-                                                    fontSize: 10,
-                                                    color: Colors.teal)),
-
-                                            trailing: const Icon(
-                                                Icons.arrow_forward_ios),
+                                          //* image icon for challenge
+                                          leading: CircleAvatar(
+                                            foregroundImage:
+                                                CachedNetworkImageProvider(
+                                                    challenge
+                                                            .newChallengeImgPath ??
+                                                        defaultUrl),
+                                            backgroundColor: Colors.transparent,
+                                            radius: 25,
                                           ),
+
+                                          //* title for challenge
+                                          title:
+                                              Text(challenge.newChallengeTitle),
+
+                                          //* duration for challenge
+                                          subtitle: Text(
+                                              challenge
+                                                  .newChallengeEventDuration,
+                                              style: const TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.teal)),
+
+                                          trailing: const Icon(
+                                              Icons.arrow_forward_ios),
                                         ),
-                                      );
-                                    } else {
-                                      return Container();
-                                    }
+                                      ),
+                                    );
                                   }),
                             ),
                           ],

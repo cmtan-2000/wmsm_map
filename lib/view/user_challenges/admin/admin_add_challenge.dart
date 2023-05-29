@@ -400,56 +400,54 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
                                   Expanded(
                                     child: CustomElevatedButton(
                                         child: const Text('Add Challenge'),
-                                        onPressed: () {
+                                        onPressed: () async {
                                           if (_formKey.currentState!
                                               .validate()) {
-                                            storeData();
-                                          }
-
-                                          Logger().d(
-                                              '${selectedDates.start.year}/${selectedDates.start.month}/${selectedDates.start.day} - ${selectedDates.end.year}/${selectedDates.end.month}/${selectedDates.end.day}');
-
-                                          List<String> voucherArray = [];
-                                          for (var array in cVoucherEC) {
-                                            Logger().d(array.text);
-                                            voucherArray.add(array.text);
-                                          }
-
-                                          String stepString = cStepsEC.text;
-                                          int stepGoal = 0;
-
-                                          Logger().i(imageChallenge);
-
-                                          if (stepString.isNotEmpty) {
-                                            try {
-                                              stepGoal =
-                                                  int.parse(cStepsEC.text);
-                                            } catch (e, stackTrace) {
-                                              Logger().e('$e\n$stackTrace');
+                                            List<String> voucherArray = [];
+                                            for (var array in cVoucherEC) {
+                                              Logger().d(array.text);
+                                              voucherArray.add(array.text);
                                             }
+
+                                            String stepString = cStepsEC.text;
+                                            int stepGoal = 0;
+
+                                            if (stepString.isNotEmpty) {
+                                              try {
+                                                stepGoal =
+                                                    int.parse(cStepsEC.text);
+                                              } catch (e, stackTrace) {
+                                                Logger().e('$e\n$stackTrace');
+                                              }
+                                            }
+
+                                            Logger().wtf(imageChallenge);
+
+                                            //*Insert data into firebase
+                                            Map<String, dynamic> data = {
+                                              'title': cTitleEC.text,
+                                              'duration': cDurationEC.text,
+                                              'description':
+                                                  cDescriptionEC.text,
+                                              'stepGoal': stepGoal,
+                                              'voucher': FieldValue.arrayUnion(
+                                                  voucherArray),
+                                              'imageUrl': imageChallenge,
+                                            };
+
+                                            db
+                                                .collection("challenges")
+                                                .add(data)
+                                                .then((value) {
+                                              Logger().i('Challenge added');
+                                            }).catchError((error) {
+                                              Logger().w(
+                                                  'Error inserting challenge into firebase');
+                                            });
+                                            storeData();
+                                            Navigator.pop(context);
+                                            snackBar('Challenge added');
                                           }
-
-                                          //*Insert data into firebase
-                                          Map<String, dynamic> data = {
-                                            'title': cTitleEC.text,
-                                            'duration': cDurationEC.text,
-                                            'description': cDescriptionEC.text,
-                                            'stepGoal': stepGoal,
-                                            'voucher': FieldValue.arrayUnion(
-                                                voucherArray),
-                                            'imageUrl': imageChallenge,
-                                          };
-
-                                          db
-                                              .collection("challenges")
-                                              .add(data)
-                                              .then((value) {
-                                            Logger().i('Challenge added');
-                                          }).catchError((error) {
-                                            Logger().w(
-                                                'Error inserting challenge into firebase');
-                                          });
-                                          snackBar('Challenge added');
                                         }),
                                   ),
                                 ],
