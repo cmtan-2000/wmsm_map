@@ -64,11 +64,15 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     return Scaffold(
       body: screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Theme.of(context).primaryColor,
+          selectedItemColor: role == 'admin'
+              ? Colors.blueGrey
+              : Theme.of(context).primaryColor,
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-          unselectedItemColor: Theme.of(context).primaryColor,
-          unselectedLabelStyle:
-              TextStyle(color: Theme.of(context).primaryColor),
+          unselectedItemColor: role == 'admin'
+              ? Colors.blueGrey
+              : Theme.of(context).primaryColor,
+          // unselectedLabelStyle:
+          //     TextStyle(color: Theme.of(context).primaryColor),
           currentIndex: _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
           items: [

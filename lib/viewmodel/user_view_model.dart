@@ -9,22 +9,21 @@ class UserViewModel with ChangeNotifier {
     _user = Users(
       fullname: '',
       username: '',
-      //password: '',
       email: '',
       phoneNumber: '',
       dateOfBirth: '',
       weight: 0.0,
       height: 0.0,
       gender: '',
-      bmi: 0.0, role: '',
+      bmi: 0.0,
+      role: '',
     );
   }
 
   String get fullname => _user.fullname;
   String get username => _user.username;
-  String get password => _user.username;
-  String get email => _user.username;
-  String get phoneNumber => _user.username;
+  String get email => _user.email;
+  String get phoneNumber => _user.phoneNumber;
   String get dateOfBirth => _user.dateOfBirth;
   double? get weight => _user.weight;
   double? get height => _user.height;
@@ -34,7 +33,6 @@ class UserViewModel with ChangeNotifier {
   void setUser(
       String fullname,
       String username,
-      //String password,
       String email,
       String phoneNumber,
       String dateOfBirth,
@@ -45,14 +43,14 @@ class UserViewModel with ChangeNotifier {
     _user = Users(
       fullname: fullname,
       username: username,
-      //password: password,
       email: email,
       phoneNumber: phoneNumber,
       dateOfBirth: dateOfBirth,
       weight: weight!,
       height: height!,
       gender: gender!,
-      bmi: bmi!, role: '',
+      bmi: bmi!,
+      role: '',
     );
     notifyListeners();
   }

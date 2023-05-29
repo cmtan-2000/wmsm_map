@@ -80,7 +80,9 @@ class _EditPhonePageWidgetState extends State<EditPhonePageWidget> {
               padding: const EdgeInsets.all(5.0),
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Theme.of(context).primaryColor),
+                  color: widget.user.role == 'admin'
+                      ? Colors.blueGrey[200]
+                      : Theme.of(context).primaryColor),
               child: const Icon(LineAwesomeIcons.phone, color: Colors.black),
             ),
             title: Text(
@@ -103,6 +105,7 @@ class _EditPhonePageWidgetState extends State<EditPhonePageWidget> {
             labelText: 'New Phone Number',
             hintText: '',
             controller: phoneNoEC,
+            keyboardType: TextInputType.number,
           ),
           const SizedBox(
             height: 20,

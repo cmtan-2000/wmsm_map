@@ -23,7 +23,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
   //*User choose img from gallery or photo
   String defaultImgUrl =
       "https://i1.sndcdn.com/avatars-000307598863-zfe44f-t500x500.jpg"; //default image
-  String imageUrl = '', username = '', fullname = '';
+  String imageUrl = '', username = '', fullname = '', role = '';
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   Future pickImage(ImageSource source) async {
@@ -62,6 +62,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
     super.initState();
     username = widget.users.username;
     fullname = widget.users.fullname;
+    role = widget.users.role;
   }
 
   @override
@@ -79,6 +80,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
             // imageUrl = snapshot.data!.data()!['profile_picture'];
             username = snapshot.data!.data()!['username'];
             fullname = snapshot.data!.data()!['fullname'];
+            role = snapshot.data!.data()!['role'];
 
             return Column(
               children: [
@@ -145,7 +147,6 @@ class _ProfilePictureState extends State<ProfilePicture> {
                                           onPressed: () {
                                             //*Take photo
                                             pickImage(ImageSource.camera);
-                                            //*store URL into user's datbase
 
                                             Navigator.pop(context);
                                           },
@@ -188,11 +189,16 @@ class _ProfilePictureState extends State<ProfilePicture> {
                 ),
                 const SizedBox(height: 10),
                 //*Name
-                Text(fullname, style: Theme.of(context).textTheme.displaySmall),
+                Text(fullname,
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          color: role == 'admin' ? Colors.white : Colors.black,
+                        )),
                 //*Username
                 Text(
                   '@$username',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: role == 'admin' ? Colors.white : Colors.black,
+                      ),
                 )
               ],
             );

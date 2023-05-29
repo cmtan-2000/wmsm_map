@@ -19,14 +19,13 @@ class CoverContent extends StatelessWidget {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: true,
-          leading: Container(),
-          backgroundColor: Theme.of(context).primaryColor,
+          automaticallyImplyLeading: false,
+          backgroundColor: users.role == 'admin'
+              ? Colors.blueGrey
+              : Theme.of(context).primaryColor,
           elevation: 0,
           title: Text(title,
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  )), //*title at app bar
+              style: Theme.of(context).textTheme.bodyLarge), //*title at app bar
         ),
         body: Stack(
           children: [
@@ -43,7 +42,9 @@ class CoverContent extends StatelessWidget {
                   ),
                   child: Container(
                     //*background colour of container
-                    color: Theme.of(context).primaryColor,
+                    color: users.role == 'admin'
+                        ? Colors.blueGrey
+                        : Theme.of(context).primaryColor,
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: ProfilePicture(users: users),
