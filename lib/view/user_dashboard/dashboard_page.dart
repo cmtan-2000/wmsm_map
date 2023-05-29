@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/user_dashboard/widgets/barchart.dart';
+import 'package:wmsm_flutter/viewmodel/health_conn_view/health_conn_view_model.dart';
 import 'package:wmsm_flutter/viewmodel/shared/shared_pref.dart';
 
 class Dashboard extends StatefulWidget {
@@ -27,6 +29,9 @@ class _DashboardState extends State<Dashboard> {
   initState() {
     super.initState();
     initialGetSavedData();
+    Future.delayed(const Duration(seconds: 3), () async {
+      Provider.of<HealthConnViewModel>(context, listen: false).getSteps();
+    });
   }
 
   void initialGetSavedData() async {
@@ -135,14 +140,24 @@ class UserDashboard extends StatelessWidget {
                                         SizedBox(
                                           width: 200,
                                           child: Column(
-                                            children: const [
-                                              //TODO: Add step count
-                                              Text('1000',
-                                                  style: TextStyle(
-                                                      fontSize: 60,
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              Text('steps',
+                                            children: [
+                                              //TODO: (DONE) Add step count
+                                              Consumer<HealthConnViewModel>(
+                                                  builder: (context, viewModel,
+                                                          child) =>
+                                                      viewModel.step['step'] ==
+                                                              null
+                                                          ? const CircularProgressIndicator()
+                                                          : Text(
+                                                              viewModel
+                                                                  .step['step']
+                                                                  .toString(),
+                                                              style: const TextStyle(
+                                                                  fontSize: 60,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold))),
+                                              const Text('steps',
                                                   style: TextStyle(
                                                       fontSize: 25,
                                                       fontWeight:

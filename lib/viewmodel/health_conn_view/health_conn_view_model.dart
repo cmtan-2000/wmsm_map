@@ -24,7 +24,7 @@ class HealthConnViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getAuthorize() async {
+  Future<bool> getAuthorize() async {
     await Permission.activityRecognition.request();
     await Permission.location.request();
 
@@ -41,7 +41,9 @@ class HealthConnViewModel extends ChangeNotifier {
         throw Exception('Exception in authorize: $e');
       }
     }
-    notifyListeners();
+    // notifyListeners();
+    // getSteps();
+    return authorized;
   }
 
   void getSteps() async {
@@ -49,19 +51,19 @@ class HealthConnViewModel extends ChangeNotifier {
     DateTime endTime = DateTime.now();
     DateTime startTime = DateTime(endTime.year, endTime.month, endTime.day);
 
-    bool request =
-        await health.requestAuthorization(types, permissions: permissions);
+    // bool request =
+    //     await health.requestAuthorization(types, permissions: permissions);
 
-    if (request == false) {
-      _step = {
-        'step': null,
-        'startTime': null,
-        'endTime': null,
-        'response': 'fail',
-      };
-      notifyListeners();
-      return;
-    }
+    // if (request == false) {
+    //   _step = {
+    //     'step': null,
+    //     'startTime': null,
+    //     'endTime': null,
+    //     'response': 'fail',
+    //   };
+    //   notifyListeners();
+    //   return;
+    // }
 
     try {
       step = await health.getTotalStepsInInterval(startTime, endTime);

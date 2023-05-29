@@ -1,8 +1,12 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
+import 'package:wmsm_flutter/viewmodel/health_conn_view/health_conn_view_model.dart';
 
 import 'custom/themes/custom_theme.dart';
 
@@ -225,13 +229,34 @@ class ContentClass extends StatelessWidget {
                     Expanded(child:
                         LayoutBuilder(builder: (BuildContext, BoxConstraints) {
                       if (BoxConstraints.minWidth < Config.minWidth + 30) {
-                        return CustomElevatedButton(
-                            onPressed: () =>
-                                Navigator.of(context).pushNamed('/btmNav'),
+                        // return CustomElevatedButton(
+                        //     onPressed: () {
+                        //       Logger().i("Check here");
+                        //       // =>
+                        //       //   Navigator.of(context).pushNamed('/btmNav'),
+                        //     },
+                        //     child: Text(
+                        //       'CONNECT YOUR TRACKER TO START',
+                        //       style: TextStyle(fontSize: 12),
+                        //     ));
+                        return Consumer<HealthConnViewModel>(
+                          builder: (context, viewModel, child) =>
+                              CustomElevatedButton(
+                            onPressed: () async {
+                              var data = await viewModel.getAuthorize();
+
+                              if (data) {
+                                Navigator.of(context).pushNamed('/btmNav');
+                              }else{
+                                
+                              }
+                            },
                             child: Text(
-                              'CONNECT YOUR TRACKER TO START',
+                              'Connect Your Tracker to START: ${viewModel.authorize}',
                               style: TextStyle(fontSize: 12),
-                            ));
+                            ),
+                          ),
+                        );
                       } else {
                         return CustomElevatedButton(
                             onPressed: () =>
