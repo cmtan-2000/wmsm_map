@@ -1,9 +1,11 @@
 // This is challenge page
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:logger/logger.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
+import 'package:wmsm_flutter/view/user_challenges/admin/admin_manage_challenge_page.dart';
 
 import '../../model/users.dart';
 import '../../viewmodel/shared/shared_pref.dart';
@@ -23,15 +25,25 @@ class _ChallengePageState extends State<ChallengePage> {
       phoneNumber: '',
       username: '',
       role: '');
+
+  // NewChallenge challenge = NewChallenge(
+  //     newChallengeDesc: '',
+  //     newChallengeEventDuration: '',
+  //     newChallengeImgPath: '',
+  //     newChallengeSteps: 0,
+  //     newChallengeTitle: '',
+  //     newChallengeVoucher: []);
+
   SharedPref sharedPref = SharedPref();
 
   @override
   initState() {
     super.initState();
-    initialGetSavedData();
+    initialGetUserSavedData();
+    // initialGetChallengeSavedData();
   }
 
-  void initialGetSavedData() async {
+  void initialGetUserSavedData() async {
     Users response = Users.fromJson(await sharedPref.read("user"));
     setState(() {
       user = Users(
@@ -44,16 +56,31 @@ class _ChallengePageState extends State<ChallengePage> {
     });
   }
 
+  // void initialGetChallengeSavedData() async {
+  //   NewChallenge response =
+  //       NewChallenge.fromJson(await sharedPref.read("challenges"));
+  //   setState(() {
+  //     challenge = NewChallenge(
+  //         newChallengeDesc: response.newChallengeDesc,
+  //         newChallengeEventDuration: response.newChallengeEventDuration,
+  //         newChallengeImgPath: response.newChallengeImgPath,
+  //         newChallengeSteps: response.newChallengeSteps,
+  //         newChallengeTitle: response.newChallengeTitle,
+  //         newChallengeVoucher: response.newChallengeVoucher);
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return user.role == 'admin'
-        ? const Center(
-            child: Text('This is challenge page for Admin')) // Admin Page
+        //*if is admin, directly head to the list of challenge
+        ? AdminJoinChallengePage(
+            user: user,
+          )
+        //*else if is user, head to where they view their challenge progress
         : user.role == 'user'
             ? const UserChallengePage()
-            : const Center(
-                child: CircularProgressIndicator(),
-              );
+            : const Center(child: CircularProgressIndicator()); // Admin Page
   }
 }
 
@@ -65,20 +92,19 @@ class UserChallengePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            floating: true,
-            snap: true,
-            title:
-                Text('Article', style: Theme.of(context).textTheme.bodyLarge),
-            automaticallyImplyLeading: false,
-          ),
-          SliverToBoxAdapter(
-              child: Container(
-            color: Theme.of(context).primaryColor,
-            height: MediaQuery.of(context).size.height * 0.9,
-            child: Column(
+      body: Container(
+        color: Theme.of(context).primaryColor,
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              floating: true,
+              snap: true,
+              title: Text('Challenge',
+                  style: Theme.of(context).textTheme.bodyLarge),
+              automaticallyImplyLeading: false,
+            ),
+            SliverToBoxAdapter(
+                child: Column(
               children: [
                 const SizedBox(height: 20),
                 Card(
@@ -86,8 +112,8 @@ class UserChallengePage extends StatelessWidget {
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: Padding(
-                      padding:
-                          const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 20.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0, vertical: 20.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -101,37 +127,37 @@ class UserChallengePage extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
-                          //! TODO: CRUD ONGOING CHALLENGE!!
+                          //TODO: READ ONGOING CHALLENGE
                           const OngoingChallengeCard(
                             ongoingTitle: 'Walk 100 miles',
                             ongoingImgPath: 'assets/images/challenge1.png',
                             ongoingPercentage: 0.6,
-                            ongonigSteps: 600,
+                            ongoingSteps: 600,
                             challengeSteps: 1000,
                           ),
                           const OngoingChallengeCard(
                             ongoingTitle: 'Walk for 30 minutes everyday',
                             ongoingImgPath: 'assets/images/challenge2.png',
                             ongoingPercentage: 0.6,
-                            ongonigSteps: 600,
+                            ongoingSteps: 600,
                             challengeSteps: 1000,
                           ),
                           const OngoingChallengeCard(
                             ongoingTitle: 'Burn 100 calories per day',
                             ongoingImgPath: 'assets/images/challenge3.png',
                             ongoingPercentage: 0.6,
-                            ongonigSteps: 600,
+                            ongoingSteps: 600,
                             challengeSteps: 1000,
                           ),
-                          //!
+
                           const SizedBox(height: 20),
                           CustomOutlinedButton(
                             disabled: false,
                             iconData: LineAwesomeIcons.trophy,
                             onPressed: () {
-                              print('Join Challenge');
+                              Logger().i('Join Challenge');
                               MyApp.navigatorKey.currentState!
-                                  .pushNamed('/joinChallenge');
+                                  .pushNamed('/userjoinChallenge');
                             },
                             text: 'Join New Challenge',
                           )
@@ -141,9 +167,9 @@ class UserChallengePage extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-          )),
-        ],
+            )),
+          ],
+        ),
       ),
     );
   }
@@ -155,14 +181,14 @@ class OngoingChallengeCard extends StatelessWidget {
     required this.ongoingTitle,
     required this.ongoingImgPath,
     required this.ongoingPercentage,
-    required this.ongonigSteps,
+    required this.ongoingSteps,
     required this.challengeSteps,
   });
 
   final String ongoingTitle;
   final String ongoingImgPath;
   final double ongoingPercentage;
-  final int ongonigSteps;
+  final int ongoingSteps;
   final int challengeSteps;
 
   @override
@@ -192,7 +218,7 @@ class OngoingChallengeCard extends StatelessWidget {
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
-                Text('$ongonigSteps/$challengeSteps steps'),
+                Text('$ongoingSteps/$challengeSteps steps'),
                 const SizedBox(height: 10),
                 LinearPercentIndicator(
                   width: MediaQuery.of(context).size.width * 0.4,

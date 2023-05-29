@@ -1,5 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:logger/logger.dart';
+import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 
 class JoinChallengeDetails extends StatelessWidget {
@@ -11,6 +14,7 @@ class JoinChallengeDetails extends StatelessWidget {
     required this.challengeSteps,
     required this.challengeVoucher,
     required this.challengeEventDuration,
+    required this.user,
   });
 
   final String challengeTitle;
@@ -19,24 +23,47 @@ class JoinChallengeDetails extends StatelessWidget {
   final String challengeSteps;
   final String challengeVoucher;
   final String challengeEventDuration;
+  final Users user;
+
+  CustomOutlinedButton _outlineButton(String role) {
+    if (role == 'user') {
+      return CustomOutlinedButton(
+          onPressed: () {
+            //TODO: add one list of challenge whenever user enrol, at challenge_page.dart
+            Logger().v(role, 'user join challenge');
+          },
+          iconData: LineAwesomeIcons.trophy,
+          text: 'Join Challenge',
+          disabled: false);
+    } else {
+      return CustomOutlinedButton(
+          onPressed: () {
+            //TODO: Redirect admin to edit challenge page
+            Logger().v(role, 'admin edit challenge');
+          },
+          iconData: LineAwesomeIcons.edit,
+          text: 'Edit Challenge',
+          disabled: false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            snap: true,
-            title: Text(challengeTitle,
-                style: Theme.of(context).textTheme.bodyLarge),
-            automaticallyImplyLeading: true,
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              //?Yellow container
-              color: Theme.of(context).primaryColor,
-              //?Challenge info details
+      body: Container(
+        color: user.role == 'admin'
+            ? Colors.blueGrey
+            : Theme.of(context).primaryColor,
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              floating: true,
+              snap: true,
+              title: Text(challengeTitle,
+                  style: Theme.of(context).textTheme.bodyLarge),
+              automaticallyImplyLeading: true,
+            ),
+            SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -50,7 +77,10 @@ class JoinChallengeDetails extends StatelessWidget {
                       child: Column(
                         children: [
                           const SizedBox(height: 10),
-                          Image.asset(challengeImgPath, width: 200),
+                          CachedNetworkImage(
+                            width: 200,
+                            imageUrl: challengeImgPath,
+                          ),
                           Padding(
                             padding: const EdgeInsets.all(25),
                             child: Column(
@@ -100,13 +130,7 @@ class JoinChallengeDetails extends StatelessWidget {
                                   style: TextStyle(fontSize: 10),
                                 ),
                                 const SizedBox(height: 20),
-                                CustomOutlinedButton(
-                                    onPressed: () {
-                                      //TODO: ADD CHALLENGE LIST AT challenge_page.dart
-                                    },
-                                    iconData: LineAwesomeIcons.trophy,
-                                    text: 'Join Challenge',
-                                    disabled: false),
+                                _outlineButton(user.role),
                               ],
                             ),
                           )
@@ -117,9 +141,9 @@ class JoinChallengeDetails extends StatelessWidget {
                   const SizedBox(height: 20),
                 ],
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

@@ -17,7 +17,9 @@ class CoverInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: users.role == 'admin'
+              ? Colors.blueGrey
+              : Theme.of(context).primaryColor,
           elevation: 0,
           title: Text(title,
               style: Theme.of(context).textTheme.bodyLarge), //*title at app bar
@@ -37,7 +39,9 @@ class CoverInfo extends StatelessWidget {
                   ),
                   child: Container(
                     //*background colour of container
-                    color: Theme.of(context).primaryColor,
+                    color: users.role == 'admin'
+                        ? Colors.blueGrey
+                        : Theme.of(context).primaryColor,
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: Column(

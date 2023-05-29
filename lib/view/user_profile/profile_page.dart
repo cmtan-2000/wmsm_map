@@ -34,8 +34,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-
     return FutureBuilder<DocumentSnapshot>(
         future: db
             .collection("users")
@@ -189,6 +187,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
     return SingleChildScrollView(
       child: Container(
         color: Colors.white,
+        height: MediaQuery.of(context).size.height,
         child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: LayoutBuilder(
@@ -247,6 +246,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                               .pushNamed('/bmiInfo', arguments: widget.user);
                         },
                         endIcon: true,
+                        role: widget.user.role,
                       ),
 
                       ProfileMenuWidget(
@@ -260,6 +260,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                               arguments: widget.user);
                         },
                         endIcon: true,
+                        role: widget.user.role,
                       ),
                       ProfileMenuWidget(
                         //titleText: user.phoneNumber,
@@ -273,6 +274,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                               arguments: widget.user);
                         },
                         endIcon: true,
+                        role: widget.user.role,
                       ),
                       ProfileMenuWidget(
                         titleText: 'No Sync App',
@@ -281,6 +283,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         //TODO: sync google fit
                         onTap: () {},
                         endIcon: true,
+                        role: widget.user.role,
                       ),
                       ProfileMenuWidget(
                         titleText: 'Password',
@@ -291,18 +294,21 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                               .pushNamed('/editPwd', arguments: widget.user);
                         },
                         endIcon: true,
+                        role: widget.user.role,
                       ),
                       ProfileMenuWidget(
                         titleText: widget.user.email,
                         icon: LineAwesomeIcons.envelope,
                         color: Colors.black,
                         endIcon: false,
+                        role: widget.user.role,
                       ),
                       ProfileMenuWidget(
                         titleText: widget.user.dateOfBirth,
                         icon: LineAwesomeIcons.calendar,
                         color: Colors.black,
                         endIcon: false,
+                        role: widget.user.role,
                       ),
                       const SizedBox(height: 20),
                       const Divider(),
@@ -312,6 +318,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         icon: LineAwesomeIcons.alternate_sign_out,
                         color: Colors.black,
                         endIcon: false,
+                        role: widget.user.role,
                         onTap: () {
                           FirebaseAuth.instance.signOut();
                           MyApp.navigatorKey.currentState!.pushNamed('/');
@@ -330,6 +337,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         icon: LineAwesomeIcons.envelope,
                         color: Colors.black,
                         endIcon: false,
+                        role: widget.user.role,
                       ),
                       ProfileMenuWidget(
                         titleText: 'Password',
@@ -338,9 +346,10 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         onTap: () {
                           //TODO: Change password
                           MyApp.navigatorKey.currentState!
-                              .pushNamed('/editPwd');
+                              .pushNamed('/editPwd', arguments: widget.user);
                         },
                         endIcon: true,
+                        role: widget.user.role,
                       ),
                       ProfileMenuWidget(
                         titleText: '+60 $phoneNumber',
@@ -348,10 +357,12 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         color: Colors.black,
                         onTap: () {
                           //!Change PHONE NUMBER
-                          MyApp.navigatorKey.currentState!
-                              .pushNamed('/editPhoneNo');
+                          MyApp.navigatorKey.currentState!.pushNamed(
+                              '/editPhoneNo',
+                              arguments: widget.user);
                         },
                         endIcon: true,
+                        role: widget.user.role,
                       ),
                       const SizedBox(height: 20),
                       const Divider(),
@@ -361,6 +372,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         icon: LineAwesomeIcons.alternate_sign_out,
                         color: Colors.black,
                         endIcon: false,
+                        role: widget.user.role,
                         onTap: () {
                           FirebaseAuth.instance.signOut();
                           MyApp.navigatorKey.currentState!.pushNamed('/');

@@ -9,7 +9,6 @@ import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/cover_info.dart';
 
 import '../../../model/users.dart';
-import '../profile_page.dart';
 
 class BMIPage extends StatefulWidget {
   const BMIPage({super.key, required this.user});
@@ -117,21 +116,25 @@ class _BMIPageWidgetState extends State<BMIPageWidget> {
                   ),
                   //*Weight text field
                   CustomTextFormField(
-                      context: context,
-                      isNumberOnly: true,
-                      maxLength: 5,
-                      labelText: 'Weight (kg)',
-                      controller: weightEC),
+                    context: context,
+                    isNumberOnly: true,
+                    maxLength: 5,
+                    labelText: 'Weight (kg)',
+                    controller: weightEC,
+                    keyboardType: TextInputType.number,
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
                   //*Height text field
                   CustomTextFormField(
-                      context: context,
-                      isNumberOnly: true,
-                      maxLength: 5,
-                      labelText: 'Height (cm)',
-                      controller: heightEC),
+                    context: context,
+                    isNumberOnly: true,
+                    maxLength: 5,
+                    labelText: 'Height (cm)',
+                    controller: heightEC,
+                    keyboardType: TextInputType.number,
+                  ),
                   const SizedBox(
                     height: 35,
                   ),

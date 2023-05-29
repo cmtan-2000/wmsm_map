@@ -10,6 +10,7 @@ class ProfileMenuWidget extends StatefulWidget {
     required this.color,
     required this.endIcon,
     this.onTap,
+    required this.role,
   });
 
   final String titleText;
@@ -17,6 +18,7 @@ class ProfileMenuWidget extends StatefulWidget {
   final Color color;
   final bool endIcon;
   final VoidCallback? onTap;
+  final String role;
 
   @override
   State<ProfileMenuWidget> createState() => _ProfileMenuWidgetState();
@@ -32,7 +34,10 @@ class _ProfileMenuWidgetState extends State<ProfileMenuWidget> {
         leading: Container(
             padding: const EdgeInsets.all(5.0),
             decoration: BoxDecoration(
-                shape: BoxShape.circle, color: Theme.of(context).primaryColor),
+                shape: BoxShape.circle,
+                color: widget.role == 'admin'
+                    ? Colors.blueGrey[200]
+                    : Theme.of(context).primaryColor),
             child: Icon(widget.icon, color: Colors.black)),
         //*the name of the profile items
         title: Text(

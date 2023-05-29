@@ -36,6 +36,7 @@ class CustomTextFormField extends TextFormField {
             labelText: labelText,
             hintText: hintText,
             prefixText: prefixText,
+            labelStyle: const TextStyle(color: Colors.blueGrey),
             filled: true,
             fillColor: const Color.fromARGB(255, 250, 250, 250),
             border: OutlineInputBorder(
@@ -45,6 +46,12 @@ class CustomTextFormField extends TextFormField {
             prefixIcon: icon?.codePoint != null ? Icon(icon) : null,
             suffix: suffix,
             suffixIcon: suffixicon,
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.blueGrey,
+              ),
+            ),
           ),
           inputFormatters: [
             isNumberOnly == true
