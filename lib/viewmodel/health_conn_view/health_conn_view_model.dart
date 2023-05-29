@@ -128,9 +128,9 @@ class HealthConnViewModel extends ChangeNotifier {
       steps.add(StepData(dayOfWeek, stepInt));
     }
 
-    for (int i = 0; i < steps.length; i++) {
-      Logger().i('Date: ${steps[i].x} . Step: ${steps[i].y}');
-    }
+    // for (int i = 0; i < steps.length; i++) {
+    //   Logger().i('Date: ${steps[i].x} . Step: ${steps[i].y}');
+    // }
 
     _monthlyStep = steps;
     notifyListeners();

@@ -17,6 +17,7 @@ import 'view/intro_page.dart';
 import 'view/user_auth/reset_pwd_page.dart';
 import 'view/user_auth/pages/user_details.dart';
 import 'view/user_auth/pages/setup_password.dart';
+import 'view/user_challenges/user/user_join_challenge_page.dart';
 import 'view/user_profile/pages/bmi_page.dart';
 
 // Map<String, WidgetBuilder> routes = {
@@ -95,9 +96,9 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
     case '/adminjoinChallenge':
       return MaterialPageRoute(
           builder: (context) => AdminJoinChallengePage(user: args as Users));
-    // case '/userjoinChallenge':
-    //   return MaterialPageRoute(
-    //       builder: (context) => const UserJoinChallengePage());
+    case '/userjoinChallenge':
+      return MaterialPageRoute(
+          builder: (context) => const UserJoinChallengePage());
     case '/articleDetails':
       return MaterialPageRoute(builder: (context) => const ArticleDetails());
     case '/addChallenge':

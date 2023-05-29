@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 import 'package:wmsm_flutter/viewmodel/health_conn_view/health_conn_view_model.dart';
+import 'package:wmsm_flutter/viewmodel/user_view_model.dart';
 
 import 'custom/themes/custom_theme.dart';
 
@@ -246,10 +247,11 @@ class ContentClass extends StatelessWidget {
                               var data = await viewModel.getAuthorize();
 
                               if (data) {
+                                Provider.of<UserViewModel>(context,
+                                        listen: false)
+                                    .setUser();
                                 Navigator.of(context).pushNamed('/btmNav');
-                              }else{
-                                
-                              }
+                              } else {}
                             },
                             child: Text(
                               'Connect Your Tracker to START: ${viewModel.authorize}',

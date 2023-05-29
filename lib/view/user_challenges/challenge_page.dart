@@ -1,4 +1,7 @@
 // This is challenge page
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
@@ -127,28 +130,64 @@ class UserChallengePage extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
-                          //TODO: READ ONGOING CHALLENGE
-                          const OngoingChallengeCard(
-                            ongoingTitle: 'Walk 100 miles',
-                            ongoingImgPath: 'assets/images/challenge1.png',
-                            ongoingPercentage: 0.6,
-                            ongoingSteps: 600,
-                            challengeSteps: 1000,
-                          ),
-                          const OngoingChallengeCard(
-                            ongoingTitle: 'Walk for 30 minutes everyday',
-                            ongoingImgPath: 'assets/images/challenge2.png',
-                            ongoingPercentage: 0.6,
-                            ongoingSteps: 600,
-                            challengeSteps: 1000,
-                          ),
-                          const OngoingChallengeCard(
-                            ongoingTitle: 'Burn 100 calories per day',
-                            ongoingImgPath: 'assets/images/challenge3.png',
-                            ongoingPercentage: 0.6,
-                            ongoingSteps: 600,
-                            challengeSteps: 1000,
-                          ),
+                          StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection('challenges')
+                                  .where('challengers',
+                                      arrayContains: FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                  .snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasData) {
+                                  Logger().i(snapshot.data!.docs.length);
+                                  return snapshot.data!.docs.isNotEmpty
+                                      ? ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: snapshot.data!.docs.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            DocumentSnapshot ds =
+                                                snapshot.data!.docs[index];
+                                            return OngoingChallengeCard(
+                                              ongoingTitle: ds['title'],
+                                              ongoingImgPath:
+                                                  'assets/images/challenge1.png',
+                                              ongoingPercentage: 0.6,
+                                              ongoingSteps: 600,
+                                              challengeSteps: 1000,
+                                            );
+                                          })
+                                      : const Center(
+                                          child: Text('No Challenge Join'),
+                                        );
+                                } else {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                }
+                              }),
+                          // //TODO: READ ONGOING CHALLENGE
+                          // const OngoingChallengeCard(
+                          //   ongoingTitle: 'Walk 100 miles',
+                          //   ongoingImgPath: 'assets/images/challenge1.png',
+                          //   ongoingPercentage: 0.6,
+                          //   ongoingSteps: 600,
+                          //   challengeSteps: 1000,
+                          // ),
+                          // const OngoingChallengeCard(
+                          //   ongoingTitle: 'Walk for 30 minutes everyday',
+                          //   ongoingImgPath: 'assets/images/challenge2.png',
+                          //   ongoingPercentage: 0.6,
+                          //   ongoingSteps: 600,
+                          //   challengeSteps: 1000,
+                          // ),
+                          // const OngoingChallengeCard(
+                          //   ongoingTitle: 'Burn 100 calories per day',
+                          //   ongoingImgPath: 'assets/images/challenge3.png',
+                          //   ongoingPercentage: 0.6,
+                          //   ongoingSteps: 600,
+                          //   challengeSteps: 1000,
+                          // ),
 
                           const SizedBox(height: 20),
                           CustomOutlinedButton(
