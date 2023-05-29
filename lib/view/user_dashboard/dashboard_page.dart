@@ -145,14 +145,24 @@ class UserDashboard extends StatelessWidget {
                                         SizedBox(
                                           width: 200,
                                           child: Column(
-                                            children: const [
+                                            children: [
                                               //TODO: Add step count
-                                              Text('1000',
-                                                  style: TextStyle(
-                                                      fontSize: 60,
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              Text('steps',
+                                              Consumer<HealthConnViewModel>(
+                                                builder: (context, health,
+                                                        child) =>
+                                                    health.step.isEmpty
+                                                        ? const CircularProgressIndicator()
+                                                        : Text(
+                                                            health
+                                                                .step['step']
+                                                                .toString(),
+                                                            style: const TextStyle(
+                                                                fontSize: 60,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                              ),
+                                              const Text('steps',
                                                   style: TextStyle(
                                                       fontSize: 25,
                                                       fontWeight:
