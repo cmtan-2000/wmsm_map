@@ -1,9 +1,8 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 import 'package:wmsm_flutter/viewmodel/health_conn_view/health_conn_view_model.dart';
@@ -247,9 +246,7 @@ class ContentClass extends StatelessWidget {
 
                               if (data) {
                                 Navigator.of(context).pushNamed('/btmNav');
-                              }else{
-                                
-                              }
+                              } else {}
                             },
                             child: Text(
                               'Connect Your Tracker to START: ${viewModel.authorize}',
@@ -263,12 +260,6 @@ class ContentClass extends StatelessWidget {
                                 Navigator.of(context).pushNamed('/btmNav'),
                             child: Text('CONNECT YOUR TRACKER TO START'));
                       }
-
-                      //   CustomElevatedButton(
-                      //       onPressed: () =>
-                      //           Navigator.of(context).pushNamed('/btmNav'),
-                      //       child: Text('CONNECT YOUR TRACKER TO START')),
-                      // ),
                     }))
                   ],
                 ),
@@ -279,7 +270,10 @@ class ContentClass extends StatelessWidget {
                   children: [
                     Expanded(
                       child: CustomOutlinedButton(
-                        onPressed: () => SnackBar(content: Text('SKIP')),
+                        onPressed: () {
+                          SnackBar(content: Text('SKIP'));
+                          MyApp.navigatorKey.currentState?.pushNamed('/btmNav');
+                        },
                         iconData: null,
                         text: 'SKIP',
                         disabled: false,

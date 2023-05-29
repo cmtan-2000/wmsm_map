@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:wmsm_flutter/view/example_provider.dart';
 import 'package:wmsm_flutter/view/user_article/article_detail.dart';
 import 'package:wmsm_flutter/view/user_challenges/admin/admin_add_challenge.dart';
+import 'package:wmsm_flutter/view/user_challenges/admin/admin_edit_challenge.dart';
 import 'package:wmsm_flutter/view/user_challenges/admin/admin_manage_challenge_page.dart';
+import 'package:wmsm_flutter/view/user_challenges/user/user_join_challenge_page.dart';
 import 'package:wmsm_flutter/view/user_dashboard/notification_page.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_pwd.dart';
 import 'package:wmsm_flutter/viewmodel/user_auth/verification_model.dart';
@@ -95,13 +97,18 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
     case '/adminjoinChallenge':
       return MaterialPageRoute(
           builder: (context) => AdminJoinChallengePage(user: args as Users));
-    // case '/userjoinChallenge':
-    //   return MaterialPageRoute(
-    //       builder: (context) => const UserJoinChallengePage());
+    case '/userjoinChallenge':
+      return MaterialPageRoute(
+          builder: (context) => const UserJoinChallengePage());
     case '/articleDetails':
       return MaterialPageRoute(builder: (context) => const ArticleDetails());
     case '/addChallenge':
       return MaterialPageRoute(builder: (context) => const AdminAddChallenge());
+    case '/editChallenge':
+      return MaterialPageRoute(
+          builder: (context) => const AdminEditChallenge());
+    // case '/leaderboard':
+    //   return MaterialPageRoute(builder: (context) => const LeaderboardPage());
     default:
       return null;
   }

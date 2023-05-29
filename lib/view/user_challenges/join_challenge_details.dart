@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 
@@ -38,8 +39,8 @@ class JoinChallengeDetails extends StatelessWidget {
     } else {
       return CustomOutlinedButton(
           onPressed: () {
-            //TODO: Redirect admin to edit challenge page
             Logger().v(role, 'admin edit challenge');
+            MyApp.navigatorKey.currentState!.pushNamed('/editChallenge');
           },
           iconData: LineAwesomeIcons.edit,
           text: 'Edit Challenge',
