@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class _stepData {
-  _stepData(this.x, this.y);
-  final String x;
-  final int y;
-}
+import '../../../model/step.dart';
+import '../../../viewmodel/health_conn_view/health_conn_view_model.dart';
 
 class WeeklyBarChart extends StatefulWidget {
   const WeeklyBarChart({super.key});
@@ -15,91 +13,71 @@ class WeeklyBarChart extends StatefulWidget {
 }
 
 class _WeeklyBarChartState extends State<WeeklyBarChart> {
-  late List<_stepData> stepData;
+  List<StepData> stepData = [];
 
   @override
   void initState() {
-    stepData = [
-      _stepData(
-        "Sun",
-        700,
-      ),
-      _stepData(
-        "Mon",
-        300,
-      ),
-      _stepData(
-        "Tue",
-        5000,
-      ),
-      _stepData(
-        "Wed",
-        1500,
-      ),
-      _stepData(
-        "Thurs",
-        700,
-      ),
-      _stepData(
-        "Fri",
-        1500,
-      ),
-      _stepData(
-        "Sat",
-        1000,
-      ),
-    ];
+    super.initState();
+    Provider.of<HealthConnViewModel>(context, listen: false).getWeeklyStep();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Text('Your Weekly Steps',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(fontWeight: FontWeight.bold)),
-          const SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
-            child: SfCartesianChart(
-              palette: const [Color.fromARGB(255, 1, 125, 197)],
-              primaryXAxis: CategoryAxis(
-                majorGridLines: const MajorGridLines(width: 0),
-              ),
-
-              // Enable legend
-              legend: Legend(isVisible: false),
-              // Enable tooltip
-              tooltipBehavior: TooltipBehavior(
-                  enable: true, animationDuration: 1, header: ''),
-              series: <ChartSeries<_stepData, String>>[
-                ColumnSeries<_stepData, String>(
-                  dataSource: stepData,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(5),
-                    topRight: Radius.circular(5),
+    return Consumer<HealthConnViewModel>(
+      builder: (context, health, child) => health.weeklyStep.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : Scaffold(
+              body: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const SizedBox(
+                    height: 20,
                   ),
-                  xValueMapper: (_stepData data, _) => data.x,
-                  yValueMapper: (_stepData data, _) => data.y,
-                  dataLabelSettings: const DataLabelSettings(isVisible: true),
-                  animationDuration: 0,
-                ),
-              ],
+                  Text('Your Weekly Steps',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.copyWith(fontWeight: FontWeight.bold)),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 0),
+                      child: SfCartesianChart(
+                        palette: const [Color.fromARGB(255, 1, 125, 197)],
+                        primaryXAxis: CategoryAxis(
+                          majorGridLines: const MajorGridLines(width: 0),
+                        ),
+
+                        // Enable legend
+                        legend: Legend(isVisible: false),
+                        // Enable tooltip
+                        tooltipBehavior: TooltipBehavior(
+                            enable: true, animationDuration: 1, header: ''),
+                        series: <ChartSeries<StepData, String>>[
+                          ColumnSeries<StepData, String>(
+                            dataSource: health.weeklyStep,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              topRight: Radius.circular(5),
+                            ),
+                            xValueMapper: (StepData data, _) => data.x,
+                            yValueMapper: (StepData data, _) => data.y,
+                            dataLabelSettings:
+                                const DataLabelSettings(isVisible: true),
+                            animationDuration: 0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
     );
   }
 }

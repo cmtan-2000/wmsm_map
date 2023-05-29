@@ -31,6 +31,8 @@ class _DashboardState extends State<Dashboard> {
     initialGetSavedData();
     Future.delayed(const Duration(seconds: 3), () async {
       Provider.of<HealthConnViewModel>(context, listen: false).getSteps();
+      Provider.of<HealthConnViewModel>(context, listen: false).getWeeklyStep();
+      Provider.of<HealthConnViewModel>(context, listen: false).getMonthlyStep();
     });
   }
 
