@@ -161,12 +161,19 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
                 .firstWhere((doc) => doc.id == documentIds[0])
                 .data();
 
+            var documentId = snapshot.data!.docs
+                .firstWhere((doc) => doc.id == documentIds[0])
+                .id;
+
+            Logger().i("Document id: $documentId");
+
             Logger().i(document);
 
             cTitleEC.text = document['title'];
             cDurationEC.text = document['duration'];
             cDescriptionEC.text = document['description'];
             cStepsEC.text = document['stepGoal'].toString();
+            imageChallenge = document['imageUrl'];
 
             Logger().wtf(cTitleEC.text);
             Logger().wtf(cDurationEC.text);
@@ -477,10 +484,11 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
                                                       db
                                                           .collection(
                                                               "challenges")
-                                                          .add(data)
+                                                          .doc(documentId)
+                                                          .update(data)
                                                           .then((value) {
                                                         Logger().i(
-                                                            'Challenge added');
+                                                            'Challenge updated');
                                                       }).catchError((error) {
                                                         Logger().w(
                                                             'Error inserting challenge into firebase');
@@ -491,7 +499,7 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
                                                               seconds: 3));
                                                       Navigator.pop(context);
                                                       snackBar(
-                                                          'Challenge added');
+                                                          'Challenge updated');
                                                     }
                                                   }),
                                             ),
