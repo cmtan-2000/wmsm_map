@@ -3,7 +3,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/view/custom/widgets/awesome_snackbar.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
@@ -11,6 +10,7 @@ import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 import 'package:wmsm_flutter/viewmodel/health_conn_view/health_conn_view_model.dart';
 import 'package:wmsm_flutter/viewmodel/user_view_model.dart';
 
+import '../main.dart';
 import 'custom/themes/custom_theme.dart';
 
 class IntroPage extends StatelessWidget {
@@ -246,6 +246,13 @@ class ContentClass extends StatelessWidget {
                           builder: (context, viewModel, child) =>
                               CustomElevatedButton(
                             onPressed: () async {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
                               var data = await viewModel.getAuthorize();
 
                               if (data) {
@@ -259,7 +266,14 @@ class ContentClass extends StatelessWidget {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackbar);
                                 Navigator.of(context).pushNamed('/btmNav');
-                              } else {}
+                              } else {
+                                final snackbar = Awesome.snackbar(
+                                    "Authentication",
+                                    "Your Account is not authenticated",
+                                    ContentType.warning);
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackbar);
+                              }
                             },
                             child: Text(
                               'Connect Your Tracker to START: ${viewModel.authorize}',
@@ -273,12 +287,6 @@ class ContentClass extends StatelessWidget {
                                 Navigator.of(context).pushNamed('/btmNav'),
                             child: Text('CONNECT YOUR TRACKER TO START'));
                       }
-
-                      //   CustomElevatedButton(
-                      //       onPressed: () =>
-                      //           Navigator.of(context).pushNamed('/btmNav'),
-                      //       child: Text('CONNECT YOUR TRACKER TO START')),
-                      // ),
                     }))
                   ],
                 ),
@@ -289,7 +297,10 @@ class ContentClass extends StatelessWidget {
                   children: [
                     Expanded(
                       child: CustomOutlinedButton(
-                        onPressed: () => SnackBar(content: Text('SKIP')),
+                        onPressed: () {
+                          SnackBar(content: Text('SKIP'));
+                          MyApp.navigatorKey.currentState?.pushNamed('/btmNav');
+                        },
                         iconData: null,
                         text: 'SKIP',
                         disabled: false,

@@ -55,7 +55,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return user.role == 'admin'
-        ? const AdminDashboard()
+        ? AdminDashboard()
         : user.role == 'user'
             ? UserDashboard(user: user)
             : const Center(child: CircularProgressIndicator());

@@ -445,6 +445,8 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
                                                   'Error inserting challenge into firebase');
                                             });
                                             storeData();
+                                            await Future.delayed(
+                                                const Duration(seconds: 3));
                                             Navigator.pop(context);
                                             snackBar('Challenge added');
                                           }
