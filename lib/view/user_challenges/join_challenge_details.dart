@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
@@ -7,7 +8,7 @@ import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 
 class JoinChallengeDetails extends StatelessWidget {
-  const JoinChallengeDetails({
+  JoinChallengeDetails({
     super.key,
     required this.challengeTitle,
     required this.challengeImgPath,
@@ -25,6 +26,7 @@ class JoinChallengeDetails extends StatelessWidget {
   final String challengeVoucher;
   final String challengeEventDuration;
   final Users user;
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   CustomOutlinedButton _outlineButton(String role) {
     if (role == 'user') {
@@ -50,103 +52,133 @@ class JoinChallengeDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: user.role == 'admin'
-            ? Colors.blueGrey
-            : Theme.of(context).primaryColor,
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              floating: true,
-              snap: true,
-              title: Text(challengeTitle,
-                  style: Theme.of(context).textTheme.bodyLarge),
-              automaticallyImplyLeading: true,
-            ),
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: Card(
-                      elevation: 2,
+    return StreamBuilder(
+        stream: db.collection('challenges').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasData) {
+            List<String> documentIds =
+                snapshot.data!.docs.map((doc) => doc.id).toList();
+            var documentId = snapshot.data!.docs
+                .firstWhere((doc) => doc.id == documentIds[0])
+                .id;
+
+            var data = snapshot.data!.docs
+                .firstWhere((doc) => doc.id == documentIds[0])
+                .data();
+            Logger().wtf(data);
+
+            return Scaffold(
+              body: Container(
+                color: user.role == 'admin'
+                    ? Colors.blueGrey
+                    : Theme.of(context).primaryColor,
+                child: CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      floating: true,
+                      snap: true,
+                      title: Text(data['title'],
+                          style: Theme.of(context).textTheme.bodyLarge),
+                      automaticallyImplyLeading: true,
+                    ),
+                    SliverToBoxAdapter(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
                         children: [
-                          const SizedBox(height: 10),
-                          CachedNetworkImage(
-                            width: 200,
-                            imageUrl: challengeImgPath,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(25),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  challengeTitle,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall
-                                      ?.copyWith(fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 5),
-                                IconAndInfo(
-                                    text: 'Complete $challengeSteps steps',
-                                    icon: LineAwesomeIcons.walking,
-                                    color: Colors.teal),
-                                IconAndInfo(
-                                    text: challengeEventDuration,
-                                    icon: LineAwesomeIcons.stopwatch,
-                                    color: Colors.teal),
-                                const SizedBox(height: 20),
-                                Text(
-                                  challengeDesc,
-                                  textAlign: TextAlign.justify,
-                                ),
-                                const SizedBox(height: 20),
-                                const Text(
-                                  'Rewards',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                IconAndInfo(
-                                    text: challengeVoucher,
-                                    icon: LineAwesomeIcons.alternate_ticket,
-                                    color: Colors.indigo),
-                                const IconAndInfo(
-                                    text: 'RM2 Family Mart Off',
-                                    icon: LineAwesomeIcons.alternate_ticket,
-                                    color: Colors.indigo),
-                                const IconAndInfo(
-                                    text: 'Buy 1 Free 1 Zus Coffee',
-                                    icon: LineAwesomeIcons.alternate_ticket,
-                                    color: Colors.indigo),
-                                const SizedBox(height: 20),
-                                const Text(
-                                  'Terms and Conditions: Can only claim one reward per completed challenge.',
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                const SizedBox(height: 20),
-                                _outlineButton(user.role),
-                              ],
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            child: Card(
+                              elevation: 2,
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 10),
+                                  CachedNetworkImage(
+                                    width: 200,
+                                    imageUrl: data['imageUrl'],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(25),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          data['title'],
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displaySmall
+                                              ?.copyWith(
+                                                  fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        IconAndInfo(
+                                            text:
+                                                'Complete ${data['stepGoal']} steps',
+                                            icon: LineAwesomeIcons.walking,
+                                            color: Colors.teal),
+                                        IconAndInfo(
+                                            text: data['duration'],
+                                            icon: LineAwesomeIcons.stopwatch,
+                                            color: Colors.teal),
+                                        const SizedBox(height: 20),
+                                        Text(
+                                          challengeDesc,
+                                          textAlign: TextAlign.justify,
+                                        ),
+                                        const SizedBox(height: 20),
+                                        const Text(
+                                          'Rewards',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        IconAndInfo(
+                                            text: challengeVoucher,
+                                            icon: LineAwesomeIcons
+                                                .alternate_ticket,
+                                            color: Colors.indigo),
+                                        const IconAndInfo(
+                                            text: 'RM2 Family Mart Off',
+                                            icon: LineAwesomeIcons
+                                                .alternate_ticket,
+                                            color: Colors.indigo),
+                                        const IconAndInfo(
+                                            text: 'Buy 1 Free 1 Zus Coffee',
+                                            icon: LineAwesomeIcons
+                                                .alternate_ticket,
+                                            color: Colors.indigo),
+                                        const SizedBox(height: 20),
+                                        const Text(
+                                          'Terms and Conditions: Can only claim one reward per completed challenge.',
+                                          style: TextStyle(fontSize: 10),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        _outlineButton(user.role),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          )
+                          ),
+                          const SizedBox(height: 20),
                         ],
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
+                    )
+                  ],
+                ),
               ),
-            )
-          ],
-        ),
-      ),
-    );
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }
 
