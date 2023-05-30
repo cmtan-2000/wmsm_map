@@ -315,8 +315,7 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return CupertinoActionSheet(
-                                                  actions: <
-                                                      CupertinoActionSheetAction>[
+                                                  actions: <CupertinoActionSheetAction>[
                                                     CupertinoActionSheetAction(
                                                       isDefaultAction: true,
                                                       onPressed: () async {
@@ -425,6 +424,7 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
 
                                             //*Insert data into firebase
                                             Map<String, dynamic> data = {
+                                              'challengers': [],
                                               'title': cTitleEC.text,
                                               'duration': cDurationEC.text,
                                               'description':
