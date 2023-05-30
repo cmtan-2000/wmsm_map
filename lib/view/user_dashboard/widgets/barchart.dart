@@ -34,7 +34,7 @@ class _BarChartState extends State<BarChart> with TickerProviderStateMixin {
           child: TabBar(
             indicator: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: const Color.fromARGB(255, 1, 125, 197)),
+                color: Theme.of(context).primaryColor),
             controller: _tabController,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.grey[600],

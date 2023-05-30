@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,7 @@ import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/user_challenges/join_challenge_details.dart';
 import 'package:wmsm_flutter/viewmodel/user_view_model.dart';
 
+import '../../custom/widgets/awesome_snackbar.dart';
 import '../../custom/widgets/custom_outlinedbutton.dart';
 
 class UserJoinChallengePage extends StatefulWidget {
@@ -78,11 +80,20 @@ class _UserJoinChallengePageWidgetState
                 .collection('challenges')
                 .doc(challengeId)
                 .update({
-                  'challengers': FieldValue.arrayUnion([userid])
-                })
-                .then((_) => Logger().i('success join Challenge'))
-                .catchError((error) => Logger().e(error));
-
+              'challengers': FieldValue.arrayUnion([userid])
+            }).then((_) {
+              final snackbar = Awesome.snackbar(
+                  "Challenge", "Enrolled to Challenge", ContentType.success);
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(snackbar);
+            }).catchError((error) {
+              final materialBanner = Awesome.materialBanner(
+                  "Challenge", "Failed to Join Challenge", ContentType.failure);
+              ScaffoldMessenger.of(context)
+                ..hideCurrentMaterialBanner()
+                ..showMaterialBanner(materialBanner);
+            });
 
             // Logger().i(challengeId);
             // //TODO: add one list of challenge whenever user enrol, at challenge_page.dart

@@ -4,11 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/cover_profile.dart';
 import 'package:wmsm_flutter/view/user_profile/widgets/profile_menu_widget.dart';
+import 'package:wmsm_flutter/viewmodel/health_conn_view/health_conn_view_model.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -276,14 +278,23 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         endIcon: true,
                         role: widget.user.role,
                       ),
-                      ProfileMenuWidget(
-                        titleText: 'No Sync App',
-                        icon: LineAwesomeIcons.shoe_prints,
-                        color: Colors.red,
-                        //TODO: sync google fit
-                        onTap: () {},
-                        endIcon: true,
-                        role: widget.user.role,
+                      Consumer<HealthConnViewModel>(
+                        builder: (context, health, child) => health.authorize
+                            ? ProfileMenuWidget(
+                                titleText: 'Sync App',
+                                icon: LineAwesomeIcons.shoe_prints,
+                                color: Colors.green,
+                                endIcon: true,
+                                role: widget.user.role)
+                            : ProfileMenuWidget(
+                                titleText: 'No Sync App',
+                                icon: LineAwesomeIcons.shoe_prints,
+                                color: Colors.red,
+                                //TODO: sync google fit
+                                onTap: () {},
+                                endIcon: true,
+                                role: widget.user.role,
+                              ),
                       ),
                       ProfileMenuWidget(
                         titleText: 'Password',

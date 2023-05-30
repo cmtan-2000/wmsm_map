@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:wmsm_flutter/view/custom/widgets/awesome_snackbar.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 import 'package:wmsm_flutter/viewmodel/health_conn_view/health_conn_view_model.dart';
@@ -250,6 +252,12 @@ class ContentClass extends StatelessWidget {
                                 Provider.of<UserViewModel>(context,
                                         listen: false)
                                     .setUser();
+                                final snackbar = Awesome.snackbar(
+                                    "Authentication",
+                                    "Your Account is authenticated",
+                                    ContentType.success);
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackbar);
                                 Navigator.of(context).pushNamed('/btmNav');
                               } else {}
                             },

@@ -48,7 +48,7 @@ class _WeeklyBarChartState extends State<WeeklyBarChart> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 20, horizontal: 0),
                       child: SfCartesianChart(
-                        palette: const [Color.fromARGB(255, 1, 125, 197)],
+                        palette: [(Theme.of(context).primaryColor)],
                         primaryXAxis: CategoryAxis(
                           majorGridLines: const MajorGridLines(width: 0),
                         ),
