@@ -107,7 +107,9 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const AdminAddChallenge());
     case '/editChallenge':
       return MaterialPageRoute(
-          builder: (context) => const AdminEditChallenge());
+          builder: (context) => AdminEditChallenge(
+                docid: args as String,
+              ));
     // case '/leaderboard':
     //   return MaterialPageRoute(builder: (context) => const LeaderboardPage());
     default:

@@ -168,6 +168,8 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     JoinChallengeDetails(
+                                                  docid: snapshot
+                                                      .data!.docs[index].id,
                                                   challengeTitle: challenge
                                                       .newChallengeTitle,
                                                   challengeDesc: challenge

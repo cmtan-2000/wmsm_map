@@ -16,7 +16,9 @@ import 'package:wmsm_flutter/view/shared/multi_line_field.dart';
 import 'package:wmsm_flutter/viewmodel/shared/shared_pref.dart';
 
 class AdminEditChallenge extends StatefulWidget {
-  const AdminEditChallenge({super.key});
+  AdminEditChallenge({super.key, required this.docid});
+
+  String docid;
 
   @override
   State<AdminEditChallenge> createState() => _AdminEditChallengeState();
@@ -145,35 +147,28 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
 
   @override
   Widget build(BuildContext context) {
+    Logger().i(widget.docid);
     return StreamBuilder(
-        stream: db.collection('challenges').snapshots(),
+        stream: db.collection('challenges').doc(widget.docid).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasData) {
-            List<String> documentIds =
-                snapshot.data!.docs.map((doc) => doc.id).toList();
+            // List<String> documentIds =
+            //     snapshot.data!.docs.map((doc) => doc.id).toList();
 
             //*search document ID and get data based on the selected document
-            var document = snapshot.data!.docs
-                .firstWhere((doc) => doc.id == documentIds[0])
-                .data();
+            var data = snapshot.data!.data();
 
-            var documentId = snapshot.data!.docs
-                .firstWhere((doc) => doc.id == documentIds[0])
-                .id;
+            // Logger().wtf(data);
 
-            Logger().i("Document id: $documentId");
-
-            Logger().i(document);
-
-            cTitleEC.text = document['title'];
-            cDurationEC.text = document['duration'];
-            cDescriptionEC.text = document['description'];
-            cStepsEC.text = document['stepGoal'].toString();
-            imageChallenge = document['imageUrl'];
+            cTitleEC.text = data!['title'];
+            cDurationEC.text = data['duration'];
+            cDescriptionEC.text = data['description'];
+            cStepsEC.text = data['stepGoal'].toString();
+            imageChallenge = data['imageUrl'];
 
             Logger().wtf(cTitleEC.text);
             Logger().wtf(cDurationEC.text);
@@ -338,8 +333,7 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
                                                         builder: (BuildContext
                                                             context) {
                                                           return CupertinoActionSheet(
-                                                            actions: <
-                                                                CupertinoActionSheetAction>[
+                                                            actions: <CupertinoActionSheetAction>[
                                                               CupertinoActionSheetAction(
                                                                 isDefaultAction:
                                                                     true,
@@ -484,7 +478,7 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
                                                       db
                                                           .collection(
                                                               "challenges")
-                                                          .doc(documentId)
+                                                          .doc(widget.docid)
                                                           .update(data)
                                                           .then((value) {
                                                         Logger().i(

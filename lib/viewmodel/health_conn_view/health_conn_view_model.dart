@@ -13,6 +13,7 @@ class HealthConnViewModel extends ChangeNotifier {
   Map<String, dynamic> _step = {};
   List<StepData> _weeklyStep = [];
   List<StepData> _monthlyStep = [];
+  String tst ="";
 
   // Getters
   String get message => _message;
@@ -20,6 +21,8 @@ class HealthConnViewModel extends ChangeNotifier {
   Map<String, dynamic> get step => _step;
   List<StepData> get weeklyStep => _weeklyStep;
   List<StepData> get monthlyStep => _monthlyStep;
+  String get test => tst;
+  
 
   // Constructor
   HealthFactory health = HealthFactory();

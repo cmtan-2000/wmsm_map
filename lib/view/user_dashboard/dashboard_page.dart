@@ -6,6 +6,7 @@ import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/user_dashboard/widgets/barchart.dart';
 import 'package:wmsm_flutter/viewmodel/shared/shared_pref.dart';
+import 'package:wmsm_flutter/viewmodel/user_view_model.dart';
 
 import '../../viewmodel/health_conn_view/health_conn_view_model.dart';
 import 'admin_dashboard_page.dart';
@@ -40,7 +41,10 @@ class _DashboardState extends State<Dashboard> {
   }
 
   void initialGetSavedData() async {
-    Users response = Users.fromJson(await sharedPref.read("user"));
+    // Users response = Users.fromJson(await sharedPref.read("user"));
+
+    final response = Provider.of<UserViewModel>(context, listen: false).user;
+
     setState(() {
       user = Users(
           dateOfBirth: response.dateOfBirth,
@@ -54,11 +58,19 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return user.role == 'admin'
-        ? AdminDashboard()
-        : user.role == 'user'
-            ? UserDashboard(user: user)
-            : const Center(child: CircularProgressIndicator());
+    return Consumer<UserViewModel>(builder: (context, userView, child) {
+      return userView.user.role == 'admin'
+          ? AdminDashboard()
+          : userView.user.role == 'user'
+              ? UserDashboard(user: userView.user)
+              : const Center(child: CircularProgressIndicator());
+    });
+
+    // user.role == 'admin'
+    //     ? AdminDashboard()
+    //     : user.role == 'user'
+    //         ? UserDashboard(user: user)
+    //         : const Center(child: CircularProgressIndicator());
   }
 }
 
@@ -150,6 +162,7 @@ class UserDashboard extends StatelessWidget {
                                               Consumer<HealthConnViewModel>(
                                                 builder: (context, health,
                                                         child) =>
+                                                        
                                                     health.step.isEmpty
                                                         ? const CircularProgressIndicator()
                                                         : Text(

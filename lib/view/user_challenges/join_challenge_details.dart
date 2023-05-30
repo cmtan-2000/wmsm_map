@@ -7,9 +7,12 @@ import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 
+import 'admin/admin_edit_challenge.dart';
+
 class JoinChallengeDetails extends StatelessWidget {
   JoinChallengeDetails({
     super.key,
+    required this.docid,
     required this.challengeTitle,
     required this.challengeImgPath,
     required this.challengeDesc,
@@ -19,6 +22,7 @@ class JoinChallengeDetails extends StatelessWidget {
     required this.user,
   });
 
+  final String docid;
   final String challengeTitle;
   final String challengeImgPath;
   final String challengeDesc;
@@ -42,7 +46,8 @@ class JoinChallengeDetails extends StatelessWidget {
       return CustomOutlinedButton(
           onPressed: () {
             Logger().v(role, 'admin edit challenge');
-            MyApp.navigatorKey.currentState!.pushNamed('/editChallenge');
+            MyApp.navigatorKey.currentState!
+                .pushNamed('/editChallenge', arguments: docid);
           },
           iconData: LineAwesomeIcons.edit,
           text: 'Edit Challenge',
@@ -53,23 +58,24 @@ class JoinChallengeDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: db.collection('challenges').snapshots(),
+        stream: db.collection('challenges').doc(docid).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasData) {
-            List<String> documentIds =
-                snapshot.data!.docs.map((doc) => doc.id).toList();
-            var documentId = snapshot.data!.docs
-                .firstWhere((doc) => doc.id == documentIds[0])
-                .id;
+            var challenge = snapshot.data!.data();
+            // List<String> documentIds =
+            //     snapshot.data!.docs.map((doc) => doc.id).toList();
+            // var documentId = snapshot.data!.docs
+            //     .firstWhere((doc) => doc.id == documentIds[0])
+            //     .id;
 
-            var data = snapshot.data!.docs
-                .firstWhere((doc) => doc.id == documentIds[0])
-                .data();
-            Logger().wtf(data);
+            // var data = snapshot.data!.docs
+            //     .firstWhere((doc) => doc.id == documentIds[0])
+            //     .data();
+            // Logger().wtf(data);
 
             return Scaffold(
               body: Container(
@@ -81,7 +87,7 @@ class JoinChallengeDetails extends StatelessWidget {
                     SliverAppBar(
                       floating: true,
                       snap: true,
-                      title: Text(data['title'],
+                      title: Text(challenge?['title'],
                           style: Theme.of(context).textTheme.bodyLarge),
                       automaticallyImplyLeading: true,
                     ),
@@ -101,7 +107,7 @@ class JoinChallengeDetails extends StatelessWidget {
                                   const SizedBox(height: 10),
                                   CachedNetworkImage(
                                     width: 200,
-                                    imageUrl: data['imageUrl'],
+                                    imageUrl: challenge?['imageUrl'],
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(25),
@@ -110,7 +116,7 @@ class JoinChallengeDetails extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          data['title'],
+                                          challenge!['title'],
                                           style: Theme.of(context)
                                               .textTheme
                                               .displaySmall
@@ -120,11 +126,11 @@ class JoinChallengeDetails extends StatelessWidget {
                                         const SizedBox(height: 5),
                                         IconAndInfo(
                                             text:
-                                                'Complete ${data['stepGoal']} steps',
+                                                'Complete ${challenge['stepGoal']} steps',
                                             icon: LineAwesomeIcons.walking,
                                             color: Colors.teal),
                                         IconAndInfo(
-                                            text: data['duration'],
+                                            text: challenge['duration'],
                                             icon: LineAwesomeIcons.stopwatch,
                                             color: Colors.teal),
                                         const SizedBox(height: 20),

@@ -6,18 +6,7 @@ import 'package:logger/logger.dart';
 import '../model/users.dart';
 
 class UserViewModel with ChangeNotifier {
-  Users _user = Users(
-    fullname: '',
-    username: '',
-    email: '',
-    phoneNumber: '',
-    dateOfBirth: '',
-    weight: 0.0,
-    height: 0.0,
-    gender: '',
-    bmi: 0.0,
-    role: '',
-  );
+  late Users _user;
   Users get user => _user;
 
   // String get fullname => _user.fullname;
@@ -31,6 +20,19 @@ class UserViewModel with ChangeNotifier {
   // double? get bmi => _user.bmi;
 
   void setUser() {
+    _user = Users(
+      fullname: '',
+      username: '',
+      email: '',
+      phoneNumber: '',
+      dateOfBirth: '',
+      weight: 0.0,
+      height: 0.0,
+      gender: '',
+      bmi: 0.0,
+      role: '',
+    );
+
     String userid = FirebaseAuth.instance.currentUser!.uid;
     FirebaseFirestore.instance
         .collection('users')

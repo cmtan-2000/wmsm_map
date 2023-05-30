@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +15,8 @@ import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/shared/multi_line_field.dart';
 import 'package:wmsm_flutter/viewmodel/shared/shared_pref.dart';
+
+import '../../custom/widgets/awesome_snackbar.dart';
 
 class AdminAddChallenge extends StatefulWidget {
   const AdminAddChallenge({super.key});
@@ -439,15 +442,30 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
                                                 .collection("challenges")
                                                 .add(data)
                                                 .then((value) {
-                                              Logger().i('Challenge added');
+                                              final snackbar = Awesome.snackbar(
+                                                  "Challenge",
+                                                  "Enrolled to Challenge",
+                                                  ContentType.success);
+                                              ScaffoldMessenger.of(context)
+                                                ..hideCurrentSnackBar()
+                                                ..showSnackBar(snackbar);
                                             }).catchError((error) {
-                                              Logger().w(
-                                                  'Error inserting challenge into firebase');
+                                              final materialBanner =
+                                                  Awesome.materialBanner(
+                                                      "Challenge",
+                                                      "Failed to Join Challenge",
+                                                      ContentType.failure);
+                                              ScaffoldMessenger.of(context)
+                                                ..hideCurrentMaterialBanner()
+                                                ..showMaterialBanner(
+                                                    materialBanner);
                                             });
                                             storeData();
-                                            await Future.delayed(
-                                                const Duration(seconds: 3));
-                                            Navigator.pop(context);
+                                            Future.delayed(
+                                                    const Duration(seconds: 4))
+                                                .then((value) =>
+                                                    Navigator.pop(context));
+
                                             snackBar('Challenge added');
                                           }
                                         }),
