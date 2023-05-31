@@ -54,6 +54,7 @@ dependencies:
   health: ^6.0.0
   permission_handler: ^10.2.0
   awesome_snackbar_content: ^0.1.1
+  coupon_uikit: ^0.2.0
 
 dev_dependencies:
   flutter_test:
@@ -116,5 +117,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-dependency_overrides:
-  test_api: 0.5.2
+# dependency_overrides:
+#   test_api: 0.5.2

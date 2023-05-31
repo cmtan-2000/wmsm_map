@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:wmsm_flutter/main.dart';
-import 'package:wmsm_flutter/model/new_challenge.dart';
 import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/user_challenges/join_challenge_details.dart';
 import 'package:wmsm_flutter/viewmodel/user_view_model.dart';
@@ -32,6 +30,10 @@ class _UserJoinChallengePageState extends State<UserJoinChallengePage> {
 
   @override
   Widget build(BuildContext context) {
+    Logger().i(db
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get());
     return FutureBuilder(
       future: db
           .collection("users")
@@ -40,6 +42,7 @@ class _UserJoinChallengePageState extends State<UserJoinChallengePage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           var userData = Users.fromSnapshot(snapshot.data!);
+          Logger().w(userData);
 
           Logger().i(snapshot.data!.data());
           Logger().i(userData.role);

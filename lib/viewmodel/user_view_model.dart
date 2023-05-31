@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 import '../model/users.dart';
 
@@ -26,10 +25,10 @@ class UserViewModel with ChangeNotifier {
       email: '',
       phoneNumber: '',
       dateOfBirth: '',
-      weight: 0.0,
-      height: 0.0,
+      weight: "0.0",
+      height: "0.0",
       gender: '',
-      bmi: 0.0,
+      bmi: "0.0",
       role: '',
     );
 

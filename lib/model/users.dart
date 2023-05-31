@@ -7,10 +7,10 @@ class Users {
   String phoneNumber;
   String dateOfBirth;
   String role;
-  double? weight; //*in kg
-  double? height; //*in cm
+  String? weight; //*in kg
+  String? height; //*in cm
   String? gender; //* for bmi
-  double? bmi; //* for bmi
+  String? bmi; //* for bmi
 
   Users(
       {required this.fullname,

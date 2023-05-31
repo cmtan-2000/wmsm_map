@@ -135,6 +135,33 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                                               color: Colors.white),
                                         ),
                                       ),
+                                      //*warn the admin before deleting a challenge
+                                      confirmDismiss: (direction) {
+                                        return showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title:
+                                                    const Text('Are you sure?'),
+                                                content: const Text(
+                                                    'You are about to delete this challenge'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(false),
+                                                    child: const Text('Cancel'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(true),
+                                                    child: const Text('Delete'),
+                                                  ),
+                                                ],
+                                              );
+                                            });
+                                      },
                                       onDismissed: (direction) {
                                         //* Remove the challenge from list
                                         db

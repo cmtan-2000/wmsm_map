@@ -105,6 +105,13 @@ class UserChallengePage extends StatelessWidget {
               title: Text('Challenge',
                   style: Theme.of(context).textTheme.bodyLarge),
               automaticallyImplyLeading: false,
+              actions: [
+                IconButton(
+                    icon: const Icon(LineAwesomeIcons.alternate_ticket),
+                    onPressed: () {
+                      MyApp.navigatorKey.currentState!.pushNamed('/voucher');
+                    }),
+              ],
             ),
             SliverToBoxAdapter(
                 child: Column(
@@ -140,7 +147,7 @@ class UserChallengePage extends StatelessWidget {
                               builder: (BuildContext context,
                                   AsyncSnapshot<QuerySnapshot> snapshot) {
                                 if (snapshot.hasData) {
-                                  Logger(). i(snapshot.data!.docs.length);
+                                  Logger().i(snapshot.data!.docs.length);
                                   return snapshot.data!.docs.isNotEmpty
                                       ? ListView.builder(
                                           shrinkWrap: true,

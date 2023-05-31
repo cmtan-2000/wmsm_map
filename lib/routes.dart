@@ -5,6 +5,7 @@ import 'package:wmsm_flutter/view/user_challenges/admin/admin_add_challenge.dart
 import 'package:wmsm_flutter/view/user_challenges/admin/admin_edit_challenge.dart';
 import 'package:wmsm_flutter/view/user_challenges/admin/admin_manage_challenge_page.dart';
 import 'package:wmsm_flutter/view/user_challenges/user/user_join_challenge_page.dart';
+import 'package:wmsm_flutter/view/user_challenges/voucher_page.dart';
 import 'package:wmsm_flutter/view/user_dashboard/notification_page.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_pwd.dart';
 import 'package:wmsm_flutter/viewmodel/user_auth/verification_model.dart';
@@ -19,7 +20,6 @@ import 'view/intro_page.dart';
 import 'view/user_auth/reset_pwd_page.dart';
 import 'view/user_auth/pages/user_details.dart';
 import 'view/user_auth/pages/setup_password.dart';
-import 'view/user_challenges/user/user_join_challenge_page.dart';
 import 'view/user_profile/pages/bmi_page.dart';
 
 // Map<String, WidgetBuilder> routes = {
@@ -110,8 +110,8 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
           builder: (context) => AdminEditChallenge(
                 docid: args as String,
               ));
-    // case '/leaderboard':
-    //   return MaterialPageRoute(builder: (context) => const LeaderboardPage());
+    case '/voucher':
+      return MaterialPageRoute(builder: (context) => const VoucherPage());
     default:
       return null;
   }

@@ -1,4 +1,5 @@
 //This is profile page
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -199,7 +200,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                   phoneNumber = widget.user.phoneNumber;
 
                   if (widget.user.bmi != null) {
-                    currentBMIValue = widget.user.bmi!.toDouble();
+                    currentBMIValue = double.parse(widget.user.bmi!);
                   } else {
                     currentBMIValue = 0;
                   }

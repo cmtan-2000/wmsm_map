@@ -158,7 +158,6 @@ class _BMIPageWidgetState extends State<BMIPageWidget> {
                                 final double bmi =
                                     weight / (height * height) * 10000;
                                 bmiEC.text = bmi.toStringAsFixed(2);
-                                double bmiDouble = double.parse(bmiEC.text);
 
                                 db
                                     .collection("users")
@@ -167,9 +166,9 @@ class _BMIPageWidgetState extends State<BMIPageWidget> {
                                     )
                                     .update({
                                   "gender": _selectedGender,
-                                  "weight": weight,
-                                  "height": height,
-                                  "bmi": bmiDouble,
+                                  "weight": weightEC.text,
+                                  "height": heightEC.text,
+                                  "bmi": bmiEC.text,
                                 }).then((value) {
                                   print(weight);
                                   print(height);

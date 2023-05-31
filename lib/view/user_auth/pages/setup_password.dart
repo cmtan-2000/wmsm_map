@@ -104,13 +104,14 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
       'username': userLoad.username,
       'email': userLoad.email,
       'phoneNumber': userLoad.phoneNumber,
-      'bmi': 0,
+      'bmi': "0",
       'gender': '',
-      'weight': 0,
-      'height': 0,
+      'weight': "0",
+      'height': "0",
       'profile_picture':
           'https://i1.sndcdn.com/avatars-000307598863-zfe44f-t500x500.jpg',
       'dateOfBirth': userLoad.dateOfBirth,
+      'role': userLoad.role,
     });
   }
 
@@ -147,6 +148,7 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                       } else if (value.length < 6) {
                         return "Please enter at least 6 characters";
                       }
+                      return null;
                     }),
               ],
             ),
@@ -172,6 +174,7 @@ class _SetupPasswordState extends State<SetupPasswordWidget> {
                       } else if (value.length < 6) {
                         return "Please enter at least 6 characters";
                       }
+                      return null;
                     }),
               ],
             ),
