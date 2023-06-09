@@ -4,11 +4,12 @@ class multiLineTextField extends StatelessWidget {
   const multiLineTextField(
       {super.key,
       required TextEditingController multiLineController,
-      this.textInputAction})
+      required this.hintText,
+      required this.labelText})
       : _multiLineController = multiLineController;
-
   final TextEditingController _multiLineController;
-  final TextInputAction? textInputAction;
+  final String hintText;
+  final String labelText;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +21,8 @@ class multiLineTextField extends StatelessWidget {
             minLines: 1,
             maxLines: 10,
             decoration: InputDecoration(
-              hintText: 'Ex: Your favourtie challenge..',
-              labelText: 'Challenge Description',
+              hintText: hintText,
+              labelText: labelText,
               labelStyle: const TextStyle(color: Colors.blueGrey),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -38,10 +39,10 @@ class multiLineTextField extends StatelessWidget {
                 ),
               ),
             ),
-            textInputAction: textInputAction,
+            textInputAction: TextInputAction.newline,
             validator: (value) {
               if (value!.isEmpty) {
-                return "Please enter your challenge description";
+                return "Please enter your $labelText description";
               }
               return null;
             },

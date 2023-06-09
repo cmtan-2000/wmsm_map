@@ -8,7 +8,6 @@ import 'package:wmsm_flutter/model/new_challenge.dart';
 import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/user_challenges/join_challenge_details.dart';
 
-//! ADMIN JOIN CHALLENGE PAGE, CAN DELETE ONE
 class AdminJoinChallengePage extends StatefulWidget {
   const AdminJoinChallengePage({super.key, required this.user});
 
@@ -54,10 +53,8 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                   },
                   backgroundColor: Colors.white,
                   tooltip: 'Add new challenge',
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.blueGrey,
-                  ),
+                  child:
+                      const Icon(LineAwesomeIcons.plus, color: Colors.blueGrey),
                 ),
               );
             } else {
@@ -265,7 +262,7 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                   backgroundColor: Colors.white,
                   tooltip: 'Add new challenge',
                   child: const Icon(
-                    Icons.add,
+                    LineAwesomeIcons.plus,
                     color: Colors.blueGrey,
                   ),
                 ),

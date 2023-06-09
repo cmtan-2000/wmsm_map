@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/routes.dart';
 import 'package:wmsm_flutter/view/custom/themes/custom_theme.dart';
+import 'package:wmsm_flutter/view/user_article/article_page.dart';
+import 'package:wmsm_flutter/viewmodel/article_view/article_view_model.dart';
 import 'package:wmsm_flutter/viewmodel/health_conn_view/health_conn_view_model.dart';
 import 'package:wmsm_flutter/viewmodel/provider/example-changenotifier.dart';
 import 'package:wmsm_flutter/viewmodel/provider/example-futureprovider.dart';
@@ -38,6 +40,8 @@ class MyApp extends StatelessWidget {
           create: (_) => HealthConnViewModel(),
           child: const HeahthPage(),
         ),
+        ChangeNotifierProvider(
+            create: (_) => ArticleViewModel(), child: const ArticlePage()),
         // ====================================================================
         // Example all Provider here
         ChangeNotifierProvider(create: (_) => MessageViewModel()),

@@ -7,8 +7,6 @@ import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 
-import 'admin/admin_edit_challenge.dart';
-
 class JoinChallengeDetails extends StatelessWidget {
   JoinChallengeDetails({
     super.key,
@@ -36,7 +34,6 @@ class JoinChallengeDetails extends StatelessWidget {
     if (role == 'user') {
       return CustomOutlinedButton(
           onPressed: () {
-            //TODO: add one list of challenge whenever user enrol, at challenge_page.dart
             Logger().v(role, 'user join challenge');
           },
           iconData: LineAwesomeIcons.trophy,

@@ -254,8 +254,11 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
                                           height: 18,
                                         ),
                                         multiLineTextField(
-                                            multiLineController:
-                                                cDescriptionEC),
+                                          multiLineController: cDescriptionEC,
+                                          hintText:
+                                              'Ex Walk 100 Miles in 30 days and gain exclusive rewards',
+                                          labelText: 'Challenge Description',
+                                        ),
                                         const SizedBox(
                                           height: 18,
                                         ),
@@ -333,7 +336,8 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
                                                         builder: (BuildContext
                                                             context) {
                                                           return CupertinoActionSheet(
-                                                            actions: <CupertinoActionSheetAction>[
+                                                            actions: <
+                                                                CupertinoActionSheetAction>[
                                                               CupertinoActionSheetAction(
                                                                 isDefaultAction:
                                                                     true,

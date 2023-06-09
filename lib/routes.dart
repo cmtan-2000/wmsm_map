@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:wmsm_flutter/model/article.dart';
 import 'package:wmsm_flutter/view/example_provider.dart';
+import 'package:wmsm_flutter/view/user_article/admin/admin_add_article.dart';
 import 'package:wmsm_flutter/view/user_article/article_detail.dart';
+import 'package:wmsm_flutter/view/user_article/search_article.dart';
 import 'package:wmsm_flutter/view/user_challenges/admin/admin_add_challenge.dart';
 import 'package:wmsm_flutter/view/user_challenges/admin/admin_edit_challenge.dart';
 import 'package:wmsm_flutter/view/user_challenges/admin/admin_manage_challenge_page.dart';
@@ -102,7 +105,8 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
           builder: (context) => const UserJoinChallengePage());
     case '/articleDetails':
-      return MaterialPageRoute(builder: (context) => const ArticleDetails());
+      return MaterialPageRoute(
+          builder: (context) => ArticleDetails(article: args as Article));
     case '/addChallenge':
       return MaterialPageRoute(builder: (context) => const AdminAddChallenge());
     case '/editChallenge':
@@ -110,8 +114,14 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
           builder: (context) => AdminEditChallenge(
                 docid: args as String,
               ));
+    case '/manageArticle':
+      return MaterialPageRoute(
+          builder: (context) => const AdminInsertArticlePage());
     case '/voucher':
       return MaterialPageRoute(builder: (context) => const VoucherPage());
+    case '/searchArticle':
+      return MaterialPageRoute(
+          builder: ((context) => const SearchArticlePage()));
     default:
       return null;
   }

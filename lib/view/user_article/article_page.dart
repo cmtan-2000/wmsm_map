@@ -2,7 +2,12 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/main.dart';
+import 'package:wmsm_flutter/model/article.dart';
+import 'package:wmsm_flutter/viewmodel/article_view/article_view_model.dart';
 
 import '../../model/users.dart';
 import '../../viewmodel/shared/shared_pref.dart';
@@ -15,6 +20,8 @@ class ArticlePage extends StatefulWidget {
 }
 
 class _ArticlePageState extends State<ArticlePage> {
+  List<Map<String, dynamic>> articles = [];
+
   Users user = Users(
       dateOfBirth: '',
       email: '',
@@ -32,6 +39,10 @@ class _ArticlePageState extends State<ArticlePage> {
 
   void initialGetSavedData() async {
     Users response = Users.fromJson(await sharedPref.read("user"));
+    final articleViewModel =
+        Provider.of<ArticleViewModel>(context, listen: false);
+    articleViewModel.getData();
+    List<Map<String, dynamic>> fetchedArticles = articleViewModel.articles;
     setState(() {
       user = Users(
           dateOfBirth: response.dateOfBirth,
@@ -40,28 +51,45 @@ class _ArticlePageState extends State<ArticlePage> {
           phoneNumber: response.phoneNumber,
           role: response.role,
           username: response.username);
+
+      articles = fetchedArticles;
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return user.role == 'admin'
-        ? const Center(child: Text('This is admin aricle page'))
-        : user.role == 'user'
-            ? const UserArticlePage()
-            : const Center(
-                child: CircularProgressIndicator(),
-              );
+  void fetchArticle() {
+    final articleViewModel =
+        Provider.of<ArticleViewModel>(context, listen: false);
+    articleViewModel.getData();
+    List<Map<String, dynamic>> fetchedArticles = articleViewModel.articles;
+
+    setState(() {
+      articles = fetchedArticles;
+    });
   }
-}
 
-class UserArticlePage extends StatelessWidget {
-  const UserArticlePage({
-    super.key,
-  });
+  FloatingActionButton? floatingbutton(String role) {
+    if (role == 'user') {
+      //return nothing
+      return null;
+    }
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.pushNamed(context, '/manageArticle');
+      },
+      backgroundColor: Colors.blueGrey,
+      tooltip: 'Add new article',
+      child: const Icon(LineAwesomeIcons.plus, color: Colors.white),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    for (var article in articles) {
+      Logger().i(article['title']);
+      Logger().i(article['author']);
+      Logger().i(article['publishDate']);
+    }
+
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -71,60 +99,88 @@ class UserArticlePage extends StatelessWidget {
             title:
                 Text('Article', style: Theme.of(context).textTheme.bodyLarge),
             automaticallyImplyLeading: false,
-          ),
-          SliverToBoxAdapter(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              ArticleListPage(
-                articleTitle: 'How to Exercise Daily',
-                articleAuthor: 'Naruto',
-                articlePublishDate: '2023-05-18',
-                articleImage:
-                    'https://images.unsplash.com/flagged/photo-1556746834-cbb4a38ee593?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=872&q=80',
-              ),
-              ArticleListPage(
-                articleTitle: 'Walk n Run Program',
-                articleAuthor: 'Hinata',
-                articlePublishDate: '2023-05-18',
-                articleImage:
-                    'https://images.unsplash.com/photo-1674574124649-778f9afc0e9c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80',
-              ),
-              ArticleListPage(
-                articleTitle: 'WMSM App Changing Lives',
-                articleAuthor: 'Sasuke',
-                articlePublishDate: '2023-05-18',
-                articleImage:
-                    'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=481&q=80',
+            actions: [
+              IconButton(
+                onPressed: () {
+                  MyApp.navigatorKey.currentState!.pushNamed('/searchArticle');
+                },
+                icon: const Icon(LineAwesomeIcons.search),
               ),
             ],
+          ),
+          SliverToBoxAdapter(
+              child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              //*turn this into listview builder
+              children: [
+                Expanded(
+                    child: ListView.builder(
+                        padding:
+                            const EdgeInsets.only(top: 10, left: 20, right: 20),
+                        itemCount: articles.length,
+                        itemBuilder: (context, index) {
+                          var article = articles[index];
+
+                          return Center(
+                            child: ArticleListPage(
+                              articleAuthor: article['author'],
+                              articleImage: article['imgPath'],
+                              articlePublishDate: article['publishDate'],
+                              articleTitle: article['title'],
+                              articleContent: article['content'],
+                            ),
+                          );
+                        })),
+              ],
+            ),
           )),
         ],
       ),
+      floatingActionButton: floatingbutton(user.role),
     );
   }
 }
 
 class ArticleListPage extends StatelessWidget {
-  const ArticleListPage({
+  ArticleListPage({
     super.key,
     required this.articleTitle,
     required this.articleAuthor,
     required this.articlePublishDate,
     required this.articleImage,
+    required this.articleContent,
   });
 
   final String articleTitle;
   final String articleAuthor;
   final String articlePublishDate;
   final String articleImage;
+  final String articleContent;
+  late SharedPref sharedPref = SharedPref();
+
+  Future<void> storeData() async {
+    Article article = Article(
+        title: articleTitle,
+        author: articleAuthor,
+        imgPath: articleImage,
+        content: articleContent,
+        publishDate: articlePublishDate);
+
+    sharedPref.save("article", article.toJson());
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      //TODO: Lead to new page
-      onTap: () {
-        MyApp.navigatorKey.currentState!.pushNamed('/articleDetails');
+      onTap: () async {
+        //pass object article to next page
+        await storeData();
+        Article article1 = Article.fromJson(await sharedPref.read("article"));
+        Logger().i(article1);
+        MyApp.navigatorKey.currentState!
+            .pushNamed('/articleDetails', arguments: article1);
       },
       child: SizedBox(
         //width and height for entire container article
@@ -153,6 +209,9 @@ class ArticleListPage extends StatelessWidget {
                     .textTheme
                     .displaySmall
                     ?.copyWith(fontWeight: FontWeight.bold)),
+            const SizedBox(
+              height: 5,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
