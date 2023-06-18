@@ -20,6 +20,7 @@ class CustomTextFormField extends TextFormField {
     suffix,
     TextInputAction? textInputAction,
     String? prefixText,
+    Function(String)? onChanged,
   }) : super(
           key: key,
           autofocus: true,
@@ -30,6 +31,7 @@ class CustomTextFormField extends TextFormField {
           onTap: onTap,
           readOnly: readOnly ?? false,
           keyboardType: keyboardType ?? TextInputType.text,
+          onChanged: onChanged,
           decoration: InputDecoration(
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 8, horizontal: 12),

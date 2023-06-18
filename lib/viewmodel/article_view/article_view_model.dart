@@ -11,6 +11,7 @@ class ArticleViewModel extends ChangeNotifier {
   String _content = '';
 
   List<Map<String, dynamic>> articles = [];
+  List<Map<String, dynamic>> searchResult = [];
 
   //setter
   void setArticle(String author, String title, String publishDate,
@@ -67,5 +68,18 @@ class ArticleViewModel extends ChangeNotifier {
 
     notifyListeners();
     Logger().i('Data saved successfully with ID: ${docRef.id}');
+  }
+
+  void searchArticle(String search) async {
+    String lowerCaseSearch = search.toLowerCase();
+    searchResult.clear();
+
+    for (var item in articles) {
+      if (item['title'].toLowerCase().contains(lowerCaseSearch)) {
+        searchResult.add(item);
+      }
+    }
+
+    notifyListeners();
   }
 }

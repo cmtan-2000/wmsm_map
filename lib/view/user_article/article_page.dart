@@ -10,7 +10,6 @@ import 'package:wmsm_flutter/model/article.dart';
 import 'package:wmsm_flutter/viewmodel/article_view/article_view_model.dart';
 
 import '../../model/users.dart';
-import '../../viewmodel/health_conn_view/health_conn_view_model.dart';
 import '../../viewmodel/shared/shared_pref.dart';
 import '../../viewmodel/user_view_model.dart';
 
@@ -31,7 +30,7 @@ class _ArticlePageState extends State<ArticlePage> {
       phoneNumber: '',
       username: '',
       role: '');
-  SharedPref sharedPref = SharedPref();
+  // SharedPref sharedPref = SharedPref();
 
   @override
   initState() {
@@ -73,11 +72,11 @@ class _ArticlePageState extends State<ArticlePage> {
 
   @override
   Widget build(BuildContext context) {
-    for (var article in articles) {
-      Logger().i(article['title']);
-      Logger().i(article['author']);
-      Logger().i(article['publishDate']);
-    }
+    // for (var article in articles) {
+    //   Logger().i(article['title']);
+    //   Logger().i(article['author']);
+    //   Logger().i(article['publishDate']);
+    // }
 
     return Scaffold(
       body: CustomScrollView(
@@ -192,7 +191,6 @@ class ArticleListPage extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
-              //TODO: Article image
               //?width and height specifically for img, any img size can fit
               child: CachedNetworkImage(
                 imageUrl: articleImage,
