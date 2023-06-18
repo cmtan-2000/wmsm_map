@@ -34,12 +34,19 @@ class ArticleViewModel extends ChangeNotifier {
       FirebaseFirestore.instance.collection('article').snapshots();
 
   //get data from database
-  void getData() {
-    articleStream.listen((QuerySnapshot snapshot) {
-      articles = snapshot.docs.map((DocumentSnapshot doc) {
+  void getData() async {
+    // articleStream.listen((QuerySnapshot snapshot) {
+    //   articles = snapshot.docs.map((DocumentSnapshot doc) {
+    //     return doc.data() as Map<String, dynamic>;
+    //   }).toList();
+    // });
+
+    await FirebaseFirestore.instance.collection('article').get().then((value) {
+      articles = value.docs.map((DocumentSnapshot doc) {
         return doc.data() as Map<String, dynamic>;
       }).toList();
     });
+
     notifyListeners();
   }
 

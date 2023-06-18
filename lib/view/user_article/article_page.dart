@@ -10,7 +10,9 @@ import 'package:wmsm_flutter/model/article.dart';
 import 'package:wmsm_flutter/viewmodel/article_view/article_view_model.dart';
 
 import '../../model/users.dart';
+import '../../viewmodel/health_conn_view/health_conn_view_model.dart';
 import '../../viewmodel/shared/shared_pref.dart';
+import '../../viewmodel/user_view_model.dart';
 
 class ArticlePage extends StatefulWidget {
   const ArticlePage({super.key});
@@ -38,11 +40,11 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
   void initialGetSavedData() async {
-    Users response = Users.fromJson(await sharedPref.read("user"));
-    final articleViewModel =
-        Provider.of<ArticleViewModel>(context, listen: false);
-    articleViewModel.getData();
-    List<Map<String, dynamic>> fetchedArticles = articleViewModel.articles;
+    // Users response = Users.fromJson(await sharedPref.read("user"));
+
+    final response = Provider.of<UserViewModel>(context, listen: false).user;
+    Provider.of<ArticleViewModel>(context, listen: false).getData();
+
     setState(() {
       user = Users(
           dateOfBirth: response.dateOfBirth,
@@ -51,19 +53,6 @@ class _ArticlePageState extends State<ArticlePage> {
           phoneNumber: response.phoneNumber,
           role: response.role,
           username: response.username);
-
-      articles = fetchedArticles;
-    });
-  }
-
-  void fetchArticle() {
-    final articleViewModel =
-        Provider.of<ArticleViewModel>(context, listen: false);
-    articleViewModel.getData();
-    List<Map<String, dynamic>> fetchedArticles = articleViewModel.articles;
-
-    setState(() {
-      articles = fetchedArticles;
     });
   }
 
@@ -108,34 +97,46 @@ class _ArticlePageState extends State<ArticlePage> {
               ),
             ],
           ),
-          SliverToBoxAdapter(
-              child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.9,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              //*turn this into listview builder
-              children: [
-                Expanded(
-                    child: ListView.builder(
-                        padding:
-                            const EdgeInsets.only(top: 10, left: 20, right: 20),
-                        itemCount: articles.length,
-                        itemBuilder: (context, index) {
-                          var article = articles[index];
+          Consumer<ArticleViewModel>(
+            builder: (context, articleViewModel, child) {
+              return SliverToBoxAdapter(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.9,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    //*turn this into listview builder
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.only(
+                              top: 10, left: 20, right: 20),
+                          itemCount: articleViewModel.articles.length,
+                          itemBuilder: (context, index) {
+                            // Get list article from database
+                            articles = articleViewModel.articles;
+                            var article = articles[index];
 
-                          return Center(
-                            child: ArticleListPage(
-                              articleAuthor: article['author'],
-                              articleImage: article['imgPath'],
-                              articlePublishDate: article['publishDate'],
-                              articleTitle: article['title'],
-                              articleContent: article['content'],
-                            ),
-                          );
-                        })),
-              ],
-            ),
-          )),
+                            return Center(
+                              child: ArticleListPage(
+                                articleAuthor: article['author'],
+                                articleImage: article['imgPath'],
+                                articlePublishDate: article['publishDate'],
+                                articleTitle: article['title'],
+                                articleContent: article['content'],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ],
       ),
       floatingActionButton: floatingbutton(user.role),

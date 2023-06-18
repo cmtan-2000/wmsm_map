@@ -13,7 +13,7 @@ class HealthConnViewModel extends ChangeNotifier {
   Map<String, dynamic> _step = {};
   List<StepData> _weeklyStep = [];
   List<StepData> _monthlyStep = [];
-  String tst ="";
+  String tst = "";
 
   // Getters
   String get message => _message;
@@ -22,7 +22,6 @@ class HealthConnViewModel extends ChangeNotifier {
   List<StepData> get weeklyStep => _weeklyStep;
   List<StepData> get monthlyStep => _monthlyStep;
   String get test => tst;
-  
 
   // Constructor
   HealthFactory health = HealthFactory();
@@ -58,21 +57,33 @@ class HealthConnViewModel extends ChangeNotifier {
   }
 
   void getSteps() async {
-    int? step = 0;
-    DateTime endTime = DateTime.now();
-    DateTime startTime = DateTime(endTime.year, endTime.month, endTime.day);
+    if (authorize) {
+      int? step = 0;
+      DateTime endTime = DateTime.now();
+      DateTime startTime = DateTime(endTime.year, endTime.month, endTime.day);
 
-    try {
-      step = await health.getTotalStepsInInterval(startTime, endTime);
+      try {
+        step = await health.getTotalStepsInInterval(startTime, endTime);
+        _step = {
+          'step': step,
+          'startTime': startTime,
+          'endTime': endTime,
+          'response': 'success',
+        };
+        notifyListeners();
+      } catch (e) {
+        throw Exception('Exception in getSteps: $e');
+      }
+    } else {
+      DateTime endTime = DateTime.now();
+      DateTime startTime = DateTime(endTime.year, endTime.month, endTime.day);
       _step = {
-        'step': step,
+        'step': 0,
         'startTime': startTime,
         'endTime': endTime,
-        'response': 'success',
+        'response': 'fail',
       };
       notifyListeners();
-    } catch (e) {
-      throw Exception('Exception in getSteps: $e');
     }
   }
 

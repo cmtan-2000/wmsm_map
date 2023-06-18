@@ -65,12 +65,6 @@ class _DashboardState extends State<Dashboard> {
               ? UserDashboard(user: userView.user)
               : const Center(child: CircularProgressIndicator());
     });
-
-    // user.role == 'admin'
-    //     ? AdminDashboard()
-    //     : user.role == 'user'
-    //         ? UserDashboard(user: user)
-    //         : const Center(child: CircularProgressIndicator());
   }
 }
 

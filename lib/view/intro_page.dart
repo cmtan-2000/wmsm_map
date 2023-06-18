@@ -283,8 +283,9 @@ class ContentClass extends StatelessWidget {
                         );
                       } else {
                         return CustomElevatedButton(
-                            onPressed: () =>
-                                Navigator.of(context).pushNamed('/btmNav'),
+                            onPressed: () {
+                              Navigator.of(context).pushNamed('/btmNav');
+                            },
                             child: Text('CONNECT YOUR TRACKER TO START'));
                       }
                     }))
@@ -297,9 +298,17 @@ class ContentClass extends StatelessWidget {
                   children: [
                     Expanded(
                       child: CustomOutlinedButton(
-                        onPressed: () {
-                          SnackBar(content: Text('SKIP'));
-                          MyApp.navigatorKey.currentState?.pushNamed('/btmNav');
+                        onPressed: () async {
+                          // SnackBar(content: Text('SKIP'));
+
+                          Provider.of<UserViewModel>(context, listen: false)
+                              .setUser();
+                          final snackbar = Awesome.snackbar(
+                              "Authentication",
+                              "Your Health Account is yet Authenticated ",
+                              ContentType.warning);
+                          ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                          Navigator.of(context).pushNamed('/btmNav');
                         },
                         iconData: null,
                         text: 'SKIP',
