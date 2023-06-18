@@ -144,46 +144,83 @@ class UserDashboard extends StatelessWidget {
                                               .displaySmall),
                                     ),
                                     const SizedBox(height: 20),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          width: 200,
-                                          child: Column(
-                                            children: [
-                                              //TODO: Add step count
-                                              Consumer<HealthConnViewModel>(
-                                                builder: (context, health,
-                                                        child) =>
-                                                        
-                                                    health.step.isEmpty
-                                                        ? const CircularProgressIndicator()
-                                                        : Text(
-                                                            health
-                                                                .step['step']
-                                                                .toString(),
-                                                            style: const TextStyle(
-                                                                fontSize: 60,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
-                                              ),
-                                              const Text('steps',
-                                                  style: TextStyle(
-                                                      fontSize: 25,
-                                                      fontWeight:
-                                                          FontWeight.bold))
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 80,
-                                          child: Image.asset(
-                                            'assets/images/walk_dashboard.png',
-                                          ),
-                                        ),
-                                      ],
+                                    Consumer<HealthConnViewModel>(
+                                      builder: (context, health, child) =>
+                                          health.step.isEmpty
+                                              ? const CircularProgressIndicator()
+                                              : health.authorize
+                                                  ? Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 200,
+                                                          child: Column(
+                                                            children: [
+                                                              //TODO: Add step count
+                                                              Consumer<
+                                                                  HealthConnViewModel>(
+                                                                builder: (context,
+                                                                        health,
+                                                                        child) =>
+                                                                    health.step
+                                                                            .isEmpty
+                                                                        ? const CircularProgressIndicator()
+                                                                        : Text(
+                                                                            health.step['step'].toString(),
+                                                                            style:
+                                                                                const TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
+                                                                          ),
+                                                              ),
+                                                              const Text(
+                                                                  'steps',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          25,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold))
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 80,
+                                                          child: Image.asset(
+                                                            'assets/images/walk_dashboard.png',
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Column(
+                                                          children: [
+                                                            //TODO: Add step count
+                                                            SizedBox(
+                                                              width: 138,
+                                                              child:
+                                                                  Image.asset(
+                                                                'assets/images/error2.png',
+                                                              ),
+                                                            ),
+                                                            const Text(
+                                                              'Not connected to Google Fit',
+                                                              style: TextStyle(
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .red),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
                                     )
                                   ],
                                 ),

@@ -78,28 +78,32 @@ class _UserJoinChallengePageWidgetState
     if (role == 'user') {
       return CustomOutlinedButton(
           onPressed: () {
-            String userid = FirebaseAuth.instance.currentUser!.uid;
-            FirebaseFirestore.instance
-                .collection('challenges')
-                .doc(challengeId)
-                .update({
-              'challengers': FieldValue.arrayUnion([userid])
-            }).then((_) {
-              final snackbar = Awesome.snackbar(
-                  "Challenge", "Enrolled to Challenge", ContentType.success);
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(snackbar);
-            }).catchError((error) {
-              final materialBanner = Awesome.materialBanner(
-                  "Challenge", "Failed to Join Challenge", ContentType.failure);
-              ScaffoldMessenger.of(context)
-                ..hideCurrentMaterialBanner()
-                ..showMaterialBanner(materialBanner);
+            showProgressDialog(context).then((value) {
+              String userid = FirebaseAuth.instance.currentUser!.uid;
+              FirebaseFirestore.instance
+                  .collection('challenges')
+                  .doc(challengeId)
+                  .update({
+                'challengers': FieldValue.arrayUnion([userid])
+              }).then((_) {
+                final snackbar = Awesome.snackbar(
+                    "Challenge", "Enrolled to Challenge", ContentType.success);
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(snackbar);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              }).catchError((error) {
+                final materialBanner = Awesome.materialBanner("Challenge",
+                    "Failed to Join Challenge", ContentType.failure);
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentMaterialBanner()
+                  ..showMaterialBanner(materialBanner);
+              });
             });
 
             // Logger().i(challengeId);
-            // //TODO: add one list of challenge whenever user enrol, at challenge_page.dart
+            // TODO: add one list of challenge whenever user enrol, at challenge_page.dart
             // Logger().v(role, 'user join challenge');
           },
           iconData: LineAwesomeIcons.trophy,
@@ -121,6 +125,29 @@ class _UserJoinChallengePageWidgetState
   void initState() {
     // TODO: implement initState
     super.initState();
+  }
+
+  Future<void> showProgressDialog(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (_) {
+        // Show the dialog with CircularProgressIndicator
+        return const AlertDialog(
+          content: SizedBox(
+            height: 50,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        );
+      },
+    );
+
+    // // Delay the duration for 3 seconds
+    // Future.delayed(const Duration(seconds: 2), () {
+    //   Navigator.pop(context); // Close the dialog after the delay
+    //   Navigator.pop(context); // Close the dialog after the delay
+    // });
   }
 
   int voucherCount = 0;
@@ -152,8 +179,7 @@ class _UserJoinChallengePageWidgetState
                           ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasData) {
                           var challenges = snapshot.data!.docs;
-                          var documents = snapshot.data!.docs;
-                          var filteredDocuments = documents
+                          var filteredDocuments = challenges
                               .where((doc) => !doc['challengers'].contains(
                                   FirebaseAuth.instance.currentUser!.uid))
                               .toList();
@@ -167,7 +193,7 @@ class _UserJoinChallengePageWidgetState
                                       itemCount: filteredDocuments.length,
                                       itemBuilder: ((context, index) => Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal: 20.0),
+                                                horizontal: 20.0, vertical: 10),
                                             child: SizedBox(
                                               width: MediaQuery.of(context)
                                                       .size
@@ -238,18 +264,26 @@ class _UserJoinChallengePageWidgetState
                                                                     FontWeight
                                                                         .bold),
                                                           ),
-                                                          // IconAndInfo(
-                                                          //     text: challengeVoucher,
-                                                          //     icon: LineAwesomeIcons.alternate_ticket,
-                                                          //     color: Colors.indigo),
-                                                          // const IconAndInfo(
-                                                          //     text: 'RM2 Family Mart Off',
-                                                          //     icon: LineAwesomeIcons.alternate_ticket,
-                                                          //     color: Colors.indigo),
-                                                          // const IconAndInfo(
-                                                          //     text: 'Buy 1 Free 1 Zus Coffee',
-                                                          //     icon: LineAwesomeIcons.alternate_ticket,
-                                                          //     color: Colors.indigo),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: challenges[
+                                                                        index]
+                                                                    ["voucher"]
+                                                                .map<Widget>(
+                                                                    (voucher) =>
+                                                                        IconAndInfo(
+                                                                          text:
+                                                                              voucher,
+                                                                          icon:
+                                                                              LineAwesomeIcons.alternate_ticket,
+                                                                          color:
+                                                                              Colors.indigo,
+                                                                        ))
+                                                                .toList(),
+                                                          ),
+
                                                           const SizedBox(
                                                               height: 20),
                                                           const Text(
@@ -260,10 +294,10 @@ class _UserJoinChallengePageWidgetState
                                                           const SizedBox(
                                                               height: 20),
                                                           _outlineButton(
-                                                              userView
-                                                                  .user.role,
-                                                              challenges[index]
-                                                                  .id)
+                                                            userView.user.role,
+                                                            challenges[index]
+                                                                .id,
+                                                          )
                                                           // _outlineButton(user.role),
                                                         ],
                                                       ),

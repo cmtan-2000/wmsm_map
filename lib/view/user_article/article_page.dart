@@ -1,5 +1,7 @@
 // This is article page
 
+// ignore_for_file: must_be_immutable
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -10,7 +12,6 @@ import 'package:wmsm_flutter/model/article.dart';
 import 'package:wmsm_flutter/viewmodel/article_view/article_view_model.dart';
 
 import '../../model/users.dart';
-import '../../viewmodel/health_conn_view/health_conn_view_model.dart';
 import '../../viewmodel/shared/shared_pref.dart';
 import '../../viewmodel/user_view_model.dart';
 
@@ -118,6 +119,7 @@ class _ArticlePageState extends State<ArticlePage> {
 
                             return Center(
                               child: ArticleListPage(
+                                articleId: article['id'],
                                 articleAuthor: article['author'],
                                 articleImage: article['imgPath'],
                                 articlePublishDate: article['publishDate'],
@@ -147,13 +149,14 @@ class _ArticlePageState extends State<ArticlePage> {
 class ArticleListPage extends StatelessWidget {
   ArticleListPage({
     super.key,
+    required this.articleId,
     required this.articleTitle,
     required this.articleAuthor,
     required this.articlePublishDate,
     required this.articleImage,
     required this.articleContent,
   });
-
+  final String articleId;
   final String articleTitle;
   final String articleAuthor;
   final String articlePublishDate;
@@ -163,6 +166,7 @@ class ArticleListPage extends StatelessWidget {
 
   Future<void> storeData() async {
     Article article = Article(
+        id: articleId,
         title: articleTitle,
         author: articleAuthor,
         imgPath: articleImage,

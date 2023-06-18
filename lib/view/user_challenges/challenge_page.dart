@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 import 'package:wmsm_flutter/view/user_challenges/admin/admin_manage_challenge_page.dart';
+import 'package:wmsm_flutter/viewmodel/health_conn_view/health_conn_view_model.dart';
 
 import '../../model/users.dart';
 import '../../viewmodel/shared/shared_pref.dart';
@@ -92,6 +94,17 @@ class UserChallengePage extends StatelessWidget {
     super.key,
   });
 
+  String convertFormatDate(String date) {
+    List<String> startDateParts = date.split('/');
+// Convert the start date parts into a valid format (YYYY-MM-DD)
+    String validStartDateString =
+        '${startDateParts[2].padLeft(4, '0')}-${startDateParts[1].padLeft(2, '0')}-${startDateParts[0].padLeft(2, '0')}';
+
+// Parse the valid start date string into a DateTime object
+    DateTime startDate = DateTime.parse(validStartDateString);
+    return startDate.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,64 +151,84 @@ class UserChallengePage extends StatelessWidget {
                             height: 10,
                           ),
                           StreamBuilder(
-                              stream: FirebaseFirestore.instance
-                                  .collection('challenges')
-                                  .where('challengers',
-                                      arrayContains: FirebaseAuth
-                                          .instance.currentUser!.uid)
-                                  .snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                                if (snapshot.hasData) {
-                                  Logger().i(snapshot.data!.docs.length);
-                                  return snapshot.data!.docs.isNotEmpty
-                                      ? ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount: snapshot.data!.docs.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            DocumentSnapshot ds =
-                                                snapshot.data!.docs[index];
-                                            return OngoingChallengeCard(
-                                              ongoingTitle: ds['title'],
-                                              ongoingImgPath:
-                                                  'assets/images/challenge1.png',
-                                              ongoingPercentage: 0.6,
-                                              ongoingSteps: 600,
-                                              challengeSteps: 1000,
-                                            );
-                                          })
-                                      : const Center(
-                                          child: Text('No Challenge Join'),
-                                        );
-                                } else {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                }
-                              }),
-                          // //TODO: READ ONGOING CHALLENGE
-                          // const OngoingChallengeCard(
-                          //   ongoingTitle: 'Walk 100 miles',
-                          //   ongoingImgPath: 'assets/images/challenge1.png',
-                          //   ongoingPercentage: 0.6,
-                          //   ongoingSteps: 600,
-                          //   challengeSteps: 1000,
-                          // ),
-                          // const OngoingChallengeCard(
-                          //   ongoingTitle: 'Walk for 30 minutes everyday',
-                          //   ongoingImgPath: 'assets/images/challenge2.png',
-                          //   ongoingPercentage: 0.6,
-                          //   ongoingSteps: 600,
-                          //   challengeSteps: 1000,
-                          // ),
-                          // const OngoingChallengeCard(
-                          //   ongoingTitle: 'Burn 100 calories per day',
-                          //   ongoingImgPath: 'assets/images/challenge3.png',
-                          //   ongoingPercentage: 0.6,
-                          //   ongoingSteps: 600,
-                          //   challengeSteps: 1000,
-                          // ),
+                            stream: FirebaseFirestore.instance
+                                .collection('challenges')
+                                .where('challengers',
+                                    arrayContains:
+                                        FirebaseAuth.instance.currentUser!.uid)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasData) {
+                                Logger().i(snapshot.data!.docs.length);
+                                return snapshot.data!.docs.isNotEmpty
+                                    ? ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: snapshot.data!.docs.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          DocumentSnapshot ds =
+                                              snapshot.data!.docs[index];
+                                          List<String> datePart =
+                                              ds['duration'].split(' - ');
+                                          String startDateString =
+                                              convertFormatDate(datePart[0]);
+                                          String endDateString =
+                                              convertFormatDate(datePart[1]);
 
+                                          double percentage = 0.0;
+
+                                          return FutureBuilder<int>(
+                                            future: Provider.of<
+                                                        HealthConnViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                .getInternalStep(
+                                                    startDateString,
+                                                    endDateString),
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot<int> snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return const Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              } else if (snapshot.hasError) {
+                                                return const Center(
+                                                    child: Text('Error'));
+                                              } else {
+                                                percentage = (snapshot.data! /
+                                                        ds['stepGoal']) *
+                                                    100;
+                                                String formattedPercentage =
+                                                    percentage
+                                                        .toStringAsFixed(2);
+                                                percentage = double.parse(
+                                                        formattedPercentage) /
+                                                    100;
+                                                return OngoingChallengeCard(
+                                                  ongoingTitle: ds['title'],
+                                                  ongoingImgPath:
+                                                      'assets/images/challenge1.png',
+                                                  ongoingPercentage: percentage,
+                                                  ongoingSteps: snapshot.data!,
+                                                  challengeSteps:
+                                                      ds['stepGoal'],
+                                                );
+                                              }
+                                            },
+                                          );
+                                        },
+                                      )
+                                    : const Center(
+                                        child: Text('No Challenge Join'),
+                                      );
+                              } else {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                            },
+                          ),
                           const SizedBox(height: 20),
                           CustomOutlinedButton(
                             disabled: false,
