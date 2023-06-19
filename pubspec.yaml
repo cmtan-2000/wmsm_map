@@ -118,5 +118,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-dependency_overrides:
-  test_api: 0.5.2
+# only cm uncomment this
+# dependency_overrides:
+# test_api: 0.5.2

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wmsm_flutter/main.dart';
+import 'package:wmsm_flutter/model/article.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/viewmodel/article_view/article_view_model.dart';
 
@@ -13,6 +15,7 @@ class SearchArticlePage extends StatefulWidget {
 class _SearchArticlePageState extends State<SearchArticlePage> {
   late TextEditingController _searchController;
   List<Map<String, dynamic>> searchResult = [];
+  late Article article1;
 
   @override
   void initState() {
@@ -28,25 +31,6 @@ class _SearchArticlePageState extends State<SearchArticlePage> {
     _searchController.dispose();
     super.dispose();
   }
-
-  //call this function to run the filter
-  // void _runFilter(String enteredKeyword) {
-  //   List<Map<String, dynamic>> results = [];
-
-  //   results = searchResult
-  //       .where((article) => article['title']
-  //           .toLowerCase()
-  //           .contains(enteredKeyword.toLowerCase()))
-  //       .toList();
-
-  //   Logger().wtf(results);
-
-  //   // // Refresh the UI
-  //   // setState(() {
-  //   //   searchResult = results;
-
-  //   // });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -67,15 +51,15 @@ class _SearchArticlePageState extends State<SearchArticlePage> {
                 child: Column(
                   children: [
                     Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 35),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: CustomTextFormField(
                             context: context,
                             controller: _searchController,
-                            hintText: 'Ex WMSM App Changing Lives',
+                            hintText: 'WMSM App Changing Lives',
                             suffixicon: IconButton(
                               onPressed: () {
                                 _searchController.clear();
-                                // articleViewmodel.searchArticle('');
+                                articleViewmodel.searchArticle('');
                               },
                               icon: const Icon(Icons.clear),
                             ),
@@ -91,37 +75,89 @@ class _SearchArticlePageState extends State<SearchArticlePage> {
                               return null;
                             })),
                     Expanded(
-                      child: articleViewmodel.searchResult.isNotEmpty ||
+                      child: articleViewmodel.searchResult.isNotEmpty &&
                               _searchController.text.isNotEmpty
-                          //*display keyword
-                          ? ListView.builder(
+                          //!display keyword
+                          ? ListView.separated(
                               padding: const EdgeInsets.only(
                                   top: 10, left: 20, right: 20),
                               itemCount: articleViewmodel.searchResult.length,
+                              separatorBuilder: (context, index) {
+                                return const Divider();
+                              },
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   title: Text(articleViewmodel
                                       .searchResult[index]['title']),
                                   subtitle: Text(articleViewmodel
                                       .searchResult[index]['author']),
-                                  // onTap: MyApp.navigatorKey.currentState!.pushNamed('/articleDetails', arguments: article1);
+                                  onTap: () {
+                                    article1 = Article(
+                                        title: articleViewmodel
+                                            .searchResult[index]['title'],
+                                        author: articleViewmodel
+                                            .searchResult[index]['author'],
+                                        content: articleViewmodel
+                                            .searchResult[index]['content'],
+                                        imgPath: articleViewmodel
+                                            .searchResult[index]['imgPath'],
+                                        publishDate: articleViewmodel
+                                            .searchResult[index]['publishDate'],
+                                        eventDate: articleViewmodel
+                                            .searchResult[index]['eventDate']);
+
+                                    MyApp.navigatorKey.currentState!.pushNamed(
+                                        '/articleDetails',
+                                        arguments: article1);
+                                  },
                                 );
                               },
                             )
-                          //*display all
-                          : ListView.builder(
-                              padding: const EdgeInsets.only(
-                                  top: 10, left: 20, right: 20),
-                              itemCount: articleViewmodel.articles.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text(articleViewmodel.articles[index]
-                                      ['title']),
-                                  subtitle: Text(articleViewmodel
-                                      .articles[index]['author']),
-                                );
-                              },
-                            ),
+
+                          //if no matching result when type is not found
+                          : _searchController.text.isNotEmpty
+                              ? const Text('No matching result')
+
+                              //!display all
+                              : ListView.separated(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, left: 20, right: 20),
+                                  itemCount: articleViewmodel.articles.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      title: Text(articleViewmodel
+                                          .articles[index]['title']),
+                                      subtitle: Text(
+                                          articleViewmodel.articles[index]
+                                              ['author'],
+                                          style: const TextStyle(
+                                              color: Colors.grey)),
+                                      onTap: () {
+                                        article1 = Article(
+                                          title: articleViewmodel
+                                              .articles[index]['title'],
+                                          author: articleViewmodel
+                                              .articles[index]['author'],
+                                          content: articleViewmodel
+                                              .articles[index]['content'],
+                                          imgPath: articleViewmodel
+                                              .articles[index]['imgPath'],
+                                          publishDate: articleViewmodel
+                                              .articles[index]['publishDate'],
+                                          eventDate: articleViewmodel
+                                              .articles[index]['eventDate'],
+                                        );
+
+                                        MyApp.navigatorKey.currentState!
+                                            .pushNamed('/articleDetails',
+                                                arguments: article1);
+                                      },
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return const Divider();
+                                  },
+                                ),
                     ),
                   ],
                 ),

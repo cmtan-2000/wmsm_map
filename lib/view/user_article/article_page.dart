@@ -122,6 +122,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                 articlePublishDate: article['publishDate'],
                                 articleTitle: article['title'],
                                 articleContent: article['content'],
+                                articleEventDate: article['eventDate'],
                               ),
                             );
                           },
@@ -144,20 +145,21 @@ class _ArticlePageState extends State<ArticlePage> {
 }
 
 class ArticleListPage extends StatelessWidget {
-  ArticleListPage({
-    super.key,
-    required this.articleTitle,
-    required this.articleAuthor,
-    required this.articlePublishDate,
-    required this.articleImage,
-    required this.articleContent,
-  });
+  ArticleListPage(
+      {super.key,
+      required this.articleTitle,
+      required this.articleAuthor,
+      required this.articlePublishDate,
+      required this.articleImage,
+      required this.articleContent,
+      required this.articleEventDate});
 
   final String articleTitle;
   final String articleAuthor;
   final String articlePublishDate;
   final String articleImage;
   final String articleContent;
+  final String articleEventDate;
   late SharedPref sharedPref = SharedPref();
 
   Future<void> storeData() async {
@@ -166,7 +168,8 @@ class ArticleListPage extends StatelessWidget {
         author: articleAuthor,
         imgPath: articleImage,
         content: articleContent,
-        publishDate: articlePublishDate);
+        publishDate: articlePublishDate,
+        eventDate: articleEventDate);
 
     sharedPref.save("article", article.toJson());
   }
@@ -216,7 +219,7 @@ class ArticleListPage extends StatelessWidget {
               children: [
                 Text('Author: $articleAuthor',
                     style: Theme.of(context).textTheme.bodySmall),
-                Text('Date: $articlePublishDate',
+                Text('Published date: $articlePublishDate',
                     style: Theme.of(context).textTheme.bodySmall),
               ],
             ),

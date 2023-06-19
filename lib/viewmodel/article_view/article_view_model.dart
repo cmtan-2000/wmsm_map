@@ -9,18 +9,20 @@ class ArticleViewModel extends ChangeNotifier {
   String _publishDate = '';
   String _imgPath = '';
   String _content = '';
+  String _eventDate = '';
 
   List<Map<String, dynamic>> articles = [];
   List<Map<String, dynamic>> searchResult = [];
 
   //setter
-  void setArticle(String author, String title, String publishDate,
-      String imgPath, String content) {
+  void setArticle(String author, String title, String imgPath,
+      String publishDate, String content, String eventDate) {
     _author = author;
     _title = title;
     _imgPath = imgPath;
     _publishDate = publishDate;
     _content = content;
+    _eventDate = eventDate;
   }
 
   //getter
@@ -29,6 +31,7 @@ class ArticleViewModel extends ChangeNotifier {
   String get publishDate => _publishDate;
   String get imgPath => _imgPath;
   String get content => _content;
+  String get eventDate => _eventDate;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   Stream<QuerySnapshot> articleStream =
@@ -59,6 +62,7 @@ class ArticleViewModel extends ChangeNotifier {
       'publishDate': _publishDate,
       'imgPath': _imgPath,
       'content': _content,
+      'eventDate': _eventDate
     };
 
     final docRef = await firestore.collection('article').add(newArticle);

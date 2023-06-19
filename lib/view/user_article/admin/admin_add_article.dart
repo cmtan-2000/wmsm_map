@@ -25,19 +25,20 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
   final _formKey = GlobalKey<FormState>();
   //* a -> author
   late TextEditingController aTitle;
-  late TextEditingController aPublishDate;
+  late TextEditingController aEventDate;
   late TextEditingController aContent;
   late TextEditingController aAuthor;
   //date format
   var dateFormat = DateFormat('yyyy-MM-dd');
-  String imageChallenge = ''; //
+  String imageChallenge = '';
+  String publishDate = '';
 
   //upload image
   @override
   void initState() {
     super.initState();
     aTitle = TextEditingController();
-    aPublishDate = TextEditingController();
+    aEventDate = TextEditingController();
     aContent = TextEditingController();
     aAuthor = TextEditingController();
   }
@@ -46,7 +47,7 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
   void dispose() {
     super.dispose();
     aTitle.dispose();
-    aPublishDate.dispose();
+    aEventDate.dispose();
     aContent.dispose();
     aAuthor.dispose();
   }
@@ -116,9 +117,9 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
                     const SizedBox(height: 20),
                     CustomTextFormField(
                         context: context,
-                        controller: aPublishDate,
+                        controller: aEventDate,
                         isNumberOnly: true,
-                        labelText: 'Published Date',
+                        labelText: 'Event Date',
                         readOnly: true,
                         suffixicon: const Icon(Icons.calendar_month),
                         textInputAction: TextInputAction.next,
@@ -127,11 +128,11 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
                               context: context,
                               initialDate: DateTime.now(),
                               firstDate: DateTime(2019),
-                              lastDate: DateTime.now());
+                              lastDate: DateTime(2090));
 
                           if (date != null) {
                             setState(() =>
-                                aPublishDate.text = dateFormat.format(date));
+                                aEventDate.text = dateFormat.format(date));
                           } else {
                             return;
                           }
@@ -245,13 +246,19 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
                                       Provider.of<ArticleViewModel>(context,
                                           listen: false);
 
+                                  //?publish date is set the day to publish the article
+                                  publishDate =
+                                      dateFormat.format(DateTime.now());
+
                                   //set all the article details
                                   articleViewModel.setArticle(
-                                      aAuthor.text,
-                                      aTitle.text,
-                                      aPublishDate.text,
-                                      imageChallenge,
-                                      aContent.text);
+                                    aAuthor.text,
+                                    aTitle.text,
+                                    imageChallenge,
+                                    publishDate,
+                                    aContent.text,
+                                    aEventDate.text,
+                                  );
 
                                   Logger().i(imageChallenge);
 

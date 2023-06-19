@@ -54,7 +54,7 @@ class ArticleDetails extends StatelessWidget {
                                     ?.copyWith(color: Colors.white),
                               ),
                               Text(
-                                'Date: ${article.publishDate}',
+                                article.publishDate,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodySmall
@@ -73,7 +73,7 @@ class ArticleDetails extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.9,
                       child: Text(
-                        article.content,
+                        '[Event date: ${article.eventDate}]\n\n${article.content}',
                         textAlign: TextAlign.justify,
                       ),
                     )
