@@ -13,7 +13,6 @@ class HealthConnViewModel extends ChangeNotifier {
   Map<String, dynamic> _step = {};
   List<StepData> _weeklyStep = [];
   List<StepData> _monthlyStep = [];
-  String tst = "";
 
   // Getters
   String get message => _message;
@@ -21,7 +20,6 @@ class HealthConnViewModel extends ChangeNotifier {
   Map<String, dynamic> get step => _step;
   List<StepData> get weeklyStep => _weeklyStep;
   List<StepData> get monthlyStep => _monthlyStep;
-  String get test => tst;
 
   // Constructor
   HealthFactory health = HealthFactory();
@@ -57,33 +55,33 @@ class HealthConnViewModel extends ChangeNotifier {
   }
 
   void getSteps() async {
-    if (authorize) {
-      int? step = 0;
-      DateTime endTime = DateTime.now();
-      DateTime startTime = DateTime(endTime.year, endTime.month, endTime.day);
+    int? step = 0;
+    DateTime endTime = DateTime.now();
+    DateTime startTime = DateTime(endTime.year, endTime.month, endTime.day);
 
-      try {
-        step = await health.getTotalStepsInInterval(startTime, endTime);
-        _step = {
-          'step': step,
-          'startTime': startTime,
-          'endTime': endTime,
-          'response': 'success',
-        };
-        notifyListeners();
-      } catch (e) {
-        throw Exception('Exception in getSteps: $e');
-      }
-    } else {
-      DateTime endTime = DateTime.now();
-      DateTime startTime = DateTime(endTime.year, endTime.month, endTime.day);
+    try {
+      step = await health.getTotalStepsInInterval(startTime, endTime);
       _step = {
-        'step': 0,
+        'step': step,
         'startTime': startTime,
         'endTime': endTime,
-        'response': 'fail',
+        'response': 'success',
       };
       notifyListeners();
+    } catch (e) {
+      throw Exception('Exception in getSteps: $e');
+    }
+  }
+
+  Future<int> getInternalStep(String start, String end) async {
+    int? step = 0;
+    DateTime startTime = DateTime.parse(start);
+    DateTime endTime = DateTime.parse(end);
+    try {
+      step = await health.getTotalStepsInInterval(startTime, endTime);
+      return Future.value(step);
+    } catch (e) {
+      throw Exception('Exception in getInternalStep: $e');
     }
   }
 

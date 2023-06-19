@@ -89,10 +89,14 @@ class _SearchArticlePageState extends State<SearchArticlePage> {
                                 return ListTile(
                                   title: Text(articleViewmodel
                                       .searchResult[index]['title']),
-                                  subtitle: Text(articleViewmodel
-                                      .searchResult[index]['author']),
+                                  subtitle: Text(
+                                      "Author: ${articleViewmodel.searchResult[index]['author']}",
+                                      style: const TextStyle(
+                                          color: Colors.grey, fontSize: 12)),
                                   onTap: () {
                                     article1 = Article(
+                                        id: articleViewmodel.searchResult[index]
+                                            ['id'],
                                         title: articleViewmodel
                                             .searchResult[index]['title'],
                                         author: articleViewmodel
@@ -131,9 +135,11 @@ class _SearchArticlePageState extends State<SearchArticlePage> {
                                           articleViewmodel.articles[index]
                                               ['author'],
                                           style: const TextStyle(
-                                              color: Colors.grey)),
+                                              color: Colors.grey, fontSize: 12)),
                                       onTap: () {
                                         article1 = Article(
+                                          id: articleViewmodel.articles[index]
+                                              ['id'],
                                           title: articleViewmodel
                                               .articles[index]['title'],
                                           author: articleViewmodel

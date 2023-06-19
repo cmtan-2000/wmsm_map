@@ -32,6 +32,8 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
   var dateFormat = DateFormat('yyyy-MM-dd');
   String imageChallenge = '';
   String publishDate = '';
+  bool isImgLoading = false;
+  bool isButtonDisabled = false;
 
   //upload image
   @override
@@ -75,6 +77,20 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
     }
 
     return completer.future;
+  }
+
+  void _startLoading() {
+    setState(() {
+      isButtonDisabled = true;
+      isImgLoading = true;
+    });
+
+    Timer(const Duration(seconds: 4), () {
+      setState(() {
+        isButtonDisabled = false;
+        isImgLoading = false;
+      });
+    });
   }
 
   @override
@@ -218,7 +234,7 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
                                     ),
                                     SizedBox(width: 10),
                                     Text(
-                                      'Upload challenge image',
+                                      'Upload article image',
                                       style: TextStyle(
                                         fontSize: 16.0,
                                       ),
@@ -240,13 +256,17 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
                           child: CustomElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  isImgLoading = true;
+                                });
+
                                 try {
                                   //initialise the view model
                                   final articleViewModel =
                                       Provider.of<ArticleViewModel>(context,
                                           listen: false);
 
-                                  //?publish date is set the day to publish the article
+                                  //publish date is set the day to publish the article
                                   publishDate =
                                       dateFormat.format(DateTime.now());
 
@@ -260,18 +280,31 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
                                     aEventDate.text,
                                   );
 
-                                  Logger().i(imageChallenge);
-
                                   // save data to the database
                                   await articleViewModel.saveData();
-                                  Logger().i('Data saved successfully');
+                                  
+                                  await Future.delayed(
+                                      const Duration(seconds: 10));
+
+                                  setState(() {
+                                    isImgLoading = true;
+                                  });
+
                                   Navigator.pop(context);
+
+                                  Logger().i('Data saved successfully');
                                 } catch (e, stackTrace) {
                                   Logger().e('$e\n$stackTrace');
+                                } finally {
+                                  setState(() {
+                                    isImgLoading = false;
+                                  });
                                 }
                               }
                             },
-                            child: const Text('Add Article'),
+                            child: isImgLoading
+                                ? const CircularProgressIndicator()
+                                : const Text('Add Article'),
                           ),
                         ),
                       ],

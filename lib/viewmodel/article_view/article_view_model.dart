@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_return_type_for_catch_error
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -34,20 +36,14 @@ class ArticleViewModel extends ChangeNotifier {
   String get eventDate => _eventDate;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  Stream<QuerySnapshot> articleStream =
-      FirebaseFirestore.instance.collection('article').snapshots();
 
-  //get data from database
   void getData() async {
-    // articleStream.listen((QuerySnapshot snapshot) {
-    //   articles = snapshot.docs.map((DocumentSnapshot doc) {
-    //     return doc.data() as Map<String, dynamic>;
-    //   }).toList();
-    // });
-
+    articles.clear();
     await FirebaseFirestore.instance.collection('article').get().then((value) {
       articles = value.docs.map((DocumentSnapshot doc) {
-        return doc.data() as Map<String, dynamic>;
+        final data = doc.data() as Map<String, dynamic>;
+        final docid = doc.id;
+        return {'id': docid, ...data};
       }).toList();
     });
 
@@ -64,14 +60,41 @@ class ArticleViewModel extends ChangeNotifier {
       'content': _content,
       'eventDate': _eventDate
     };
+    firestore.collection('article').add(newArticle).then((value) {
+      getData();
+      notifyListeners();
+      Logger().i('Data saved successfully with ID: ${value.id}');
+    });
+  }
 
-    final docRef = await firestore.collection('article').add(newArticle);
+  Future<void> updateData(String id) async {
+    final docid = id;
+    final updatedArticle = {
+      'author': _author,
+      'title': _title,
+      'publishDate': _publishDate,
+      'imgPath': _imgPath,
+      'content': _content,
+    };
 
-    //update the local articles list
-    articles.add(newArticle);
+    firestore
+        .collection('article')
+        .doc(docid)
+        .update(updatedArticle)
+        .then((value) {
+      getData();
+      notifyListeners();
+      Logger().i('Data updated successfully with ID: $docid');
+    }).catchError((error) => Logger().e('Failed to update data: $error'));
+  }
 
-    notifyListeners();
-    Logger().i('Data saved successfully with ID: ${docRef.id}');
+  Future<void> deleteData(String id) async {
+    final docid = id;
+    firestore.collection('article').doc(docid).delete().then((value) {
+      getData();
+      notifyListeners();
+      Logger().i('Data deleted successfully with ID: $docid');
+    }).catchError((error) => Logger().e('Failed to delete data: $error'));
   }
 
   void searchArticle(String search) async {
