@@ -7,6 +7,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/model/users.dart';
+import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/user_challenges/join_challenge_details.dart';
 import 'package:wmsm_flutter/viewmodel/user_view_model.dart';
 
@@ -179,10 +180,11 @@ class _UserJoinChallengePageWidgetState
                           ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasData) {
                           var challenges = snapshot.data!.docs;
-                          var filteredDocuments = challenges
-                              .where((doc) => !doc['challengers'].contains(
-                                  FirebaseAuth.instance.currentUser!.uid))
-                              .toList();
+                          var filteredDocuments = challenges;
+                          // challenges
+                          //     .where((doc) => !doc['challengers'].contains(
+                          //         FirebaseAuth.instance.currentUser!.uid))
+                          //     .toList();
 
                           return filteredDocuments.isEmpty
                               ? const Center(
@@ -232,21 +234,13 @@ class _UserJoinChallengePageWidgetState
                                                           const SizedBox(
                                                               height: 5),
                                                           IconAndInfo(
-                                                              text:
-                                                                  'Complete ${challenges[index]['stepGoal']} steps',
-                                                              icon:
-                                                                  LineAwesomeIcons
-                                                                      .walking,
-                                                              color:
-                                                                  Colors.teal),
+                                                              text:'Complete ${challenges[index]['stepGoal']} steps',
+                                                              icon: LineAwesomeIcons.walking,
+                                                              color:Colors.teal),
                                                           IconAndInfo(
-                                                              text:
-                                                                  '${challenges[index]['duration']}',
-                                                              icon:
-                                                                  LineAwesomeIcons
-                                                                      .stopwatch,
-                                                              color:
-                                                                  Colors.teal),
+                                                              text:'${challenges[index]['duration']}',
+                                                              icon: LineAwesomeIcons.stopwatch,
+                                                              color:Colors.teal),
                                                           const SizedBox(
                                                               height: 20),
                                                           Text(
@@ -293,11 +287,97 @@ class _UserJoinChallengePageWidgetState
                                                           ),
                                                           const SizedBox(
                                                               height: 20),
-                                                          _outlineButton(
-                                                            userView.user.role,
-                                                            challenges[index]
-                                                                .id,
-                                                          )
+                                                          challenges[index][
+                                                                      'challengers']
+                                                                  .contains(FirebaseAuth
+                                                                      .instance
+                                                                      .currentUser!
+                                                                      .uid)
+                                                              ?  Row(
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: Column(
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                      children: [
+                                                                        const Text('You have joined this challenge'),
+                                                                        CustomElevatedButton(onPressed: (){
+                                                                          // showProgressDialog(context).then((value) {
+                                                                          //   String userid = FirebaseAuth.instance.currentUser!.uid;
+                                                                          //   FirebaseFirestore.instance
+                                                                          //       .collection('challenges')
+                                                                          //       .doc(challenges[index].id)
+                                                                          //       .update({
+                                                                          //     'challengers': FieldValue.arrayRemove([userid])
+                                                                          //   }).then((_) {
+                                                                          //     final snackbar = Awesome.snackbar(
+                                                                          //         "Challenge", "Withdrawn from Challenge", ContentType.success);
+                                                                          //     ScaffoldMessenger.of(context)
+                                                                          //       ..hideCurrentSnackBar()
+                                                                          //       ..showSnackBar(snackbar);
+                                                                          //     Navigator.pop(context);
+                                                                          //     Navigator.pop(context);
+                                                                          //   }).catchError((error) {
+                                                                          //     final materialBanner = Awesome.materialBanner("Challenge",
+                                                                          //         "Failed to Withdraw from Challenge", ContentType.failure);
+                                                                          //     ScaffoldMessenger.of(context)
+                                                                          //       ..hideCurrentMaterialBanner()
+                                                                          //       ..showMaterialBanner(materialBanner);
+                                                                          //   });
+                                                                          // });
+
+                                                                          showDialog(context: context, builder:(build){
+                                                                            return AlertDialog(
+                                                                              title: const Text('Are you sure?'),
+                                                                              content: const Text('You are about to delete this challenge'),
+                                                                              actions: <Widget>[
+                                                                                TextButton(
+                                                                                  onPressed: () => Navigator.of(context).pop(false),
+                                                                                  child: const Text('Cancel'),
+                                                                                ),
+                                                                                TextButton(
+                                                                                  onPressed: (){
+                                                                                    showProgressDialog(context).then((value) {
+                                                                                    String userid = FirebaseAuth.instance.currentUser!.uid;
+                                                                                    FirebaseFirestore.instance
+                                                                                          .collection('challenges')
+                                                                                          .doc(challenges[index].id)
+                                                                                          .update({
+                                                                                        'challengers': FieldValue.arrayRemove([userid])
+                                                                                      }).then((_) {
+                                                                                        final snackbar = Awesome.snackbar(
+                                                                                            "Challenge", "Withdrawn from Challenge", ContentType.success);
+                                                                                        ScaffoldMessenger.of(context)
+                                                                                          ..hideCurrentSnackBar()
+                                                                                          ..showSnackBar(snackbar);
+                                                                                        Navigator.pop(context);
+                                                                                        Navigator.pop(context);
+                                                                                      }).catchError((error) {
+                                                                                        final materialBanner = Awesome.materialBanner("Challenge",
+                                                                                            "Failed to Withdraw from Challenge", ContentType.failure);
+                                                                                        ScaffoldMessenger.of(context)
+                                                                                          ..hideCurrentMaterialBanner()
+                                                                                          ..showMaterialBanner(materialBanner);
+                                                                                      });
+                                                                                    });
+                                                                                  },
+                                                                                  child: const Text('Delete'),
+                                                                                ),
+                                                                              ],
+                                                                            );
+                                                                          });
+                                                                        }, child: const Text('Withdraw Challenges', style: TextStyle(fontWeight: FontWeight.bold),))
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              )
+                                                              : _outlineButton(
+                                                                  userView.user
+                                                                      .role,
+                                                                  challenges[
+                                                                          index]
+                                                                      .id,
+                                                                )
                                                           // _outlineButton(user.role),
                                                         ],
                                                       ),

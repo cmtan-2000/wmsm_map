@@ -217,7 +217,7 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
                                     ),
                                     SizedBox(width: 10),
                                     Text(
-                                      'Upload challenge image',
+                                      'Upload article image',
                                       style: TextStyle(
                                         fontSize: 16.0,
                                       ),

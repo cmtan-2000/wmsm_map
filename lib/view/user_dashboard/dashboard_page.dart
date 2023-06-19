@@ -28,6 +28,7 @@ class _DashboardState extends State<Dashboard> {
       username: '',
       role: '');
   SharedPref sharedPref = SharedPref();
+  TextEditingController _goalController = TextEditingController();
 
   @override
   initState() {
@@ -241,6 +242,18 @@ class UserDashboard extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: 20),
+                        // DashboardCardWidget(
+                        //   title: 'Goals',
+                        //   imgPath: 'assets/images/goal.png',
+                        //   infoCard: 'Set Your Goal Start From Now!',
+                        //   onPressed: () {
+                        //     showDialog(context: context, builder: (context) {
+                        //       // var goalDialog = GoalDialog(context);
+                        //       // return goalDialog;
+                        //     });
+                        //   },
+                        // ),
+                        const SizedBox(height: 20),
                         //?Challenges card
                         DashboardCardWidget(
                           title: 'Challenges',
@@ -278,6 +291,34 @@ class UserDashboard extends StatelessWidget {
       ),
     );
   }
+
+  // GoalDialog(BuildContext context) => AlertDialog(
+  //     title: Text('Set Goal'),
+  //     content: TextField(
+  //       controller: _goalController,
+  //       keyboardType: TextInputType.number,
+  //       decoration: InputDecoration(
+  //         labelText: 'Enter your goal',
+  //       ),
+  //     ),
+  //     actions: [
+  //       TextButton(
+  //         onPressed: () {
+  //           // Save the goal and close the dialog
+  //           String goal = _goalController.text;
+  //           Navigator.of(context).pop(goal);
+  //         },
+  //         child: Text('Save'),
+  //       ),
+  //       TextButton(
+  //         onPressed: () {
+  //           // Close the dialog without saving
+  //           Navigator.of(context).pop();
+  //         },
+  //         child: Text('Cancel'),
+  //       ),
+  //     ],
+  //   );
 }
 
 class DashboardCardWidget extends StatelessWidget {
