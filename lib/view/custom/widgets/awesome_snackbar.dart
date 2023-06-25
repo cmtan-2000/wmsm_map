@@ -5,7 +5,9 @@ class Awesome {
   static SnackBar snackbar(
       String title, String message, ContentType contentType) {
     return SnackBar(
+      
       elevation: 0,
+      duration: const Duration(seconds: 1),
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.transparent,
       content: AwesomeSnackbarContent(
@@ -20,6 +22,7 @@ class Awesome {
       String title, String message, ContentType contentType) {
     return MaterialBanner(
       elevation: 0,
+      
       backgroundColor: Colors.transparent,
       forceActionsBelow: true,
       content: AwesomeSnackbarContent(

@@ -81,7 +81,7 @@ class HealthConnViewModel extends ChangeNotifier {
       step = await health.getTotalStepsInInterval(startTime, endTime);
       return Future.value(step);
     } catch (e) {
-      throw Exception('Exception in getInternalStep: $e');
+      return Future.value(0);
     }
   }
 

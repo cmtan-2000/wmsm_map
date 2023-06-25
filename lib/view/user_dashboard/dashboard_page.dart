@@ -15,8 +15,8 @@ import 'package:wmsm_flutter/viewmodel/user_view_model.dart';
 
 import '../../viewmodel/health_conn_view/health_conn_view_model.dart';
 import '../custom/widgets/awesome_snackbar.dart';
-import '../custom/widgets/draggleline.dart';
 import 'admin_dashboard_page.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 //* The dashboard page to determine user dashboard or admin dashboard
 class Dashboard extends StatefulWidget {
@@ -56,9 +56,6 @@ class _DashboardState extends State<Dashboard> {
     Logger().v('dispose', 'dashboard');
   }
 
-  
-
-
   void initialGetSavedData() async {
     // Users response = Users.fromJson(await sharedPref.read("user"));
 
@@ -88,7 +85,7 @@ class _DashboardState extends State<Dashboard> {
 }
 
 class UserDashboard extends StatefulWidget {
-   const UserDashboard({
+  const UserDashboard({
     super.key,
     required this.user,
   });
@@ -170,59 +167,84 @@ class _UserDashboardState extends State<UserDashboard> {
                                     ),
                                     const SizedBox(height: 20),
                                     Consumer<HealthConnViewModel>(
-                                      builder: (context, health, child) =>
-                                          health.authorize
-                                              ? health.step.isNotEmpty
-                                                  ? Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 200,
-                                                          child: Column(
+                                        builder: (context, health, child) =>
+                                            health.authorize
+                                                ? health.step.isNotEmpty
+                                                    ? Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          SizedBox(
+                                                            width: 200,
+                                                            child: Column(
+                                                              children: [
+                                                                //TODO: Add step count
+                                                                Consumer<
+                                                                    HealthConnViewModel>(
+                                                                  builder: (context,
+                                                                          health,
+                                                                          child) =>
+                                                                      health.step
+                                                                              .isEmpty
+                                                                          ? const CircularProgressIndicator()
+                                                                          : Text(
+                                                                              health.step['step'].toString(),
+                                                                              style: const TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
+                                                                            ),
+                                                                ),
+                                                                const Text(
+                                                                    'steps',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            25,
+                                                                        fontWeight:
+                                                                            FontWeight.bold))
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 138,
+                                                            child: Image.asset(
+                                                              'assets/images/walking.png',
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    : Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Column(
                                                             children: [
                                                               //TODO: Add step count
-                                                              Consumer<
-                                                                  HealthConnViewModel>(
-                                                                builder: (context,
-                                                                        health,
-                                                                        child) =>
-                                                                    health.step
-                                                                            .isEmpty
-                                                                        ? const CircularProgressIndicator()
-                                                                        : Text(
-                                                                            health.step['step'].toString(),
-                                                                            style:
-                                                                                const TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
-                                                                          ),
+                                                              SizedBox(
+                                                                width: 138,
+                                                                child:
+                                                                    Image.asset(
+                                                                  'assets/images/error2.png',
+                                                                ),
                                                               ),
                                                               const Text(
-                                                                  'steps',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          25,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold))
+                                                                'Not connected to Google Fit',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .red),
+                                                              )
                                                             ],
                                                           ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 138,
-                                                          child: Image.asset(
-                                                            'assets/images/walking.png',
-                                                          ),
-                                                          
-                                                        ),
-                                                      ],
-                                                    )
-                                                  : Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Column(
+                                                        ],
+                                                      )
+                                                : Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Column(
                                                           children: [
                                                             //TODO: Add step count
                                                             SizedBox(
@@ -244,10 +266,9 @@ class _UserDashboardState extends State<UserDashboard> {
                                                             )
                                                           ],
                                                         ),
-                                                      ],
-                                                    )
-                                              : const CircularProgressIndicator()
-                                    )
+                                                      ),
+                                                    ],
+                                                  ))
                                   ],
                                 ),
                               ),
@@ -303,74 +324,117 @@ class _UserDashboardState extends State<UserDashboard> {
                         //   builder: (context, user, child) => Text("${user.goal}")
                         // ),
                         const SizedBox(height: 20),
-                        StreamBuilder(
-                          stream: FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).snapshots(),
-                          builder: ((BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                            if(snapshot.hasData){
-                              var userData = snapshot.data!.data() as Map<String, dynamic>;
-                              // if goal attribute exist
-                              if (userData.containsKey('goal')) {
-                                  // 'goal' attribute exists
-                                  if (userData['goal'] != null &&
-                                      userData['goal'].isNotEmpty) {
-                                    // 'goal' attribute is not empty
-                                    // return Text(
-                                    //     'Has user data goal: ${userData['goal']}');
-                                    return DashboardCardWidget(
-                                      title: 'Goals',
-                                      imgPath: 'assets/images/goal.png',
-                                      infoCard: 'This is your goal Set: ${userData['goal']} left to Go!',
-                                      onPressed: () {
-                                        showDialog(context: context, builder: (context) {
-                                          var goalDialog = GoalDialog(context);
-                                          return goalDialog;
-                                        });
-                                      },
-                                    );
-                                  } else {
-                                    // 'goal' attribute is empty
-                                    return DashboardCardWidget(
-                                      title: 'Goals',
-                                      imgPath: 'assets/images/goal.png',
-                                      infoCard:
-                                          'your Goal is Empty',
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              var goalDialog =
-                                                  GoalDialog(context);
-                                              return goalDialog;
-                                            });
-                                      },
-                                    );
-                                  }
-                                } else {
-                                  // 'goal' attribute does not exist
-                                  return DashboardCardWidget(
-                                      title: 'Goals',
-                                      imgPath: 'assets/images/goal.png',
-                                      infoCard:
-                                          'No goal set',
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              var goalDialog =
-                                                  GoalDialog(context);
-                                              return goalDialog;
-                                            });
-                                      },
-                                    );;
-                                }
-                            }
-                            return Container();
-                          }))
-                        ,
-                        
+                        Consumer<HealthConnViewModel>(
+                          builder: (context, health, child) => health.authorize
+                              ? StreamBuilder(
+                                  stream: FirebaseFirestore.instance
+                                      .collection("users")
+                                      .doc(FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                      .snapshots(),
+                                  builder: ((BuildContext context,
+                                      AsyncSnapshot<DocumentSnapshot>
+                                          snapshot) {
+                                    if (snapshot.hasData) {
+                                      var userData = snapshot.data!.data()
+                                          as Map<String, dynamic>;
+
+                                      // Get user step from healthViewmodel
+                                      var userStep =
+                                          Provider.of<HealthConnViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              .step;
+                                      return Consumer<HealthConnViewModel>(
+                                          builder: (context, health, child) {
+                                        if (health.step.isNotEmpty) {
+                                          userStep = health.step;
+                                        }
+                                        Logger().i(userStep['step']);
+                                        double percentage = 0.0;
+                                        String leftgoal = " ";
+                                        if (userData.containsKey('goal')) {
+                                          if (userStep['step'] != null) {
+                                            int goalUser = int.parse(
+                                                userData['goal']); //3000
+                                            int stepUser =
+                                                userStep['step']; //1433
+
+                                            Logger().w(goalUser);
+                                            Logger().w(stepUser);
+
+                                            int remainingSteps =
+                                                goalUser - stepUser;
+
+                                            if (remainingSteps > 0) {
+                                              // User has remaining steps to reach the goal
+                                              leftgoal =
+                                                  "$remainingSteps steps remaining";
+                                            } else {
+                                              // User has achieved or exceeded the goal
+                                              leftgoal = "Goal achieved";
+                                            }
+                                            Logger().w(leftgoal);
+
+                                            double percentage =
+                                                stepUser / goalUser;
+                                            percentage = percentage.clamp(0, 1);
+                                          }
+                                        }
+                                        Logger().i(percentage);
+                                        return DashboardCardWidget(
+                                          linearPercent: percentage,
+                                          textBtn: (userData
+                                                  .containsKey('goal'))
+                                              ? (userData['goal'] != null &&
+                                                          userData['goal']
+                                                              .isNotEmpty) ==
+                                                      true
+                                                  ? "Update Goal"
+                                                  : "Update My Zero Goal"
+                                              : "Set New Goal",
+                                          title: 'Daily Goals',
+                                          imgPath: (userData
+                                                  .containsKey('goal'))
+                                              ? 'assets/images/goal.png'
+                                              : 'assets/images/pin-front-color.png',
+                                          infoCard: (userData['goal'] != null &&
+                                                      userData['goal']
+                                                          .isNotEmpty) ==
+                                                  true
+                                              ? leftgoal
+                                              : 'your Goal is Empty',
+                                          onPressed: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  var goalDialog =
+                                                      GoalDialog(context);
+                                                  return goalDialog;
+                                                });
+                                          },
+                                        );
+                                      });
+                                    }
+                                    return Container();
+                                  }))
+                              : DashboardCardWidget(
+                                  linearPercent: 0,
+                                  textBtn: " ",
+                                  title: 'Daily Goal',
+                                  imgPath: 'assets/images/error2.png',
+                                  infoCard: 'You must get authorize first!',
+                                  onPressed: () {
+                                    return;
+                                  },
+                                ),
+                        ),
+
                         const SizedBox(height: 20),
                         //?Challenges card
                         DashboardCardWidget(
+                          linearPercent: 0,
+                          textBtn: "Join Challenge",
                           title: 'Challenges',
                           imgPath: 'assets/images/challenge.png',
                           infoCard: 'Get rewarded by joining challenge!',
@@ -381,6 +445,8 @@ class _UserDashboardState extends State<UserDashboard> {
                         ),
                         const SizedBox(height: 20),
                         DashboardCardWidget(
+                          linearPercent: 0,
+                          textBtn: "See New Article",
                           title: 'Health Article',
                           imgPath: 'assets/images/newspaper.png',
                           infoCard: 'Health article is out now!',
@@ -407,7 +473,7 @@ class _UserDashboardState extends State<UserDashboard> {
     );
   }
 
-  AlertDialog GoalDialog(BuildContext context){
+  AlertDialog GoalDialog(BuildContext context) {
     TextEditingController goalController = TextEditingController();
     return AlertDialog(
       title: const Text('Set Goal'),
@@ -421,20 +487,22 @@ class _UserDashboardState extends State<UserDashboard> {
       actions: [
         TextButton(
           onPressed: () {
-            FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set({
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(FirebaseAuth.instance.currentUser!.uid)
+                .set({
               'goal': goalController.text,
-            }, SetOptions(merge: true)).then((value){
-
-                final snackbar = Awesome.snackbar("Goal", "Goal ${goalController.text} set", ContentType.success);
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(snackbar);
-                Navigator.of(context).pop();
+            }, SetOptions(merge: true)).then((value) {
+              final snackbar = Awesome.snackbar("Goal",
+                  "Goal ${goalController.text} set", ContentType.success);
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(snackbar);
+              Navigator.of(context).pop();
             });
           },
           child: const Text('Save'),
         ),
-        
         TextButton(
           onPressed: () {
             // Close the dialog without saving
@@ -448,18 +516,22 @@ class _UserDashboardState extends State<UserDashboard> {
 }
 
 class DashboardCardWidget extends StatelessWidget {
-  const DashboardCardWidget({
+  DashboardCardWidget({
     super.key,
     required this.imgPath,
     required this.title,
     required this.infoCard,
     required this.onPressed,
+    required this.textBtn,
+    required this.linearPercent,
   });
 
+  final String textBtn;
   final String imgPath;
   final String title;
   final String infoCard;
   final VoidCallback onPressed;
+  double linearPercent = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -480,38 +552,67 @@ class DashboardCardWidget extends StatelessWidget {
               elevation: 2,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(
                   children: [
-                    Image.asset(
-                      imgPath,
-                      width: MediaQuery.of(context).size.width * 0.2,
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Wrap(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          imgPath,
+                          width: MediaQuery.of(context).size.width * 0.2,
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                infoCard,
+                              Wrap(
+                                children: [
+                                  Text(
+                                    infoCard,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              CustomElevatedButton(
+                                //?Navigate to the challenge page / article page
+                                onPressed: onPressed,
+                                child: Text(textBtn),
                               ),
                             ],
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          CustomElevatedButton(
-                            //?Navigate to the challenge page / article page
-                            onPressed: onPressed,
-                            child: const Text('Join'),
-                          ),
-                        ],
-                      ),
-                    )
+                        )
+                      ],
+                    ),
+                    linearPercent != 0.0
+                        ? Container(
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                return LinearPercentIndicator(
+                                  animation: true,
+                                  animationDuration: 500,
+                                  animateFromLastPercent: true,
+                                  width: constraints
+                                      .maxWidth, // Use the maximum width available
+                                  lineHeight: 16.0,
+                                  percent: linearPercent,
+                                  backgroundColor: Colors.white70,
+                                  barRadius: const Radius.circular(20),
+                                  center: Text(
+                                    "${(linearPercent * 100).toStringAsFixed(0)}%",
+                                    style: const TextStyle(
+                                        fontSize: 12.0, color: Colors.black),
+                                  ),
+                                  progressColor: Colors.orange,
+                                );
+                              },
+                            ),
+                          )
+                        : Container()
                   ],
                 ),
               )),

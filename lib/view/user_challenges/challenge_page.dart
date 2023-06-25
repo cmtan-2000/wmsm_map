@@ -207,7 +207,7 @@ class UserChallengePage extends StatelessWidget {
                                                 percentage = double.parse(
                                                         formattedPercentage) /
                                                     100;
-
+                                                percentage = percentage.clamp(0.0, 1.0);
                                                 Logger().i(percentage);
 
                                                 return OngoingChallengeCard(
@@ -227,7 +227,10 @@ class UserChallengePage extends StatelessWidget {
                                     : const Center(
                                         child: Text('No Challenge Join'),
                                       );
-                              } else {
+                              }else if(snapshot.hasError){
+                                return const Center(
+                                    child: Text('Error larh'));
+                              }else{
                                 return const Center(
                                     child: CircularProgressIndicator());
                               }
