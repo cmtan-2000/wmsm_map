@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
 
+import '../../model/uservoucher.dart';
 import '../../model/voucher.dart';
 
 class VoucherViewModel {
@@ -11,24 +12,17 @@ class VoucherViewModel {
       .then((value) => Future.value(value.id))
       .catchError((error) => Future.value(error.toString()));
 
-  Future<void> updateVoucher(Voucher voucher){
-    //update voucher to database
-    
-    return Future.delayed(const Duration(seconds: 1));
-  }
+  Future<String> updateVoucher(Voucher voucher) async => voucherRef.add(voucher.toMap())
+        .then((value) => Future.value("Update Successfilly"))
+        .catchError((error) => Future.value(error.toString()));
 
-  Future<void> deleteVoucher(Voucher voucher){
-    //delete voucher from database
-    return Future.delayed(const Duration(seconds: 1));
-  }
+  Future<void> deleteVoucher(String id) async => voucherRef.doc(id).delete()
+      .then((value) => Future.value("Delete Successfilly"))
+      .catchError((error) => Future.value(error.toString()));
 
-  Future<void> getVoucher(){
-    //get voucher from database
-    return Future.delayed(const Duration(seconds: 1));
-  }
+  Future<void> get getVoucher async => voucherRef.get().then((value) => value.docs.forEach((element) {
+      Logger().i(element.data());
+    }));
 
-  Future<void> getVoucherById(String id){
-    //get voucher by id from database
-    return Future.delayed(const Duration(seconds: 1));
-  }
+  Future<Voucher> getVoucherById(String id)=> voucherRef.doc(id).get().then((value) => Future.value(Voucher.fromMap(value.data()!)));
 }

@@ -267,6 +267,8 @@ class _UserJoinChallengePageWidgetState
                                                                     FontWeight
                                                                         .bold),
                                                           ),
+                                                          // voucher get name from firebase, and display here
+                                                           
                                                           Column(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
@@ -285,7 +287,7 @@ class _UserJoinChallengePageWidgetState
                                                                               Colors.indigo,
                                                                         ))
                                                                 .toList(),
-                                                          ),
+                                                          ),                                                      
 
                                                           const SizedBox(
                                                               height: 20),
