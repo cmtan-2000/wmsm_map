@@ -17,7 +17,9 @@ import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/shared/multi_line_field.dart';
 import 'package:wmsm_flutter/viewmodel/shared/shared_pref.dart';
+import 'package:wmsm_flutter/viewmodel/voucher/voucher_view_model.dart';
 
+import '../../../model/voucher.dart';
 import '../../custom/widgets/awesome_snackbar.dart';
 
 class AdminAddChallenge extends StatefulWidget {
@@ -38,6 +40,9 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
   final _formKey = GlobalKey<FormState>();
   String imageChallenge = ''; //get the return image url from firebase
   FirebaseFirestore db = FirebaseFirestore.instance;
+  List<List<TextEditingController>> voucherArray = [];
+  List<String> voucherId = [];
+
   @override
   void initState() {
     cTitleEC = TextEditingController();
@@ -45,6 +50,8 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
     cDescriptionEC = TextEditingController();
     cStepsEC = TextEditingController();
     cVoucherEC = [TextEditingController()];
+    createController();
+
     super.initState();
     LocalNotification.init();
     listenNotifications();
@@ -91,6 +98,39 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
     sharedPref.save("newChallenge", newChallenge.toJson());
   }
 
+  void createController() {
+    TextEditingController nameV = TextEditingController();
+    TextEditingController typeV = TextEditingController();
+    TextEditingController quantityV = TextEditingController();
+    TextEditingController expirationDateV = TextEditingController();
+    TextEditingController priceV = TextEditingController();
+
+    List<TextEditingController> vControllerArray = [];
+    vControllerArray.add(nameV);
+    vControllerArray.add(typeV);
+    vControllerArray.add(quantityV);
+    vControllerArray.add(expirationDateV);
+    vControllerArray.add(priceV);
+
+    voucherArray.add(vControllerArray);
+  }
+
+  void deleteController() {
+    TextEditingController nameV = voucherArray.last[0];
+    TextEditingController typeV = voucherArray.last[1];
+    TextEditingController quantityV = voucherArray.last[2];
+    TextEditingController expirationDateV = voucherArray.last[3];
+    TextEditingController priceV = voucherArray.last[4];
+
+    nameV.dispose();
+    typeV.dispose();
+    quantityV.dispose();
+    expirationDateV.dispose();
+    priceV.dispose();
+
+    voucherArray.removeLast();
+  }
+
   IconButton _iconButton(String option) {
     return IconButton(
       onPressed: () {
@@ -98,12 +138,16 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
           setState(() {
             TextEditingController controller = TextEditingController();
             cVoucherEC.add(controller);
+
+            createController();
           });
         } else if (option == 'remove' && cVoucherEC.isNotEmpty) {
           setState(() {
             TextEditingController controller = cVoucherEC.last;
             cVoucherEC.remove(controller);
             controller.dispose();
+
+            deleteController();
           });
         }
       },
@@ -284,20 +328,14 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
                               ),
                               ListView.builder(
                                 shrinkWrap: true,
-                                itemCount: cVoucherEC.length,
+                                itemCount: voucherArray.length,
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 8.0),
-                                    child: CustomTextFormField(
-                                      context: context,
-                                      isNumberOnly: false,
-                                      labelText: 'Challenge Voucher',
-                                      hintText: 'Ex: Free 1 month gym pass',
-                                      controller: cVoucherEC[index],
-                                      textInputAction: TextInputAction.next,
-                                    ),
+                                    child:
+                                        buildVoucherCard(voucherArray[index]),
                                   );
                                 },
                               ),
@@ -328,8 +366,7 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return CupertinoActionSheet(
-                                                  actions: <
-                                                      CupertinoActionSheetAction>[
+                                                  actions: <CupertinoActionSheetAction>[
                                                     CupertinoActionSheetAction(
                                                       isDefaultAction: true,
                                                       onPressed: () async {
@@ -416,73 +453,89 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
                                         onPressed: () async {
                                           if (_formKey.currentState!
                                               .validate()) {
-                                            List<String> voucherArray = [];
-                                            for (var array in cVoucherEC) {
-                                              Logger().d(array.text);
-                                              voucherArray.add(array.text);
-                                            }
+                                            //*Get data from form
+                                            // voucherArray
+                                            // for(List<TextEditingController> voucher in voucherArray){
+                                            //   for(TextEditingController controller in voucher){
+                                            //     Logger().d(controller.text);
+                                            //   }
+                                            // }
 
-                                            String stepString = cStepsEC.text;
-                                            int stepGoal = 0;
+                                            // insert data voucher to database
+                                            
 
-                                            if (stepString.isNotEmpty) {
-                                              try {
-                                                stepGoal =
-                                                    int.parse(cStepsEC.text);
-                                              } catch (e, stackTrace) {
-                                                Logger().e('$e\n$stackTrace');
+                                            // List<String> voucherArray = [];
+                                            // for (var array in cVoucherEC) {
+                                            //   Logger().d(array.text);
+                                            //   voucherArray.add(array.text);
+                                            // }
+
+                                            processVouchers().then((value) {
+                                              Logger().i(voucherId);
+                                              String stepString = cStepsEC.text;
+                                              int stepGoal = 0;
+
+                                              if (stepString.isNotEmpty) {
+                                                try {
+                                                  stepGoal =
+                                                      int.parse(cStepsEC.text);
+                                                } catch (e, stackTrace) {
+                                                  Logger().e('$e\n$stackTrace');
+                                                }
                                               }
-                                            }
 
-                                            Logger().wtf(imageChallenge);
+                                              Logger().wtf(imageChallenge);
 
-                                            //*Insert data into firebase
-                                            Map<String, dynamic> data = {
-                                              'challengers': [],
-                                              'title': cTitleEC.text,
-                                              'duration': cDurationEC.text,
-                                              'description':
-                                                  cDescriptionEC.text,
-                                              'stepGoal': stepGoal,
-                                              'voucher': FieldValue.arrayUnion(
-                                                  voucherArray),
-                                              'imageUrl': imageChallenge,
-                                            };
+                                              //*Insert data into firebase
+                                              Map<String, dynamic> data = {
+                                                'challengers': [],
+                                                'title': cTitleEC.text,
+                                                'duration': cDurationEC.text,
+                                                'description':
+                                                    cDescriptionEC.text,
+                                                'stepGoal': stepGoal,
+                                                'voucher': voucherId,
+                                                'imageUrl': imageChallenge,
+                                              };
+                                              
+                                              db
+                                                  .collection("challenges")
+                                                  .add(data)
+                                                  .then((value) {
+                                                final snackbar = Awesome.snackbar(
+                                                    "Challenge",
+                                                    "Enrolled to Challenge",
+                                                    ContentType.success);
+                                                ScaffoldMessenger.of(context)
+                                                  ..hideCurrentSnackBar()
+                                                  ..showSnackBar(snackbar);
+                                              }).catchError((error) {
+                                                final materialBanner =
+                                                    Awesome.materialBanner(
+                                                        "Challenge",
+                                                        "Failed to Join Challenge",
+                                                        ContentType.failure);
+                                                ScaffoldMessenger.of(context)
+                                                  ..hideCurrentMaterialBanner()
+                                                  ..showMaterialBanner(
+                                                      materialBanner);
+                                              });
+                                              storeData();
+                                              Future.delayed(
+                                                      const Duration(seconds: 4))
+                                                  .then((value) =>
+                                                      Navigator.pop(context));
 
-                                            db
-                                                .collection("challenges")
-                                                .add(data)
-                                                .then((value) {
-                                              final snackbar = Awesome.snackbar(
-                                                  "Challenge",
-                                                  "Enrolled to Challenge",
-                                                  ContentType.success);
-                                              ScaffoldMessenger.of(context)
-                                                ..hideCurrentSnackBar()
-                                                ..showSnackBar(snackbar);
-                                            }).catchError((error) {
-                                              final materialBanner =
-                                                  Awesome.materialBanner(
-                                                      "Challenge",
-                                                      "Failed to Join Challenge",
-                                                      ContentType.failure);
-                                              ScaffoldMessenger.of(context)
-                                                ..hideCurrentMaterialBanner()
-                                                ..showMaterialBanner(
-                                                    materialBanner);
+                                              LocalNotification.showNotification(
+                                                title: 'New Challenge Released',
+                                                body:
+                                                    'Challenge is released, check it out now!',
+                                                payload: 'user_challenge',
+                                              );
                                             });
-                                            storeData();
-                                            Future.delayed(
-                                                    const Duration(seconds: 4))
-                                                .then((value) =>
-                                                    Navigator.pop(context));
 
-                                            LocalNotification.showNotification(
-                                              title: 'New Challenge Released',
-                                              body:
-                                                  'Challenge is released, check it out now!',
-                                              payload: 'user_challenge',
-                                            );
+
+
                                           }
                                         }),
                                   ),
@@ -504,5 +557,190 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
         ),
       ),
     );
+  }
+
+  // Card buildVoucherCard(
+  //     String name,
+  //     String type,
+  //     int quantity,
+  //     DateTime expirationDate,
+  //     double price,
+  //     TextEditingController customTextFieldController) {
+  //   return Card(
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(16.0),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text(
+  //             name,
+  //             style: TextStyle(
+  //               fontSize: 18,
+  //               fontWeight: FontWeight.bold,
+  //             ),
+  //           ),
+  //           SizedBox(height: 8),
+  //           Text(
+  //             'Type: $type',
+  //             style: TextStyle(
+  //               fontSize: 16,
+  //             ),
+  //           ),
+  //           SizedBox(height: 8),
+  //           Text(
+  //             'Quantity: $quantity',
+  //             style: TextStyle(
+  //               fontSize: 16,
+  //             ),
+  //           ),
+  //           SizedBox(height: 8),
+  //           Text(
+  //             'Expiration Date: ${expirationDate.toString()}',
+  //             style: TextStyle(
+  //               fontSize: 16,
+  //             ),
+  //           ),
+  //           SizedBox(height: 8),
+  //           Text(
+  //             'Price: \$${price.toStringAsFixed(2)}',
+  //             style: TextStyle(
+  //               fontSize: 16,
+  //             ),
+  //           ),
+  //           SizedBox(height: 16),
+  //           TextField(
+  //             controller: customTextFieldController,
+  //             decoration: InputDecoration(
+  //               labelText: 'Custom Field',
+  //               hintText: 'Enter your custom value',
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Card buildVoucherCard(List<TextEditingController> voucherEC) {
+    return Card(
+      color: Colors.red[100],
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 8),
+            CustomTextFormField(
+              context: context,
+              controller: voucherEC[0],
+              hintText: 'Enter your voucher Name',
+              labelText: 'Voucher',
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.name,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 8.0),
+                    child: CustomTextFormField(
+                      context: context,
+                      controller: voucherEC[1],
+                      hintText: 'Enter your voucher Type',
+                      labelText: 'Type',
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.name,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: CustomTextFormField(
+                    context: context,
+                    controller: voucherEC[4],
+                    hintText: 'Enter your voucher Price',
+                    labelText: 'Price (RM)',
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 8.0),
+                    child: CustomTextFormField(
+                      context: context,
+                      controller: voucherEC[2],
+                      hintText: 'Enter your voucher Quantity',
+                      labelText: 'Quantity',
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Stack(
+                    children: [
+                      CustomTextFormField(
+                        context: context,
+                        controller: voucherEC[3],
+                        hintText: 'Enter your voucher Expiration Date',
+                        labelText: 'Expiration Date',
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.number,
+                      ),
+                      Positioned.fill(
+                        child: InkWell(
+                          onTap: () {
+                            _selectDate(context, voucherEC[3]);
+                          },
+                          child: Container(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _selectDate(
+      BuildContext context, TextEditingController controller) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      controller.text =
+          picked.toString(); // Update the text field with selected date
+    }
+  }
+  Future<void> processVouchers() async {
+    for (List<TextEditingController> voucher in voucherArray) {
+      insertVoucher(voucher);
+    }
+  }
+
+  void insertVoucher(List<TextEditingController> voucherEC) async {
+    final voucher = Voucher(
+      name: voucherEC[0].text,
+      type: voucherEC[1].text,
+      quantity: voucherEC[2].text,
+      expirationDate: voucherEC[3].text,
+      price: voucherEC[4].text,
+      users: [],
+    );
+    VoucherViewModel vm = VoucherViewModel();
+    vm.insertVoucher(voucher).then((value) => voucherId.add(value));
   }
 }

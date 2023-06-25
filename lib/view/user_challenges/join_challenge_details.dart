@@ -150,15 +150,35 @@ class JoinChallengeDetails extends StatelessWidget {
                                           Expanded(
                                             child: ListView.builder(
                                                 padding: EdgeInsets.zero,
-                                                itemBuilder: (context, index) =>
-                                                    IconAndInfo(
-                                                        text: challengeVoucher[
-                                                            index],
-                                                        icon: LineAwesomeIcons
-                                                            .alternate_ticket,
-                                                        color: Colors.indigo),
                                                 itemCount:
-                                                    challengeVoucher.length),
+                                                    challengeVoucher.length,
+                                                itemBuilder: (context, index) =>
+                                                    // IconAndInfo(
+                                                    //     text: challengeVoucher[
+                                                    //         index],
+                                                    //     icon: LineAwesomeIcons
+                                                    //         .alternate_ticket,
+                                                    //     color: Colors.indigo),
+                                                    FutureBuilder(
+                                                      future: FirebaseFirestore.instance.collection("vouchers").doc(challengeVoucher[index]).get(),
+                                                      builder: ( context, snapshot){
+                                                        if(snapshot.hasError){
+                                                          return const Text("Something went wrong");
+                                                        }
+                                                        if(snapshot.hasData && !snapshot.data!.exists){
+                                                          return const Text("Document does not exist");
+                                                        }
+                                                        if(snapshot.connectionState == ConnectionState.done){
+                                                          Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                                                          return IconAndInfo(
+                                                              text: data['name'],
+                                                              icon: LineAwesomeIcons
+                                                                  .alternate_ticket,
+                                                              color: Colors.indigo);
+                                                        }
+                                                        return const Text("loading");
+                                                      })
+                                                ),
                                           ),
                                           const SizedBox(height: 20),
                                           const Text(
