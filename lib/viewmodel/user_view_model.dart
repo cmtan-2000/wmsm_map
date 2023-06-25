@@ -1,12 +1,17 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 import '../model/users.dart';
 
 class UserViewModel with ChangeNotifier {
   late Users _user;
   Users get user => _user;
+  int _goal = 0;
+  int get goal => _goal;
 
   // String get fullname => _user.fullname;
   // String get username => _user.username;
@@ -47,10 +52,32 @@ class UserViewModel with ChangeNotifier {
         weight: user['weight'],
         height: user['height'],
         gender: user['gender'],
+        goal: user['goal'],
         bmi: user['bmi'],
         role: user['role'],
       );
+      _goal = int.parse(user['goal']);
       notifyListeners();
     });
   }
+
+  // Future<void> updateGoal() async {
+  //   String userId = FirebaseAuth.instance.currentUser!.uid;
+
+  //   FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(userId)
+  //       .get()
+  //       .then((snapshot) {
+  //     if (snapshot.exists) {
+  //       _goal = int.parse(snapshot.data()?['goal'] ?? '0');
+  //       Logger().d("$_goal");
+  //       notifyListeners();
+  //     }
+  //   });
+
+  // }
+
+  
+ 
 }

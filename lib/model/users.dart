@@ -10,6 +10,7 @@ class Users {
   String? weight; //*in kg
   String? height; //*in cm
   String? gender; //* for bmi
+  String? goal; //* for step goal
   String? bmi; //* for bmi
 
   Users(
@@ -22,6 +23,7 @@ class Users {
       this.weight,
       this.height,
       this.gender,
+      this.goal,
       this.bmi});
 
   Users.fromJson(Map<String, dynamic> json)

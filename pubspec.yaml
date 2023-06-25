@@ -56,6 +56,7 @@ dependencies:
   awesome_snackbar_content: ^0.1.1
   coupon_uikit: ^0.2.0
   mobile_scanner: ^3.2.0
+  flutter_svg: ^1.1.6
 
 dev_dependencies:
   flutter_test:
