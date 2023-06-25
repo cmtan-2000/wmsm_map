@@ -60,6 +60,7 @@ dependencies:
   flutter_local_notifications: ^14.1.1
   rxdart: ^0.27.7
 
+  flutter_svg: ^1.1.6
 
 dev_dependencies:
   flutter_test:
@@ -123,5 +124,5 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 # only cm uncomment this
-# dependency_overrides:
-# test_api: 0.5.2
+dependency_overrides:
+  test_api: 0.5.2

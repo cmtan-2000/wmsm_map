@@ -1,5 +1,10 @@
+// ignore_for_file: non_constant_identifier_names
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/model/users.dart';
@@ -9,6 +14,8 @@ import 'package:wmsm_flutter/viewmodel/shared/shared_pref.dart';
 import 'package:wmsm_flutter/viewmodel/user_view_model.dart';
 
 import '../../viewmodel/health_conn_view/health_conn_view_model.dart';
+import '../custom/widgets/awesome_snackbar.dart';
+import '../custom/widgets/draggleline.dart';
 import 'admin_dashboard_page.dart';
 
 //* The dashboard page to determine user dashboard or admin dashboard
@@ -28,18 +35,29 @@ class _DashboardState extends State<Dashboard> {
       username: '',
       role: '');
   SharedPref sharedPref = SharedPref();
-  TextEditingController _goalController = TextEditingController();
-
+  TextEditingController goalController = TextEditingController();
+  UserViewModel userViewModel = UserViewModel();
   @override
   initState() {
     super.initState();
     initialGetSavedData();
-    Future.delayed(const Duration(seconds: 3), () async {
+    Future.delayed(const Duration(seconds: 1), () async {
       Provider.of<HealthConnViewModel>(context, listen: false).getSteps();
       Provider.of<HealthConnViewModel>(context, listen: false).getWeeklyStep();
       Provider.of<HealthConnViewModel>(context, listen: false).getMonthlyStep();
     });
   }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    // userViewModel.disposeAll;
+    Logger().v('dispose', 'dashboard');
+  }
+
+  
+
 
   void initialGetSavedData() async {
     // Users response = Users.fromJson(await sharedPref.read("user"));
@@ -69,14 +87,20 @@ class _DashboardState extends State<Dashboard> {
   }
 }
 
-class UserDashboard extends StatelessWidget {
-  const UserDashboard({
+class UserDashboard extends StatefulWidget {
+   const UserDashboard({
     super.key,
     required this.user,
   });
 
   final Users user;
 
+  @override
+  State<UserDashboard> createState() => _UserDashboardState();
+}
+
+class _UserDashboardState extends State<UserDashboard> {
+  UserViewModel userViewModel = UserViewModel();
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -116,7 +140,7 @@ class UserDashboard extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              'Welcome back\n${user.fullname}!',
+                              'Welcome back\n${widget.user.fullname}!',
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
@@ -147,9 +171,8 @@ class UserDashboard extends StatelessWidget {
                                     const SizedBox(height: 20),
                                     Consumer<HealthConnViewModel>(
                                       builder: (context, health, child) =>
-                                          health.step.isEmpty
-                                              ? const CircularProgressIndicator()
-                                              : health.authorize
+                                          health.authorize
+                                              ? health.step.isNotEmpty
                                                   ? Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -186,10 +209,11 @@ class UserDashboard extends StatelessWidget {
                                                           ),
                                                         ),
                                                         SizedBox(
-                                                          width: 80,
+                                                          width: 138,
                                                           child: Image.asset(
-                                                            'assets/images/walk_dashboard.png',
+                                                            'assets/images/walking.png',
                                                           ),
+                                                          
                                                         ),
                                                       ],
                                                     )
@@ -221,7 +245,8 @@ class UserDashboard extends StatelessWidget {
                                                           ],
                                                         ),
                                                       ],
-                                                    ),
+                                                    )
+                                              : const CircularProgressIndicator()
                                     )
                                   ],
                                 ),
@@ -241,18 +266,108 @@ class UserDashboard extends StatelessWidget {
                     width: double.infinity,
                     child: Column(
                       children: [
-                        const SizedBox(height: 20),
-                        // DashboardCardWidget(
-                        //   title: 'Goals',
-                        //   imgPath: 'assets/images/goal.png',
-                        //   infoCard: 'Set Your Goal Start From Now!',
-                        //   onPressed: () {
-                        //     showDialog(context: context, builder: (context) {
-                        //       // var goalDialog = GoalDialog(context);
-                        //       // return goalDialog;
-                        //     });
+                        // StreamBuilder<int>(
+                        //   stream: Provider.of<UserViewModel>(context)
+                        //       .stepGoalStream,
+                        //   builder: (context, snapshot) {
+                        //     if (snapshot.hasData) {
+                        //       return Column(
+                        //         children: [
+                        //           const SizedBox(height: 20),
+                        //           Text(
+                        //             'Your Goal',
+                        //             style: Theme.of(context)
+                        //                 .textTheme
+                        //                 .bodyLarge
+                        //                 ?.copyWith(
+                        //                     fontWeight: FontWeight.bold),
+                        //           ),
+                        //           const SizedBox(height: 20),
+                        //           Text(
+                        //             'Your goal is ${snapshot.data} steps',
+                        //             style: Theme.of(context)
+                        //                 .textTheme
+                        //                 .bodyMedium
+                        //                 ?.copyWith(
+                        //                     fontWeight: FontWeight.bold),
+                        //           ),
+                        //           const SizedBox(height: 20),
+                        //         ],
+                        //       );
+                        //     } else {
+                        //       return Container();
+                        //     }
                         //   },
                         // ),
+                        // Consumer<UserViewModel>(
+                        //   builder: (context, user, child) => Text("${user.goal}")
+                        // ),
+                        const SizedBox(height: 20),
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).snapshots(),
+                          builder: ((BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            if(snapshot.hasData){
+                              var userData = snapshot.data!.data() as Map<String, dynamic>;
+                              // if goal attribute exist
+                              if (userData.containsKey('goal')) {
+                                  // 'goal' attribute exists
+                                  if (userData['goal'] != null &&
+                                      userData['goal'].isNotEmpty) {
+                                    // 'goal' attribute is not empty
+                                    // return Text(
+                                    //     'Has user data goal: ${userData['goal']}');
+                                    return DashboardCardWidget(
+                                      title: 'Goals',
+                                      imgPath: 'assets/images/goal.png',
+                                      infoCard: 'This is your goal Set: ${userData['goal']} left to Go!',
+                                      onPressed: () {
+                                        showDialog(context: context, builder: (context) {
+                                          var goalDialog = GoalDialog(context);
+                                          return goalDialog;
+                                        });
+                                      },
+                                    );
+                                  } else {
+                                    // 'goal' attribute is empty
+                                    return DashboardCardWidget(
+                                      title: 'Goals',
+                                      imgPath: 'assets/images/goal.png',
+                                      infoCard:
+                                          'your Goal is Empty',
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              var goalDialog =
+                                                  GoalDialog(context);
+                                              return goalDialog;
+                                            });
+                                      },
+                                    );
+                                  }
+                                } else {
+                                  // 'goal' attribute does not exist
+                                  return DashboardCardWidget(
+                                      title: 'Goals',
+                                      imgPath: 'assets/images/goal.png',
+                                      infoCard:
+                                          'No goal set',
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              var goalDialog =
+                                                  GoalDialog(context);
+                                              return goalDialog;
+                                            });
+                                      },
+                                    );;
+                                }
+                            }
+                            return Container();
+                          }))
+                        ,
+                        
                         const SizedBox(height: 20),
                         //?Challenges card
                         DashboardCardWidget(
@@ -292,33 +407,44 @@ class UserDashboard extends StatelessWidget {
     );
   }
 
-  // GoalDialog(BuildContext context) => AlertDialog(
-  //     title: Text('Set Goal'),
-  //     content: TextField(
-  //       controller: _goalController,
-  //       keyboardType: TextInputType.number,
-  //       decoration: InputDecoration(
-  //         labelText: 'Enter your goal',
-  //       ),
-  //     ),
-  //     actions: [
-  //       TextButton(
-  //         onPressed: () {
-  //           // Save the goal and close the dialog
-  //           String goal = _goalController.text;
-  //           Navigator.of(context).pop(goal);
-  //         },
-  //         child: Text('Save'),
-  //       ),
-  //       TextButton(
-  //         onPressed: () {
-  //           // Close the dialog without saving
-  //           Navigator.of(context).pop();
-  //         },
-  //         child: Text('Cancel'),
-  //       ),
-  //     ],
-  //   );
+  AlertDialog GoalDialog(BuildContext context){
+    TextEditingController goalController = TextEditingController();
+    return AlertDialog(
+      title: const Text('Set Goal'),
+      content: TextField(
+        controller: goalController,
+        keyboardType: TextInputType.number,
+        decoration: const InputDecoration(
+          labelText: 'Enter your goal',
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set({
+              'goal': goalController.text,
+            }, SetOptions(merge: true)).then((value){
+
+                final snackbar = Awesome.snackbar("Goal", "Goal ${goalController.text} set", ContentType.success);
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(snackbar);
+                Navigator.of(context).pop();
+            });
+          },
+          child: const Text('Save'),
+        ),
+        
+        TextButton(
+          onPressed: () {
+            // Close the dialog without saving
+            Navigator.of(context).pop();
+          },
+          child: const Text('Cancel'),
+        ),
+      ],
+    );
+  }
 }
 
 class DashboardCardWidget extends StatelessWidget {
