@@ -227,9 +227,9 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
                               child: Container(
                                 padding: const EdgeInsets.all(
                                     16.0), // Set the inner padding
-                                child: const Row(
+                                child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children:  [
+                                  children: const [
                                     Icon(
                                       Icons.upload_rounded,
                                       color: Colors.black,

@@ -61,7 +61,9 @@ dependencies:
   rxdart: ^0.27.7
   barcode_widget: ^2.0.4
   flutter_barcode_scanner: ^2.0.0
-  pdf: ^3.10.4
+  syncfusion_flutter_pdf: ^21.2.4
+  open_file: ^3.3.2
+  path_provider: ^2.0.15
 
 dev_dependencies:
   flutter_test:
@@ -125,5 +127,5 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 # only cm uncomment this
-dependency_overrides:
-  test_api: 0.5.2
+# dependency_overrides:
+#   test_api: 0.5.2

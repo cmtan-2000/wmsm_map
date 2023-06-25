@@ -214,10 +214,18 @@ class UserChallengePage extends StatelessWidget {
                                                 percentage = double.parse(
                                                         formattedPercentage) /
                                                     100;
-                                                percentage = percentage.clamp(0.0, 1.0);
+                                                percentage =
+                                                    percentage.clamp(0.0, 1.0);
                                                 Logger().i(percentage);
 
                                                 return OngoingChallengeCard(
+                                                  onTap: () {
+                                                    MyApp.navigatorKey
+                                                        .currentState!
+                                                        .pushNamed(
+                                                      '/userchallengeDetail',
+                                                    );
+                                                  },
                                                   ongoingTitle: ds['title'],
                                                   ongoingImgPath:
                                                       'assets/images/challenge1.png',
@@ -234,10 +242,9 @@ class UserChallengePage extends StatelessWidget {
                                     : const Center(
                                         child: Text('No Challenge Join'),
                                       );
-                              }else if(snapshot.hasError){
-                                return const Center(
-                                    child: Text('Error larh'));
-                              }else{
+                              } else if (snapshot.hasError) {
+                                return const Center(child: Text('Error larh'));
+                              } else {
                                 return const Center(
                                     child: CircularProgressIndicator());
                               }
@@ -276,6 +283,7 @@ class OngoingChallengeCard extends StatelessWidget {
     required this.ongoingPercentage,
     required this.ongoingSteps,
     required this.challengeSteps,
+    required this.onTap,
   });
 
   final String ongoingTitle;
@@ -283,52 +291,56 @@ class OngoingChallengeCard extends StatelessWidget {
   final double ongoingPercentage;
   final int ongoingSteps;
   final int challengeSteps;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 10,
-        ),
-        Row(
-          children: [
-            Image.asset(
-              ongoingImgPath,
-              width: 100,
-            ),
-            const SizedBox(width: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: Text(
-                    ongoingTitle,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(fontWeight: FontWeight.bold),
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Image.asset(
+                ongoingImgPath,
+                width: 100,
+              ),
+              const SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 200,
+                    child: Text(
+                      ongoingTitle,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                Text('$ongoingSteps/$challengeSteps steps'),
-                const SizedBox(height: 10),
-                LinearPercentIndicator(
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  lineHeight: 10,
-                  //TODO: Percentage of challenge
-                  percent: ongoingPercentage,
-                  progressColor: Colors.green,
-                  barRadius: const Radius.circular(16),
-                ),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-      ],
+                  Text('$ongoingSteps/$challengeSteps steps'),
+                  const SizedBox(height: 10),
+                  LinearPercentIndicator(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    lineHeight: 10,
+                    //TODO: Percentage of challenge
+                    percent: ongoingPercentage,
+                    progressColor: Colors.green,
+                    barRadius: const Radius.circular(16),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+        ],
+      ),
     );
   }
 }

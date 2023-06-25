@@ -8,6 +8,7 @@ import 'package:wmsm_flutter/view/user_challenges/admin/admin_add_challenge.dart
 import 'package:wmsm_flutter/view/user_challenges/admin/admin_edit_challenge.dart';
 import 'package:wmsm_flutter/view/user_challenges/admin/admin_manage_challenge_page.dart';
 import 'package:wmsm_flutter/view/user_challenges/admin/admin_scan_voucher.dart';
+import 'package:wmsm_flutter/view/user_challenges/user/challenge_details.dart';
 import 'package:wmsm_flutter/view/user_challenges/user/user_claim_voucher.dart';
 import 'package:wmsm_flutter/view/user_challenges/user/user_join_challenge_page.dart';
 import 'package:wmsm_flutter/view/user_challenges/voucher_page.dart';
@@ -129,6 +130,9 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
     case '/claimVoucher':
       return MaterialPageRoute(
           builder: ((context) => const UserClaimVoucher()));
+    case '/userchallengeDetail':
+      return MaterialPageRoute(
+          builder: ((context) => const ChallengeDetails()));
     default:
       return null;
   }

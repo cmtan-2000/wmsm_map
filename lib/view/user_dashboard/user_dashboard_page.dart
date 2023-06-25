@@ -30,7 +30,6 @@ class UserDashboard extends StatelessWidget {
                   },
                   child: const Badge(
                     label: Text('12'),
-                    //TODO: Flutter riverpod change
                     isLabelVisible: true,
                     child: Icon(LineAwesomeIcons.bell),
                   ),
