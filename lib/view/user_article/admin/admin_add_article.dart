@@ -282,7 +282,7 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
 
                                   // save data to the database
                                   await articleViewModel.saveData();
-                                  
+
                                   await Future.delayed(
                                       const Duration(seconds: 10));
 

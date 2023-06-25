@@ -56,6 +56,10 @@ dependencies:
   awesome_snackbar_content: ^0.1.1
   coupon_uikit: ^0.2.0
   mobile_scanner: ^3.2.0
+  firebase_messaging: ^14.6.3
+  flutter_local_notifications: ^14.1.1
+  rxdart: ^0.27.7
+
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:wmsm_flutter/api/localnotification_api.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/model/new_challenge.dart';
 import 'package:wmsm_flutter/model/users.dart';
@@ -22,12 +23,24 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   String id = '';
   List<NewChallenge> listOfNewChallenge = [];
-  String defaultUrl =
-      'https://i1.sndcdn.com/avatars-000307598863-zfe44f-t500x500.jpg';
 
   @override
   initState() {
     super.initState();
+    LocalNotification.init();
+    listenNotifications();
+  }
+
+  //*the moment click notification, it will listen here and direct to the page
+  void listenNotifications() =>
+      LocalNotification.onNotifications.stream.listen(notificationDirect);
+
+  void notificationDirect(String? payload) {
+    Logger().wtf("Check Payload: $payload");
+    if (payload != null) {
+      MyApp.navigatorKey.currentState!.pushNamed('/userjoinChallenge');
+      LocalNotification.clearPayload();
+    }
   }
 
   @override
@@ -66,7 +79,7 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                       snap: true,
                       title: Text('Manage Challenge',
                           style: Theme.of(context).textTheme.bodyLarge),
-                      automaticallyImplyLeading: true,
+                      automaticallyImplyLeading: false,
                     ),
                     SliverToBoxAdapter(
                       child: Container(
@@ -223,8 +236,7 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                                             foregroundImage:
                                                 CachedNetworkImageProvider(
                                                     challenge
-                                                            .newChallengeImgPath ??
-                                                        defaultUrl),
+                                                        .newChallengeImgPath),
                                             backgroundColor: Colors.transparent,
                                             radius: 25,
                                           ),
@@ -257,7 +269,12 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                 floatingActionButton: FloatingActionButton(
                   //* direct to admin add challenge page
                   onPressed: () {
-                    MyApp.navigatorKey.currentState!.pushNamed('/addChallenge');
+                    LocalNotification.showNotification(
+                      title: 'New Challenge Released',
+                      body: 'Challenge is released, check it out now!',
+                      payload: 'user_challenge',
+                    );
+                    //MyApp.navigatorKey.currentState!.pushNamed('/addChallenge');
                   },
                   backgroundColor: Colors.white,
                   tooltip: 'Add new challenge',
