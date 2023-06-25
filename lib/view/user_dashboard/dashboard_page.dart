@@ -378,42 +378,47 @@ class _UserDashboardState extends State<UserDashboard> {
 
                                             double percentage =
                                                 stepUser / goalUser;
+                                            Logger().i(percentage);
+
                                             percentage = percentage.clamp(0, 1);
-                                          }
-                                        }
-                                        Logger().i(percentage);
-                                        return DashboardCardWidget(
-                                          linearPercent: percentage,
-                                          textBtn: (userData
-                                                  .containsKey('goal'))
-                                              ? (userData['goal'] != null &&
+                                            Logger().i(percentage);
+
+                                            return DashboardCardWidget(
+                                              linearPercent: percentage,
+                                              textBtn: (userData
+                                                      .containsKey('goal'))
+                                                  ? (userData['goal'] != null &&
+                                                              userData['goal']
+                                                                  .isNotEmpty) ==
+                                                          true
+                                                      ? "Update Goal"
+                                                      : "Update My Zero Goal"
+                                                  : "Set New Goal",
+                                              title: 'Daily Goals',
+                                              imgPath: (userData
+                                                      .containsKey('goal'))
+                                                  ? 'assets/images/goal.png'
+                                                  : 'assets/images/pin-front-color.png',
+                                              infoCard: (userData['goal'] !=
+                                                              null &&
                                                           userData['goal']
                                                               .isNotEmpty) ==
                                                       true
-                                                  ? "Update Goal"
-                                                  : "Update My Zero Goal"
-                                              : "Set New Goal",
-                                          title: 'Daily Goals',
-                                          imgPath: (userData
-                                                  .containsKey('goal'))
-                                              ? 'assets/images/goal.png'
-                                              : 'assets/images/pin-front-color.png',
-                                          infoCard: (userData['goal'] != null &&
-                                                      userData['goal']
-                                                          .isNotEmpty) ==
-                                                  true
-                                              ? leftgoal
-                                              : 'your Goal is Empty',
-                                          onPressed: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  var goalDialog =
-                                                      GoalDialog(context);
-                                                  return goalDialog;
-                                                });
-                                          },
-                                        );
+                                                  ? leftgoal
+                                                  : 'your Goal is Empty',
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      var goalDialog =
+                                                          GoalDialog(context);
+                                                      return goalDialog;
+                                                    });
+                                              },
+                                            );
+                                          }
+                                        }
+                                        return Container();
                                       });
                                     }
                                     return Container();
