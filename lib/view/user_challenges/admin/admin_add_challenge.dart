@@ -10,6 +10,8 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:wmsm_flutter/api/localnotification_api.dart';
+import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/model/new_challenge.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
@@ -44,6 +46,20 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
     cStepsEC = TextEditingController();
     cVoucherEC = [TextEditingController()];
     super.initState();
+    LocalNotification.init();
+    listenNotifications();
+  }
+
+  //*the moment click notification, it will listen here and direct to the page
+  void listenNotifications() =>
+      LocalNotification.onNotifications.stream.listen(notificationDirect);
+
+  void notificationDirect(String? payload) {
+    Logger().wtf("Check Payload: $payload");
+    if (payload != null) {
+      MyApp.navigatorKey.currentState!.pushNamed('/userjoinChallenge');
+      LocalNotification.clearPayload();
+    }
   }
 
   @override
@@ -110,15 +126,6 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
     start: DateTime.now(),
     end: DateTime.now(),
   );
-
-  snackBar(String? message) {
-    return ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message!),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
 
   Future<String> pickImage(ImageSource source) async {
     XFile? image = await ImagePicker().pickImage(source: source);
@@ -470,7 +477,12 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
                                                 .then((value) =>
                                                     Navigator.pop(context));
 
-                                            snackBar('Challenge added');
+                                            LocalNotification.showNotification(
+                                              title: 'New Challenge Released',
+                                              body:
+                                                  'Challenge is released, check it out now!',
+                                              payload: 'user_challenge',
+                                            );
                                           }
                                         }),
                                   ),

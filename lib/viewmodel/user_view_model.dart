@@ -10,8 +10,8 @@ import '../model/users.dart';
 class UserViewModel with ChangeNotifier {
   late Users _user;
   Users get user => _user;
-  int _goal = 0;
-  int get goal => _goal;
+  // int _goal = 0;
+  // int get goal => _goal;
 
   // String get fullname => _user.fullname;
   // String get username => _user.username;
@@ -52,11 +52,11 @@ class UserViewModel with ChangeNotifier {
         weight: user['weight'],
         height: user['height'],
         gender: user['gender'],
-        goal: user['goal'],
+        // goal: user['goal'] ?? "",
         bmi: user['bmi'],
         role: user['role'],
       );
-      _goal = int.parse(user['goal']);
+      // _goal = int.parse(user['goal']);
       notifyListeners();
     });
   }

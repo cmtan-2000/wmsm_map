@@ -23,7 +23,6 @@ class Users {
       this.weight,
       this.height,
       this.gender,
-      this.goal,
       this.bmi});
 
   Users.fromJson(Map<String, dynamic> json)

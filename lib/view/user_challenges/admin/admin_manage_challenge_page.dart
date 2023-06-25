@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
-import 'package:wmsm_flutter/api/localnotification_api.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/model/new_challenge.dart';
 import 'package:wmsm_flutter/model/users.dart';
@@ -27,20 +26,6 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
   @override
   initState() {
     super.initState();
-    LocalNotification.init();
-    listenNotifications();
-  }
-
-  //*the moment click notification, it will listen here and direct to the page
-  void listenNotifications() =>
-      LocalNotification.onNotifications.stream.listen(notificationDirect);
-
-  void notificationDirect(String? payload) {
-    Logger().wtf("Check Payload: $payload");
-    if (payload != null) {
-      MyApp.navigatorKey.currentState!.pushNamed('/userjoinChallenge');
-      LocalNotification.clearPayload();
-    }
   }
 
   @override
@@ -80,6 +65,16 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                       title: Text('Manage Challenge',
                           style: Theme.of(context).textTheme.bodyLarge),
                       automaticallyImplyLeading: false,
+                      actions: [
+                        IconButton(
+                          onPressed: () {
+                            MyApp.navigatorKey.currentState!
+                                .pushNamed('/scanVoucher');
+                          },
+                          icon: const Icon(LineAwesomeIcons.camera,
+                              color: Colors.blueGrey),
+                        ),
+                      ],
                     ),
                     SliverToBoxAdapter(
                       child: Container(
@@ -200,6 +195,9 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                                         elevation: 2,
                                         child: ListTile(
                                           onTap: () {
+                                            Logger().wtf(
+                                                "List of challenge's voucher: ${challenge.newChallengeVoucher}");
+
                                             MyApp.navigatorKey.currentState!
                                                 .push(
                                               MaterialPageRoute(
@@ -220,10 +218,9 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                                                   challengeSteps: challenge
                                                       .newChallengeSteps
                                                       .toString(),
+
                                                   challengeVoucher: challenge
-                                                          .newChallengeVoucher[
-                                                      voucherCount %
-                                                          voucherLength],
+                                                      .newChallengeVoucher,
 
                                                   user: widget.user,
                                                 ),
@@ -269,12 +266,7 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                 floatingActionButton: FloatingActionButton(
                   //* direct to admin add challenge page
                   onPressed: () {
-                    LocalNotification.showNotification(
-                      title: 'New Challenge Released',
-                      body: 'Challenge is released, check it out now!',
-                      payload: 'user_challenge',
-                    );
-                    //MyApp.navigatorKey.currentState!.pushNamed('/addChallenge');
+                    MyApp.navigatorKey.currentState!.pushNamed('/addChallenge');
                   },
                   backgroundColor: Colors.white,
                   tooltip: 'Add new challenge',
