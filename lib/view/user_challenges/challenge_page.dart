@@ -124,6 +124,14 @@ class UserChallengePage extends StatelessWidget {
                     onPressed: () {
                       MyApp.navigatorKey.currentState!.pushNamed('/voucher');
                     }),
+
+                //TODO: TEST THE PAGE
+                IconButton(
+                    icon: const Icon(LineAwesomeIcons.hand_holding_us_dollar),
+                    onPressed: () {
+                      MyApp.navigatorKey.currentState!
+                          .pushNamed('/claimVoucher');
+                    }),
               ],
             ),
             SliverToBoxAdapter(

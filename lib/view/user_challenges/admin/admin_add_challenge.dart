@@ -11,7 +11,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:wmsm_flutter/api/localnotification_api.dart';
-import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/model/new_challenge.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
@@ -54,20 +53,20 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
 
     super.initState();
     LocalNotification.init();
-    listenNotifications();
+    // listenNotifications();
   }
 
   //*the moment click notification, it will listen here and direct to the page
-  void listenNotifications() =>
-      LocalNotification.onNotifications.stream.listen(notificationDirect);
+  // void listenNotifications() =>
+  //     LocalNotification.onNotifications.stream.listen(notificationDirect);
 
-  void notificationDirect(String? payload) {
-    Logger().wtf("Check Payload: $payload");
-    if (payload != null) {
-      MyApp.navigatorKey.currentState!.pushNamed('/userjoinChallenge');
-      LocalNotification.clearPayload();
-    }
-  }
+  // void notificationDirect(String? payload) {
+  //   Logger().wtf("Check Payload: $payload");
+  //   if (payload != null) {
+  //     MyApp.navigatorKey.currentState!.pushNamed('/adminjoinChallenge');
+  //     LocalNotification.clearPayload();
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -526,18 +525,14 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
                                                   .then((value) =>
                                                       Navigator.pop(context));
 
-                                              LocalNotification.showNotification(
-                                                title: 'New Challenge Released',
-                                                body:
-                                                    'Challenge is released, check it out now!',
-                                                payload: 'user_challenge',
-                                              );
-                                            });
-
-
-
-                                          }
-                                        }),
+                                            LocalNotification.showNotification(
+                                              title: 'New Challenge Released',
+                                              body:
+                                                  'Challenge is released, check it out now!',
+                                              payload: 'user_challenge',
+                                            );
+                                          });
+                                        }}),
                                   ),
                                 ],
                               ),
