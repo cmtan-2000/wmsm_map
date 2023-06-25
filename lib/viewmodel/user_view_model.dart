@@ -3,13 +3,24 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 import '../model/users.dart';
+
+class ChartData {
+  ChartData(this.x, this.y, [this.color]);
+
+  final String x;
+  final int y;
+  Color? color;
+
+  //create constructor of chart data
+}
 
 class UserViewModel with ChangeNotifier {
   late Users _user;
   Users get user => _user;
+  late List<ChartData> genderData = [];
+
   // int _goal = 0;
   // int get goal => _goal;
 
@@ -22,6 +33,29 @@ class UserViewModel with ChangeNotifier {
   // double? get height => _user.height;
   // String? get gender => _user.gender;
   // double? get bmi => _user.bmi;
+
+  Future<void> fetchGenderData() async {
+    genderData.clear();
+    int maleCount = 0;
+    int femaleCount = 0;
+    String gender = '';
+    final snapshot = await FirebaseFirestore.instance.collection('users').get();
+
+    for (var doc in snapshot.docs) {
+      gender = doc.data()['gender'];
+      if (gender == 'Male') {
+        maleCount++;
+      } else if (gender == 'Female') {
+        femaleCount++;
+      }
+    }
+    genderData.add(
+        ChartData('Male', maleCount, const Color.fromARGB(255, 97, 105, 223)));
+    genderData.add(ChartData(
+        'Female', femaleCount, const Color.fromARGB(255, 197, 104, 143)));
+
+    notifyListeners();
+  }
 
   void setUser() {
     _user = Users(
@@ -77,7 +111,4 @@ class UserViewModel with ChangeNotifier {
   //   });
 
   // }
-
-  
- 
 }

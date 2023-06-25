@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:wmsm_flutter/view/user_dashboard/dashboard_page.dart';
 // import 'package:wmsm_flutter/view/user_dashboard/dashboard.dart';
 import 'package:wmsm_flutter/viewmodel/shared/shared_pref.dart';
@@ -74,7 +75,10 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
           // unselectedLabelStyle:
           //     TextStyle(color: Theme.of(context).primaryColor),
           currentIndex: _currentIndex,
-          onTap: (index) => setState(() => _currentIndex = index),
+          onTap: (index) {
+            setState(() => _currentIndex = index);
+            Logger().wtf("index: $index");
+          },
           items: [
             const BottomNavigationBarItem(
               icon: Icon(Icons.home),

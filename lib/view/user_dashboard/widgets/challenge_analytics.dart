@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ChallengeAnalytics extends StatefulWidget {
@@ -15,7 +14,6 @@ class _ChallengeAnalyticsState extends State<ChallengeAnalytics> {
 
   @override
   void initState() {
-    //TODO: get data from challengers firebase
     data = [];
     super.initState();
   }
@@ -26,13 +24,13 @@ class _ChallengeAnalyticsState extends State<ChallengeAnalytics> {
       stream: FirebaseFirestore.instance.collection('challenges').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          data.clear();
           for (int i = 0; i < snapshot.data!.docs.length; i++) {
             int userCount = snapshot.data!.docs[i]['challengers'].length;
             String title = snapshot.data!.docs[i]['title'];
+
             data.add(_ChartData(title, userCount));
           }
-
-          Logger().i('data list: $data');
 
           return SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
@@ -72,6 +70,10 @@ class _ChallengeAnalyticsState extends State<ChallengeAnalytics> {
                                   const DataLabelSettings(isVisible: true),
                               name: 'Total number of users enrolled')
                         ],
+                        legend: Legend(
+                            position: LegendPosition.bottom,
+                            isVisible: true,
+                            overflowMode: LegendItemOverflowMode.wrap),
                       ),
                     ]),
               ),

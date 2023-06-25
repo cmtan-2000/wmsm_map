@@ -50,6 +50,10 @@ class MyApp extends StatelessWidget {
           create: (_) => ArticleViewModel(),
           child: const ArticlePage(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => ArticleViewModel(),
+          child: const ArticlePage(),
+        ),
         // ====================================================================
         // Example all Provider here
         ChangeNotifierProvider(create: (_) => MessageViewModel()),
