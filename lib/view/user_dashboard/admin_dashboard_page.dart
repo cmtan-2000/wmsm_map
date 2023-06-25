@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:wmsm_flutter/view/user_dashboard/widgets/challenge_analytics.dart';
+import 'package:wmsm_flutter/view/user_dashboard/widgets/voucher_analytics.dart';
 
 class AdminDashboard extends StatelessWidget {
   AdminDashboard({super.key});
@@ -70,26 +72,10 @@ class AdminDashboard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 40),
-                        Card(
-                          elevation: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 30),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Text(
-                                    'Ongoing Challenges',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall,
-                                  ),
-                                  const SizedBox(height: 20),
-                                ]),
-                          ),
-                        )
+                        const ChallengeAnalytics(),
+                        const SizedBox(height: 40),
+                        const VoucherAnalytics(),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),

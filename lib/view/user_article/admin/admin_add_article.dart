@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:wmsm_flutter/api/localnotification_api.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/shared/multi_line_field.dart';
@@ -43,6 +44,7 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
     aEventDate = TextEditingController();
     aContent = TextEditingController();
     aAuthor = TextEditingController();
+    LocalNotification.init();
   }
 
   @override
@@ -291,8 +293,11 @@ class _AdminInsertArticlePageState extends State<AdminInsertArticlePage> {
                                   });
 
                                   Navigator.pop(context);
-
-                                  Logger().i('Data saved successfully');
+                                  LocalNotification.showNotification(
+                                    title: 'New Article Released',
+                                    body: 'Article is released, view now!',
+                                    payload: 'added_article',
+                                  );
                                 } catch (e, stackTrace) {
                                   Logger().e('$e\n$stackTrace');
                                 } finally {
