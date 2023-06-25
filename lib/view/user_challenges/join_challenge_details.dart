@@ -25,7 +25,7 @@ class JoinChallengeDetails extends StatelessWidget {
   final String challengeImgPath;
   final String challengeDesc;
   final String challengeSteps;
-  final String challengeVoucher;
+  final List<String> challengeVoucher;
   final String challengeEventDuration;
   final Users user;
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -74,6 +74,9 @@ class JoinChallengeDetails extends StatelessWidget {
             //     .data();
             // Logger().wtf(data);
 
+            Logger().wtf(
+                'Voucher length in detail page: ${challengeVoucher.length}');
+
             return Scaffold(
               body: Container(
                 color: user.role == 'admin'
@@ -108,62 +111,64 @@ class JoinChallengeDetails extends StatelessWidget {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(25),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          challenge!['title'],
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displaySmall
-                                              ?.copyWith(
-                                                  fontWeight: FontWeight.bold),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        IconAndInfo(
-                                            text:
-                                                'Complete ${challenge['stepGoal']} steps',
-                                            icon: LineAwesomeIcons.walking,
-                                            color: Colors.teal),
-                                        IconAndInfo(
-                                            text: challenge['duration'],
-                                            icon: LineAwesomeIcons.stopwatch,
-                                            color: Colors.teal),
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          challengeDesc,
-                                          textAlign: TextAlign.justify,
-                                        ),
-                                        const SizedBox(height: 20),
-                                        const Text(
-                                          'Rewards',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        IconAndInfo(
-                                            text: challengeVoucher,
-                                            icon: LineAwesomeIcons
-                                                .alternate_ticket,
-                                            color: Colors.indigo),
-                                        const IconAndInfo(
-                                            text: 'RM2 Family Mart Off',
-                                            icon: LineAwesomeIcons
-                                                .alternate_ticket,
-                                            color: Colors.indigo),
-                                        const IconAndInfo(
-                                            text: 'Buy 1 Free 1 Zus Coffee',
-                                            icon: LineAwesomeIcons
-                                                .alternate_ticket,
-                                            color: Colors.indigo),
-                                        const SizedBox(height: 20),
-                                        const Text(
-                                          'Terms and Conditions: Can only claim one reward per completed challenge.',
-                                          style: TextStyle(fontSize: 10),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        _outlineButton(user.role),
-                                      ],
+                                    child: SizedBox(
+                                      height: 450,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            challenge!['title'],
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall
+                                                ?.copyWith(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          IconAndInfo(
+                                              text:
+                                                  'Complete ${challenge['stepGoal']} steps',
+                                              icon: LineAwesomeIcons.walking,
+                                              color: Colors.teal),
+                                          IconAndInfo(
+                                              text: challenge['duration'],
+                                              icon: LineAwesomeIcons.stopwatch,
+                                              color: Colors.teal),
+                                          const SizedBox(height: 20),
+                                          Text(
+                                            challengeDesc,
+                                            textAlign: TextAlign.justify,
+                                          ),
+                                          const SizedBox(height: 20),
+                                          const Text(
+                                            'Rewards',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Expanded(
+                                            child: ListView.builder(
+                                                padding: EdgeInsets.zero,
+                                                itemBuilder: (context, index) =>
+                                                    IconAndInfo(
+                                                        text: challengeVoucher[
+                                                            index],
+                                                        icon: LineAwesomeIcons
+                                                            .alternate_ticket,
+                                                        color: Colors.indigo),
+                                                itemCount:
+                                                    challengeVoucher.length),
+                                          ),
+                                          const SizedBox(height: 20),
+                                          const Text(
+                                            'Terms and Conditions: Lorem ipsum lorem ipsum blah blah blah blah blah blah.',
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                          const SizedBox(height: 20),
+                                          _outlineButton(user.role),
+                                        ],
+                                      ),
                                     ),
                                   )
                                 ],

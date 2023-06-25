@@ -4,6 +4,8 @@ import 'package:wmsm_flutter/view/custom/widgets/horizontal_voucher.dart';
 class VoucherPage extends StatelessWidget {
   const VoucherPage({super.key});
 
+  // final NewChallenge voucher;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +26,6 @@ class VoucherPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    const SizedBox(height: 20),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.9,
                       child: Card(

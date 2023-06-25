@@ -1,11 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:coupon_uikit/coupon_uikit.dart';
-import 'package:logger/logger.dart';
 
-//TODO: become dynamic
 class HorizontalCoupon extends StatelessWidget {
   const HorizontalCoupon({Key? key}) : super(key: key);
+
+  // final NewChallenge voucherList;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class HorizontalCoupon extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Logger().i('Pressed');
+        // Logger().wtf(voucherList.newChallengeVoucher);
         showDialog(
             context: context,
             barrierColor: Colors.white.withOpacity(0.95),
@@ -137,51 +137,34 @@ class CouponBarcode extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
       ),
-      firstChild: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Text(
-            //TODO: change text
-            'TEALIVE VOUCHER',
+      firstChild: Container(
+        width: double.maxFinite,
+        padding: const EdgeInsets.all(18),
+        child: BarcodeWidget(
+          barcode: Barcode.qrCode(),
+          //TODO: qr code data
+          data: 'Khew Jia Peng',
+          color: Colors.white,
+          width: 30,
+          height: 30,
+        ),
+      ),
+      secondChild:
+          Column(mainAxisAlignment: MainAxisAlignment.center, children: const [
+        Text('TEALIVE VOUCHER',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+            )),
+        SizedBox(height: 10),
+        Text('RM3 OFF',
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10),
-          Text(
-            'RM3',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 56,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            'OFF',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-      secondChild: Container(
-        width: double.maxFinite,
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Colors.white),
-          ),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 42),
-        child: CachedNetworkImage(
-          width: double.maxFinite,
-          imageUrl:
-              'https://static.vecteezy.com/system/resources/previews/001/199/360/non_2x/barcode-png.png',
-        ),
-      ),
+            ))
+      ]),
     );
   }
 }
