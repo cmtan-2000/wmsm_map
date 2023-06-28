@@ -15,7 +15,7 @@ import 'package:wmsm_flutter/model/article.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/viewmodel/user_view_model.dart';
 
-import '../../viewmodel/article_view/article_view_model.dart';
+import '../../viewmodel/article/article_view_model.dart';
 import '../custom/widgets/custom_elevatedbutton.dart';
 import '../shared/multi_line_field.dart';
 

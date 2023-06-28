@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:wmsm_flutter/model/chart.dart';
 
 class ChallengeAnalytics extends StatefulWidget {
   const ChallengeAnalytics({super.key});
@@ -10,7 +11,7 @@ class ChallengeAnalytics extends StatefulWidget {
 }
 
 class _ChallengeAnalyticsState extends State<ChallengeAnalytics> {
-  late List<_ChartData> data;
+  late List<ChartData> data;
 
   @override
   void initState() {
@@ -29,7 +30,7 @@ class _ChallengeAnalyticsState extends State<ChallengeAnalytics> {
             int userCount = snapshot.data!.docs[i]['challengers'].length;
             String title = snapshot.data!.docs[i]['title'];
 
-            data.add(_ChartData(title, userCount));
+            data.add(ChartData(title, userCount));
           }
 
           return SizedBox(
@@ -62,10 +63,10 @@ class _ChallengeAnalyticsState extends State<ChallengeAnalytics> {
                             TooltipBehavior(enable: true, animationDuration: 1),
                         margin: EdgeInsets.zero,
                         series: <CircularSeries>[
-                          DoughnutSeries<_ChartData, String>(
+                          DoughnutSeries<ChartData, String>(
                               dataSource: data,
-                              xValueMapper: (_ChartData data, _) => data.x,
-                              yValueMapper: (_ChartData data, _) => data.y,
+                              xValueMapper: (ChartData data, _) => data.x,
+                              yValueMapper: (ChartData data, _) => data.y,
                               dataLabelSettings:
                                   const DataLabelSettings(isVisible: true),
                               name: 'Total number of users enrolled')
@@ -85,11 +86,4 @@ class _ChallengeAnalyticsState extends State<ChallengeAnalytics> {
       },
     );
   }
-}
-
-class _ChartData {
-  _ChartData(this.x, this.y);
-
-  final String x;
-  final int y;
 }
