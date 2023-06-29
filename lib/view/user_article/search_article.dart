@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/main.dart';
 import 'package:wmsm_flutter/model/article.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
-import 'package:wmsm_flutter/viewmodel/article_view/article_view_model.dart';
+import 'package:wmsm_flutter/viewmodel/article/article_view_model.dart';
 
 class SearchArticlePage extends StatefulWidget {
   const SearchArticlePage({super.key});

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:wmsm_flutter/model/chart.dart';
 
 class VoucherAnalytics extends StatefulWidget {
   const VoucherAnalytics({super.key});
@@ -9,14 +10,9 @@ class VoucherAnalytics extends StatefulWidget {
   State<VoucherAnalytics> createState() => _VoucherAnalyticsState();
 }
 
-class _VoucherAnalyticsState extends State<VoucherAnalytics>
-    with AutomaticKeepAliveClientMixin {
-  _ChartData selectedData = _ChartData('', 0);
-  late List<_ChartData> typeData;
-  late List<_ChartData> quantityData;
-
-  @override
-  bool get wantKeepAlive => true;
+class _VoucherAnalyticsState extends State<VoucherAnalytics> {
+  late List<ChartData> typeData;
+  late List<ChartData> quantityData;
 
   @override
   void initState() {
@@ -32,16 +28,20 @@ class _VoucherAnalyticsState extends State<VoucherAnalytics>
         stream: FirebaseFirestore.instance.collection('vouchers').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            String type = '', name = '';
-            int quantity = 0;
+            String type = '', name = '', stringTotalPrice = '';
+            int quantity = 0, foodCount = 0, drinkCount = 0;
             typeData.clear();
             quantityData.clear();
-            int foodCount = 0;
-            int drinkCount = 0;
+            double totalVoucherPrice = 0;
+            stringTotalPrice = totalVoucherPrice.toStringAsFixed(2);
             for (int i = 0; i < snapshot.data!.docs.length; i++) {
               type = snapshot.data!.docs[i]['type'];
               name = snapshot.data!.docs[i]['name'];
-              quantity = int.parse(snapshot.data!.docs[i]['quantity']);
+              quantity = snapshot.data!.docs[i]['quantity'];
+              totalVoucherPrice +=
+                  double.parse(snapshot.data!.docs[i]['price']) *
+                      snapshot.data!.docs[i]['quantity'];
+              stringTotalPrice = totalVoucherPrice.toStringAsFixed(2);
 
               if (type == 'food') {
                 foodCount++;
@@ -49,11 +49,11 @@ class _VoucherAnalyticsState extends State<VoucherAnalytics>
                 drinkCount++;
               }
 
-              quantityData.add(_ChartData(name, quantity));
+              quantityData.add(ChartData(name, quantity));
             }
-            typeData.add(_ChartData(
+            typeData.add(ChartData(
                 'Food', foodCount, const Color.fromARGB(255, 216, 147, 90)));
-            typeData.add(_ChartData(
+            typeData.add(ChartData(
                 'Drink', drinkCount, const Color.fromARGB(255, 170, 110, 170)));
 
             return SizedBox(
@@ -90,47 +90,34 @@ class _VoucherAnalyticsState extends State<VoucherAnalytics>
                             legend: Legend(isVisible: false),
                             tooltipBehavior: TooltipBehavior(
                                 enable: true, animationDuration: 1, header: ''),
-                            series: <ChartSeries<_ChartData, String>>[
-                              ColumnSeries<_ChartData, String>(
+                            series: <ChartSeries<ChartData, String>>[
+                              ColumnSeries<ChartData, String>(
                                 dataSource: typeData,
                                 borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(10),
                                   topRight: Radius.circular(10),
                                 ),
-                                pointColorMapper: (_ChartData data, _) =>
+                                pointColorMapper: (ChartData data, _) =>
                                     data.color,
-                                xValueMapper: (_ChartData data, _) => data.x,
-                                yValueMapper: (_ChartData data, _) => data.y,
+                                xValueMapper: (ChartData data, _) => data.x,
+                                yValueMapper: (ChartData data, _) => data.y,
                                 dataLabelSettings:
                                     const DataLabelSettings(isVisible: true),
                                 animationDuration: 0,
                               ),
                             ],
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 30),
 
                           //*radial bar (Voucher quantity)
-
-                          SfCircularChart(
-                            margin: EdgeInsets.zero,
-                            title: ChartTitle(text: 'Voucher quantity'),
-                            series: <CircularSeries>[
-                              PieSeries<_ChartData, String>(
-                                dataSource: quantityData,
-                                enableTooltip: true,
-                                xValueMapper: (_ChartData data, _) => data.x,
-                                yValueMapper: (_ChartData data, _) => data.y,
-                                dataLabelSettings:
-                                    const DataLabelSettings(isVisible: true),
-                                name: 'Voucher quantity',
-                              )
-                            ],
-                            legend: Legend(
-                                height: '100%',
-                                position: LegendPosition.bottom,
-                                isVisible: true,
-                                overflowMode: LegendItemOverflowMode.wrap),
+                          Text(
+                            'Total voucher prices: RM$stringTotalPrice',
+                            style: const TextStyle(fontSize: 15),
                           ),
+                          VoucherQuantityGraph(
+                            quantityData: quantityData,
+                          ),
+
                           const SizedBox(height: 20),
                         ]),
                   )),
@@ -142,12 +129,31 @@ class _VoucherAnalyticsState extends State<VoucherAnalytics>
   }
 }
 
-class _ChartData {
-  _ChartData(this.x, this.y, [this.color]);
+class VoucherQuantityGraph extends StatelessWidget {
+  const VoucherQuantityGraph({super.key, required this.quantityData});
 
-  final String x;
-  final int y;
-  Color? color;
+  final List<ChartData> quantityData;
 
-  //create constructor of chart data
+  @override
+  Widget build(BuildContext context) {
+    return SfCircularChart(
+      tooltipBehavior: TooltipBehavior(enable: true),
+      margin: EdgeInsets.zero,
+      series: <CircularSeries>[
+        PieSeries<ChartData, String>(
+          dataSource: quantityData,
+          enableTooltip: true,
+          xValueMapper: (ChartData data, _) => data.x,
+          yValueMapper: (ChartData data, _) => data.y,
+          dataLabelSettings: const DataLabelSettings(isVisible: true),
+          name: 'Voucher Name per Voucher price',
+        )
+      ],
+      legend: Legend(
+          height: '100%',
+          position: LegendPosition.bottom,
+          isVisible: true,
+          overflowMode: LegendItemOverflowMode.wrap),
+    );
+  }
 }

@@ -13,7 +13,7 @@ import 'package:wmsm_flutter/api/localnotification_api.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/shared/multi_line_field.dart';
-import 'package:wmsm_flutter/viewmodel/article_view/article_view_model.dart';
+import 'package:wmsm_flutter/viewmodel/article/article_view_model.dart';
 
 class AdminInsertArticlePage extends StatefulWidget {
   const AdminInsertArticlePage({super.key});

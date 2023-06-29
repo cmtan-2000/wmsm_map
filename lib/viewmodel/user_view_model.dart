@@ -3,42 +3,28 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:wmsm_flutter/model/chart.dart';
 
 import '../model/users.dart';
-
-class ChartData {
-  ChartData(this.x, this.y, [this.color]);
-
-  final String x;
-  final int y;
-  Color? color;
-
-  //create constructor of chart data
-}
 
 class UserViewModel with ChangeNotifier {
   late Users _user;
   Users get user => _user;
   late List<ChartData> genderData = [];
+  int userCount = 0;
 
-  // int _goal = 0;
-  // int get goal => _goal;
-
-  // String get fullname => _user.fullname;
-  // String get username => _user.username;
-  // String get email => _user.email;
-  // String get phoneNumber => _user.phoneNumber;
-  // String get dateOfBirth => _user.dateOfBirth;
-  // double? get weight => _user.weight;
-  // double? get height => _user.height;
-  // String? get gender => _user.gender;
-  // double? get bmi => _user.bmi;
+  //Count the number of users
+  Future<int> userCountMethod() async {
+    final snapshot = await FirebaseFirestore.instance.collection('users').get();
+    final userCount = snapshot.docs.length;
+    notifyListeners();
+    return userCount;
+  }
 
   Future<void> fetchGenderData() async {
     genderData.clear();
-    int maleCount = 0;
-    int femaleCount = 0;
     String gender = '';
+    int maleCount = 0, femaleCount = 0;
     final snapshot = await FirebaseFirestore.instance.collection('users').get();
 
     for (var doc in snapshot.docs) {

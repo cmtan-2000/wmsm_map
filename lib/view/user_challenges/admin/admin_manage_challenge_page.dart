@@ -36,7 +36,7 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
           if (snapshot.hasData) {
             List<String> documentIds =
                 snapshot.data!.docs.map((doc) => doc.id).toList();
-            Logger().i(documentIds.length);
+            // Logger().i(documentIds.length);
 
             if (documentIds.isEmpty) {
               return Scaffold(
@@ -116,9 +116,9 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                                     //* get the document id
                                     String id = documentIds[index];
 
-                                    Logger().wtf(index);
-                                    Logger().i(challenge.newChallengeImgPath);
-                                    Logger().i(challenge);
+                                    // Logger().wtf(index);
+                                    // Logger().i(challenge.newChallengeImgPath);
+                                    // Logger().i(challenge);
 
                                     //* loop voucher length
                                     int voucherLength =
