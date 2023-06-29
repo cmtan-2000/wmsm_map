@@ -13,6 +13,7 @@ import 'package:wmsm_flutter/view/user_dashboard/widgets/barchart.dart';
 import 'package:wmsm_flutter/viewmodel/shared/shared_pref.dart';
 import 'package:wmsm_flutter/viewmodel/user_view_model.dart';
 
+import '../../api/localnotification_api.dart';
 import '../../viewmodel/health_conn_view/health_conn_view_model.dart';
 import '../custom/widgets/awesome_snackbar.dart';
 import 'admin_dashboard_page.dart';
@@ -98,6 +99,26 @@ class UserDashboard extends StatefulWidget {
 
 class _UserDashboardState extends State<UserDashboard> {
   UserViewModel userViewModel = UserViewModel();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    LocalNotification.init();
+
+  }
+
+  // void listenNotifications() =>
+  //     LocalNotification.onNotifications.stream.listen(notificationDirect);
+
+  // void notificationDirect(String? payload) {
+  //   Logger().wtf("Check Payload: $payload");
+  //   if (payload != null) {
+  //     MyApp.navigatorKey.currentState!.pushNamed('/adminjoinChallenge');
+  //     LocalNotification.clearPayload();
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -382,6 +403,7 @@ class _UserDashboardState extends State<UserDashboard> {
 
                                             percentage = percentage.clamp(0, 1);
                                             Logger().i(percentage);
+                                            
 
                                             return DashboardCardWidget(
                                               linearPercent: percentage,
@@ -394,7 +416,7 @@ class _UserDashboardState extends State<UserDashboard> {
                                                       ? "Update Goal"
                                                       : "Update My Zero Goal"
                                                   : "Set New Goal",
-                                              title: 'Daily Goals',
+                                              title: 'Daily Goal',
                                               imgPath: (userData
                                                       .containsKey('goal'))
                                                   ? 'assets/images/goal.png'
@@ -597,6 +619,15 @@ class DashboardCardWidget extends StatelessWidget {
                         ? Container(
                             child: LayoutBuilder(
                               builder: (context, constraints) {
+                                if(linearPercent > 0.5) {
+                                  LocalNotification.showNotification(
+                                    title: 'Daily Step Goal',
+                                    body:
+                                        'You have half more way steps to finish, GO!',
+                                    payload: 'added_article',
+                                  );
+                                }
+
                                 return LinearPercentIndicator(
                                   animation: true,
                                   animationDuration: 500,
