@@ -130,15 +130,82 @@ class HealthConnViewModel extends ChangeNotifier {
     DateTime startOfMonth = DateTime(now.year, now.month, 1);
     DateTime endOfMonth = DateTime(now.year, now.month + 1, 0);
 
+    List<Map<String, dynamic>> daySteps;
+    int totalSteps = 0;
+
     List<StepData> steps = [];
+
+    List<List<int>> monthlyStep = [[], [], [], [], [], [], []];
+    
     for (int i = 0; i < endOfMonth.day; i++) {
       final target = DateTime(now.year, now.month, i + 1);
       final next = DateTime(now.year, now.month, i + 2);
       int? step = await health.getTotalStepsInInterval(target, next);
       int stepInt = step ?? 0;
+      totalSteps += stepInt;
+
+      
       String dayOfWeek = DateFormat('EEE').format(target);
-      steps.add(StepData(dayOfWeek, stepInt));
+      switch (dayOfWeek) {
+        case 'Sun':
+          monthlyStep[0].add(stepInt);
+          break;
+        case 'Mon':
+          monthlyStep[1].add(stepInt);
+          break;
+        case 'Tue':
+          monthlyStep[2].add(stepInt);
+          break;
+        case 'Wed':
+          monthlyStep[3].add(stepInt);
+          break;  
+        case 'Thu':
+          monthlyStep[4].add(stepInt);
+          break;
+        case 'Fri':
+          monthlyStep[5].add(stepInt);
+          break;
+        case 'Sat':
+          monthlyStep[6].add(stepInt);
+          break;
+        default:
+      }
+      // steps.add(StepData(dayOfWeek, stepInt));
     }
+
+    // loop sunday until saturday in the barchart
+    for (int i = 0; i < 7; i++) {
+      int sum = 0;
+      for (int j = 0; j < monthlyStep[i].length; j++) {
+        sum += monthlyStep[i][j];
+      }
+      switch (i) {
+        case 0:
+          steps.add(StepData('Sun', sum));
+          break;
+        case 1:
+          steps.add(StepData('Mon', sum));
+          break;
+        case 2:
+          steps.add(StepData('Tue', sum));
+          break;
+        case 3:
+          steps.add(StepData('Wed', sum));
+          break;
+        case 4:
+          steps.add(StepData('Thu', sum));
+          break;  
+        case 5:
+          steps.add(StepData('Fri', sum));
+          break;  
+        case 6:
+          steps.add(StepData('Sat', sum));
+          break;  
+        default:
+      }
+      // steps.add(StepData(DateFormat('EEE').format(DateTime(now.year, now.month, i + 1)), sum));
+    }
+
 
     // for (int i = 0; i < steps.length; i++) {
     //   Logger().i('Date: ${steps[i].x} . Step: ${steps[i].y}');

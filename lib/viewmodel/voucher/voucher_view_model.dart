@@ -139,6 +139,7 @@ class VoucherViewModel {
 
   Future<String> insertUserVoucher(String vid) async {
     UserVoucher userVoucher = UserVoucher(
+      id: "",
       uid: FirebaseAuth.instance.currentUser!.uid,
       vid: vid,
       status: "Available",
