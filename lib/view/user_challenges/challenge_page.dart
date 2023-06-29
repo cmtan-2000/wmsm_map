@@ -1,5 +1,6 @@
 // This is challenge page
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +9,16 @@ import 'package:logger/logger.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/main.dart';
+import 'package:wmsm_flutter/view/custom/widgets/custom_button.dart';
+import 'package:wmsm_flutter/view/custom/widgets/custom_elevatedbutton.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 import 'package:wmsm_flutter/view/user_challenges/admin/admin_manage_challenge_page.dart';
 import 'package:wmsm_flutter/viewmodel/health_conn_view/health_conn_view_model.dart';
 
 import '../../model/users.dart';
 import '../../viewmodel/shared/shared_pref.dart';
+import '../../viewmodel/voucher/voucher_view_model.dart';
+import '../custom/widgets/awesome_snackbar.dart';
 
 class ChallengePage extends StatefulWidget {
   const ChallengePage({super.key});
@@ -219,13 +224,7 @@ class UserChallengePage extends StatelessWidget {
                                                 Logger().i(percentage);
 
                                                 return OngoingChallengeCard(
-                                                  onTap: () {
-                                                    MyApp.navigatorKey
-                                                        .currentState!
-                                                        .pushNamed(
-                                                      '/userchallengeDetail',
-                                                    );
-                                                  },
+                                                  id: ds.id,
                                                   ongoingTitle: ds['title'],
                                                   ongoingImgPath:
                                                       'assets/images/challenge1.png',
@@ -275,28 +274,61 @@ class UserChallengePage extends StatelessWidget {
   }
 }
 
-class OngoingChallengeCard extends StatelessWidget {
+class OngoingChallengeCard extends StatefulWidget {
   const OngoingChallengeCard({
     super.key,
+    required this.id,
     required this.ongoingTitle,
     required this.ongoingImgPath,
     required this.ongoingPercentage,
     required this.ongoingSteps,
     required this.challengeSteps,
-    required this.onTap,
   });
-
+  final String id;
   final String ongoingTitle;
   final String ongoingImgPath;
   final double ongoingPercentage;
   final int ongoingSteps;
   final int challengeSteps;
-  final VoidCallback onTap;
+
+  @override
+  State<OngoingChallengeCard> createState() => _OngoingChallengeCardState();
+}
+
+class _OngoingChallengeCardState extends State<OngoingChallengeCard> {
+  VoucherViewModel vvm = VoucherViewModel();
+  var checkTicketAvailable = true;
+  var checkTicketClaimed = true;
+  List<String> listVoucher = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkAvailable();
+    checkClaimed();
+  }
+
+  void checkAvailable() async {
+    var result = await vvm.checkChallengesQuantityVoucher(widget.id);
+    setState(() {
+      checkTicketAvailable = result;
+    });
+  }
+
+  void checkClaimed() async {
+    listVoucher = await vvm.getVoucherIdByChallengeId(widget.id);
+    var result = await vvm.checkVoucher(
+        FirebaseAuth.instance.currentUser!.uid, listVoucher);
+        Logger().wtf(result.toString());
+    setState(() {
+      checkTicketClaimed = result;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
       child: Column(
         children: [
           const SizedBox(
@@ -305,7 +337,7 @@ class OngoingChallengeCard extends StatelessWidget {
           Row(
             children: [
               Image.asset(
-                ongoingImgPath,
+                widget.ongoingImgPath,
                 width: 100,
               ),
               const SizedBox(width: 20),
@@ -315,23 +347,94 @@ class OngoingChallengeCard extends StatelessWidget {
                   SizedBox(
                     width: 200,
                     child: Text(
-                      ongoingTitle,
+                      widget.ongoingTitle,
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Text('$ongoingSteps/$challengeSteps steps'),
+                  Text('${widget.ongoingSteps}/${widget.challengeSteps} steps'),
                   const SizedBox(height: 10),
-                  LinearPercentIndicator(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    lineHeight: 10,
-                    //TODO: Percentage of challenge
-                    percent: ongoingPercentage,
-                    progressColor: Colors.green,
-                    barRadius: const Radius.circular(16),
-                  ),
+                  widget.ongoingPercentage == 1
+                      ? checkTicketClaimed
+                          // ? checkTicketAvailable
+                          //   ? CustomElevatedButton(onPressed: (){
+                          //       Logger().i(listVoucher);
+                          //         vvm.getAvailableVoucher(listVoucher)
+                          //             .then((value) =>
+                          //                 ScaffoldMessenger.of(
+                          //                         context)
+                          //                     .showSnackBar(
+                          //                   Awesome.snackbar(
+                          //                     'Congratulations!',
+                          //                     'You have claim the ticket id: $value !',
+                          //                     ContentType.success,
+                          //                   ),
+                          //                 ));
+                          //         }, child: const Text("Claim Reward"))
+                          //     :
+                          //       CustomOutlinedButton(
+                          //           onPressed: () {},
+                          //           text: "Voucher Out of Stock",
+                          //           disabled: true,
+                          //           iconData: null,
+                          //         )
+                          ? CustomOutlinedButton(
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  Awesome.snackbar(
+                                    'Sorry!',
+                                    'You have already claimed the reward!',
+                                    ContentType.warning,
+                                  ),
+                                );
+                              },
+                              iconData: null,
+                              text: "Claimed",
+                              disabled: true)
+
+                          : checkTicketAvailable
+                            ? CustomElevatedButton(onPressed: (){
+                                  vvm.getAvailableVoucher(listVoucher)
+                                      .then((value) =>
+                                      // Perform Insertion to UserVoucher
+                                        vvm.insertUserVoucher(value)
+                                       ).then((value) =>
+                                        // Perform Update to Voucher
+                                        vvm.updateVoucher(value)
+                                       ).then((value) => ScaffoldMessenger.of(
+                                                context)
+                                            .showSnackBar(
+                                          Awesome.snackbar(
+                                            'Congratulations!',
+                                            'You have claim the ticket id: $value !',
+                                            ContentType.success,
+                                          ),
+                                        )).then((value) {
+                                          checkClaimed();
+                                          checkAvailable();
+                                          setState(() {
+                                            
+                                          });
+                                        });
+
+                                  }, child: const Text("Claim Reward"))
+                              :CustomOutlinedButton(
+                                    onPressed: () {},
+                                    text: "Voucher Out of Stock",
+                                    disabled: true,
+                                    iconData: null,
+                                  )
+                          
+                      : LinearPercentIndicator(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          lineHeight: 10,
+                          //TODO: Percentage of challenge
+                          percent: widget.ongoingPercentage,
+                          progressColor: Colors.green,
+                          barRadius: const Radius.circular(16),
+                        ),
                 ],
               ),
             ],

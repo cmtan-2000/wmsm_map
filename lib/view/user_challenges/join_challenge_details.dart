@@ -153,12 +153,6 @@ class JoinChallengeDetails extends StatelessWidget {
                                                 itemCount:
                                                     challengeVoucher.length,
                                                 itemBuilder: (context, index) =>
-                                                    // IconAndInfo(
-                                                    //     text: challengeVoucher[
-                                                    //         index],
-                                                    //     icon: LineAwesomeIcons
-                                                    //         .alternate_ticket,
-                                                    //     color: Colors.indigo),
                                                     FutureBuilder(
                                                       future: FirebaseFirestore.instance.collection("vouchers").doc(challengeVoucher[index]).get(),
                                                       builder: ( context, snapshot){

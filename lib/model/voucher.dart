@@ -3,10 +3,9 @@ import 'dart:convert';
 class Voucher {
   final String name;
   final String type;
-  final String quantity;
+  final int quantity;
   final String expirationDate;
   final String price;
-  final List<String> users;
 
   Voucher({
     required this.name,
@@ -14,7 +13,6 @@ class Voucher {
     required this.quantity,
     required this.expirationDate,
     required this.price,
-    required this.users,
   });
 
   factory Voucher.fromJson(String str) => Voucher.fromMap(json.decode(str));
@@ -27,7 +25,6 @@ class Voucher {
         quantity: json["quantity"],
         expirationDate: json["expirationDate"],
         price: json["price"],
-        users: List<String>.from(json["users"].map((x) => x)),
       );
 
   Map<String, dynamic> toMap() => {
@@ -36,6 +33,5 @@ class Voucher {
         "quantity": quantity,
         "expirationDate": expirationDate,
         "price": price,
-        "users": List<dynamic>.from(users.map((x) => x)),
       };
 }

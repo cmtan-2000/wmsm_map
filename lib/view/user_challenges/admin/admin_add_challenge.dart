@@ -730,10 +730,9 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
     final voucher = Voucher(
       name: voucherEC[0].text,
       type: voucherEC[1].text,
-      quantity: voucherEC[2].text,
+      quantity: int.parse(voucherEC[2].text),
       expirationDate: voucherEC[3].text,
       price: voucherEC[4].text,
-      users: [],
     );
     VoucherViewModel vm = VoucherViewModel();
     vm.insertVoucher(voucher).then((value) => voucherId.add(value));
