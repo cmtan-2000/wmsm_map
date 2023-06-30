@@ -32,7 +32,6 @@ class _ArticlePageState extends State<ArticlePage> {
       phoneNumber: '',
       username: '',
       role: '');
-  // SharedPref sharedPref = SharedPref();
 
   @override
   initState() {

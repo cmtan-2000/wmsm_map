@@ -6,7 +6,6 @@ import 'package:logger/logger.dart';
 import 'package:wmsm_flutter/main.dart';
 
 //*Notification API for Firebase cloud messaging
-//!THIS ONE SO FAR NO USE DAO, CUZ USING THE LOCAL NOTIF
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   Logger().i('Title: ${message.notification?.title}');
@@ -68,9 +67,10 @@ class FirebaseApi {
     //*perform action when app is open from terminated state, via notification
     _firebaseMessaging.getInitialMessage().then(handleMessage);
 
-    //*perform action when app is open from background state, via notification
+    //*call when user click notifcation when app in background
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
 
+    //*when app terminated
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
 
     FirebaseMessaging.onMessage.listen((message) {

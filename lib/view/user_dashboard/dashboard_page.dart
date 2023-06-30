@@ -3,7 +3,6 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:wmsm_flutter/main.dart';
@@ -77,7 +76,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Consumer<UserViewModel>(builder: (context, userView, child) {
       return userView.user.role == 'admin'
-          ? AdminDashboard()
+          ? const AdminDashboard()
           : userView.user.role == 'user'
               ? UserDashboard(user: userView.user)
               : const Center(child: CircularProgressIndicator());
@@ -105,19 +104,7 @@ class _UserDashboardState extends State<UserDashboard> {
     // TODO: implement initState
     super.initState();
     LocalNotification.init();
-
   }
-
-  // void listenNotifications() =>
-  //     LocalNotification.onNotifications.stream.listen(notificationDirect);
-
-  // void notificationDirect(String? payload) {
-  //   Logger().wtf("Check Payload: $payload");
-  //   if (payload != null) {
-  //     MyApp.navigatorKey.currentState!.pushNamed('/adminjoinChallenge');
-  //     LocalNotification.clearPayload();
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -129,20 +116,6 @@ class _UserDashboardState extends State<UserDashboard> {
             SliverAppBar(
               title: Text('Home', style: Theme.of(context).textTheme.bodyLarge),
               automaticallyImplyLeading: false,
-              actions: [
-                GestureDetector(
-                  onTap: () {
-                    MyApp.navigatorKey.currentState!.pushNamed('/notification');
-                  },
-                  child: const Badge(
-                    label: Text('12'),
-                    //TODO: Flutter riverpod change
-                    isLabelVisible: true,
-                    child: Icon(LineAwesomeIcons.bell),
-                  ),
-                ),
-                const SizedBox(width: 20),
-              ],
             ),
             SliverToBoxAdapter(
               child: Column(
@@ -239,7 +212,6 @@ class _UserDashboardState extends State<UserDashboard> {
                                                         children: [
                                                           Column(
                                                             children: [
-                                                              //TODO: Add step count
                                                               SizedBox(
                                                                 width: 138,
                                                                 child:
@@ -267,7 +239,6 @@ class _UserDashboardState extends State<UserDashboard> {
                                                       Expanded(
                                                         child: Column(
                                                           children: [
-                                                            //TODO: Add step count
                                                             SizedBox(
                                                               width: 138,
                                                               child:
@@ -308,42 +279,6 @@ class _UserDashboardState extends State<UserDashboard> {
                     width: double.infinity,
                     child: Column(
                       children: [
-                        // StreamBuilder<int>(
-                        //   stream: Provider.of<UserViewModel>(context)
-                        //       .stepGoalStream,
-                        //   builder: (context, snapshot) {
-                        //     if (snapshot.hasData) {
-                        //       return Column(
-                        //         children: [
-                        //           const SizedBox(height: 20),
-                        //           Text(
-                        //             'Your Goal',
-                        //             style: Theme.of(context)
-                        //                 .textTheme
-                        //                 .bodyLarge
-                        //                 ?.copyWith(
-                        //                     fontWeight: FontWeight.bold),
-                        //           ),
-                        //           const SizedBox(height: 20),
-                        //           Text(
-                        //             'Your goal is ${snapshot.data} steps',
-                        //             style: Theme.of(context)
-                        //                 .textTheme
-                        //                 .bodyMedium
-                        //                 ?.copyWith(
-                        //                     fontWeight: FontWeight.bold),
-                        //           ),
-                        //           const SizedBox(height: 20),
-                        //         ],
-                        //       );
-                        //     } else {
-                        //       return Container();
-                        //     }
-                        //   },
-                        // ),
-                        // Consumer<UserViewModel>(
-                        //   builder: (context, user, child) => Text("${user.goal}")
-                        // ),
                         const SizedBox(height: 20),
                         Consumer<HealthConnViewModel>(
                           builder: (context, health, child) => health.authorize
@@ -403,7 +338,6 @@ class _UserDashboardState extends State<UserDashboard> {
 
                                             percentage = percentage.clamp(0, 1);
                                             Logger().i(percentage);
-                                            
 
                                             return DashboardCardWidget(
                                               linearPercent: percentage,
@@ -447,13 +381,11 @@ class _UserDashboardState extends State<UserDashboard> {
                                   }))
                               : DashboardCardWidget(
                                   linearPercent: 0,
-                                  textBtn: " ",
+                                  textBtn: "Authorize First",
                                   title: 'Daily Goal',
                                   imgPath: 'assets/images/error2.png',
-                                  infoCard: 'You must get authorize first!',
-                                  onPressed: () {
-                                    return;
-                                  },
+                                  infoCard: 'You must be authorized first!',
+                                  onPressed: () {},
                                 ),
                         ),
 
@@ -619,7 +551,7 @@ class DashboardCardWidget extends StatelessWidget {
                         ? Container(
                             child: LayoutBuilder(
                               builder: (context, constraints) {
-                                if(linearPercent > 0.5) {
+                                if (linearPercent > 0.5) {
                                   LocalNotification.showNotification(
                                     title: 'Daily Step Goal',
                                     body:

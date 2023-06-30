@@ -32,7 +32,7 @@ Widget buildTitle() =>
       Text('WMSM Monthly Report',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
       SizedBox(height: 0.3 * PdfPageFormat.cm),
-      Text('Last updated: ${DateFormat('dd-MM-yyyy').format(DateTime.now())}',
+      Text('Issued date: ${DateFormat('dd/MM/yyyy').format(DateTime.now())}',
           style: const TextStyle(fontSize: 10)),
       SizedBox(height: 1.2 * PdfPageFormat.cm),
     ]);
@@ -109,6 +109,7 @@ Widget buildVoucherAnalytics(List<ChartData> vPriceData,
     buildTable4(headers2, mapData2),
     SizedBox(height: 0.5 * PdfPageFormat.cm),
     Text('Overall voucher price: RM${overallVoucherPrice.toStringAsFixed(2)}'),
+    SizedBox(height: 1.5 * PdfPageFormat.cm),
   ]);
 }
 

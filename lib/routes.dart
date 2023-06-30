@@ -11,7 +11,6 @@ import 'package:wmsm_flutter/view/user_challenges/admin/admin_scan_voucher.dart'
 import 'package:wmsm_flutter/view/user_challenges/user/challenge_details.dart';
 import 'package:wmsm_flutter/view/user_challenges/user/user_join_challenge_page.dart';
 import 'package:wmsm_flutter/view/user_challenges/voucher_page.dart';
-import 'package:wmsm_flutter/view/user_dashboard/notification_page.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_pwd.dart';
 import 'package:wmsm_flutter/viewmodel/user_auth/verification_model.dart';
 import 'package:wmsm_flutter/view/user_profile/pages/edit_username.dart';
@@ -26,30 +25,6 @@ import 'view/user_auth/reset_pwd_page.dart';
 import 'view/user_auth/pages/user_details.dart';
 import 'view/user_auth/pages/setup_password.dart';
 import 'view/user_profile/pages/bmi_page.dart';
-
-// Map<String, WidgetBuilder> routes = {
-//   //*User
-//   '/': (context) => const AuthenticationViewModel(),
-//   '/userdetails': (context) => const UserDetails(),
-//   '/setuppassword': (context) => const SetupPassword(),
-//   '/verifyemail': (context) => const VerificationViewModel(),
-//   '/intro': (context) => const IntroPage(),
-//   '/btmNav': (context) => BottomNavScreen(),
-//   '/bmiInfo': (context) => const BMIPage(),
-//   '/editUserName': (context) => const EditUserName(),
-//   '/editPwd': (context) => const EditPassword(),
-//   '/editPhoneNo': (context) => const EditPhoneNumber(),
-//   '/profile': (context) => const ProfilePage(),
-//   '/resetpwd': (context) => const ResetPassword(),
-
-//   //*Admin
-//   '/adminBtmNav': (context) => AdminBottomNavScreen(),
-//   // '/adminProfile': (context) => const AdminProfilePage(),
-//   '/adminDashboard': (context) => const AdminDashboardPage(),
-//   '/adminChallenge': (context) => const AdminChallengePage(),
-//   '/adminArticle': (context) => const AdminArticlePage(),
-//   '/adminEditPhoneNo': (context) => const AdminEditPhoneNo(),
-// };
 
 Route<dynamic>? generateRoute(RouteSettings settings) {
   final args = settings.arguments;
@@ -98,8 +73,6 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
     case '/challengePage':
       return MaterialPageRoute(
           builder: (context) => const BottomNavScreen(index: 1));
-    case '/notification':
-      return MaterialPageRoute(builder: (context) => NotificationPage());
     case '/adminjoinChallenge':
       return MaterialPageRoute(
           builder: (context) => AdminJoinChallengePage(user: args as Users));

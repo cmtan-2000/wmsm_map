@@ -83,8 +83,8 @@ dev_dependencies:
 # 2) flutter pub get
 # 3) flutter pub run flutter_native_splash:create
 flutter_native_splash:
-  color: "#FFB901"
-  image: assets/images/etika.png
+  color: "#FFFFFF"
+  image: assets/images/etiqa.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -127,5 +127,5 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 # only cm uncomment this
-dependency_overrides:
-  test_api: 0.5.2
+# dependency_overrides:
+#   test_api: 0.5.2

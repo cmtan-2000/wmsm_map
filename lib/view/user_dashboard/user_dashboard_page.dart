@@ -88,7 +88,6 @@ class UserDashboard extends StatelessWidget {
                                           width: 200,
                                           child: Column(
                                             children: const [
-                                              //TODO: Add step count
                                               Text('1000',
                                                   style: TextStyle(
                                                       fontSize: 60,

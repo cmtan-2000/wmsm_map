@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:wmsm_flutter/api/firebase_api.dart';
 import 'package:wmsm_flutter/routes.dart';
 import 'package:wmsm_flutter/view/custom/themes/custom_theme.dart';
 import 'package:wmsm_flutter/view/user_article/article_page.dart';
@@ -12,24 +14,25 @@ import 'viewmodel/provider/example-streamprovider.dart';
 import 'viewmodel/user_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('Handling a background message ${message.messageId}');
+  Logger().i('Handling a background message ${message.messageId}');
 }
 
 void main() async {
-  // // Keep Splash Screen until initialization has completed!
-  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(
-  //     widgetsBinding:
-  //         widgetsBinding); // FlutterNativeSplash.removeAfter(initialization);
+  // Keep Splash Screen until initialization has completed!
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(
+      widgetsBinding:
+          widgetsBinding); // FlutterNativeSplash.removeAfter(initialization);
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // await FirebaseApi().initNotifications();
+  await FirebaseApi().initNotifications();
   runApp(const MyApp());
-  // FlutterNativeSplash.remove();
+  FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {
