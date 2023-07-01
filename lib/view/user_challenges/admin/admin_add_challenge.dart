@@ -470,7 +470,8 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
                                             // }
 
                                             processVouchers().then((value) {
-                                              Logger().i(voucherId);
+                                              Logger().i(value);
+                                              voucherId = value;
                                               String stepString = cStepsEC.text;
                                               int stepGoal = 0;
 
@@ -720,13 +721,16 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
           picked.toString(); // Update the text field with selected date
     }
   }
-  Future<void> processVouchers() async {
+  Future<List<String>> processVouchers() async {
+    List<String> vArray = [];
     for (List<TextEditingController> voucher in voucherArray) {
-      insertVoucher(voucher);
+      String resultVid = await insertVoucher(voucher);
+      vArray.add(resultVid);
     }
+    return Future.value(vArray);
   }
 
-  void insertVoucher(List<TextEditingController> voucherEC) async {
+  Future<String> insertVoucher(List<TextEditingController> voucherEC) async {
     final voucher = Voucher(
       name: voucherEC[0].text,
       type: voucherEC[1].text,
@@ -735,6 +739,9 @@ class _AdminAddChallengeState extends State<AdminAddChallenge> {
       price: voucherEC[4].text,
     );
     VoucherViewModel vm = VoucherViewModel();
-    vm.insertVoucher(voucher).then((value) => voucherId.add(value));
+    String vid  = await vm.insertVoucher(voucher);
+    Logger().i('$vid inserted');
+    return Future.value(vid);
+    
   }
 }

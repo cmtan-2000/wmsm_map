@@ -15,6 +15,9 @@ import 'package:wmsm_flutter/view/custom/widgets/custom_textformfield.dart';
 import 'package:wmsm_flutter/view/shared/multi_line_field.dart';
 import 'package:wmsm_flutter/viewmodel/shared/shared_pref.dart';
 
+import '../../../model/voucher.dart';
+import '../../../viewmodel/voucher/voucher_view_model.dart';
+
 class AdminEditChallenge extends StatefulWidget {
   AdminEditChallenge({super.key, required this.docid});
 
@@ -34,6 +37,8 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
   late SharedPref sharedPref = SharedPref();
   String imageChallenge = '';
   FirebaseFirestore db = FirebaseFirestore.instance;
+   List<List<TextEditingController>> voucherArray = [];
+  List<String> voucherId = [];
 
   @override
   void initState() {
@@ -61,37 +66,6 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
     start: DateTime.now(),
     end: DateTime.now(),
   );
-
-  IconButton _iconButton(String option) {
-    return IconButton(
-      onPressed: () {
-        if (option == 'add') {
-          setState(() {
-            TextEditingController controller = TextEditingController();
-            cVoucherEC.add(controller);
-          });
-        } else if (option == 'remove' && cVoucherEC.isNotEmpty) {
-          setState(() {
-            TextEditingController controller = cVoucherEC.last;
-            cVoucherEC.remove(controller);
-            controller.dispose();
-          });
-        }
-      },
-      icon: option == 'add'
-          ? const Icon(LineAwesomeIcons.plus)
-          : const Icon(LineAwesomeIcons.minus),
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-          if (states.contains(MaterialState.pressed)) {
-            return Colors.orange; // Apply a different color when pressed
-          }
-          return Theme.of(context).primaryColor; // Default color
-        }),
-      ),
-    );
-  }
 
   Future<String> pickImage(ImageSource source) async {
     XFile? image = await ImagePicker().pickImage(source: source);
@@ -170,10 +144,8 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
             cStepsEC.text = data['stepGoal'].toString();
             imageChallenge = data['imageUrl'];
 
-            Logger().wtf(cTitleEC.text);
-            Logger().wtf(cDurationEC.text);
-            Logger().wtf(cDescriptionEC.text);
-            Logger().wtf(cStepsEC.text);
+            List<dynamic> voucher = data['voucher'];
+            // Logger().w(voucher);
 
             return Scaffold(
               body: Container(
@@ -274,43 +246,57 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
                                         const SizedBox(
                                           height: 20,
                                         ),
-                                        const Divider(),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            _iconButton('add'),
-                                            _iconButton('remove'),
-                                          ],
-                                        ),
-                                        ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount: cVoucherEC.length,
-                                          padding: EdgeInsets.zero,
-                                          itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 8.0),
-                                              child: CustomTextFormField(
-                                                context: context,
-                                                isNumberOnly: false,
-                                                labelText: 'Challenge Voucher',
-                                                hintText:
-                                                    'Ex: Free 1 month gym pass',
-                                                controller: cVoucherEC[index],
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
+                                        // const Divider(),
+                                        // const SizedBox(
+                                        //   height: 20,
+                                        // ),
+                                        // Row(
+                                        //   mainAxisAlignment:
+                                        //       MainAxisAlignment.end,
+                                        //   children: [
+                                        //     _iconButton('add'),
+                                        //     _iconButton('remove'),
+                                        //   ],
+                                        // ),
+                                        // // ListView.builder(
+                                        // //   shrinkWrap: true,
+                                        // //   itemCount: cVoucherEC.length,
+                                        // //   padding: EdgeInsets.zero,
+                                        // //   itemBuilder: (context, index) {
+                                        // //     return Padding(
+                                        // //       padding:
+                                        // //           const EdgeInsets.symmetric(
+                                        // //               vertical: 8.0),
+                                        // //       child: CustomTextFormField(
+                                        // //         context: context,
+                                        // //         isNumberOnly: false,
+                                        // //         labelText: 'Challenge Voucher',
+                                        // //         hintText:
+                                        // //             'Ex: Free 1 month gym pass',
+                                        // //         controller: cVoucherEC[index],
+                                        // //         textInputAction:
+                                        // //             TextInputAction.next,
+                                        // //       ),
+                                        // //     );
+                                        // //   },
+                                        // // ),
+                                        // ListView.builder(
+                                        //   shrinkWrap: true,
+                                        //   itemCount: voucherArray.length,
+                                        //   padding: EdgeInsets.zero,
+                                        //   itemBuilder: (context, index) {
+                                        //     return Padding(
+                                        //       padding:
+                                        //           const EdgeInsets.symmetric(
+                                        //               vertical: 8.0),
+                                        //       child: buildVoucherCard(
+                                        //           voucherArray[index]),
+                                        //     );
+                                        //   },
+                                        // ),
+                                        // const SizedBox(
+                                        //   height: 20,
+                                        // ),
                                         const Divider(),
                                         const SizedBox(
                                           height: 20,
@@ -432,18 +418,18 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
                                             Expanded(
                                               child: CustomElevatedButton(
                                                   child: const Text(
-                                                      'Add Challenge'),
+                                                      'Update Challenge'),
                                                   onPressed: () async {
                                                     if (_formKey.currentState!
                                                         .validate()) {
-                                                      List<String>
-                                                          voucherArray = [];
-                                                      for (var array
-                                                          in cVoucherEC) {
-                                                        Logger().d(array.text);
-                                                        voucherArray
-                                                            .add(array.text);
-                                                      }
+                                                      // List<String>
+                                                      //     voucherArray = [];
+                                                      // for (var array
+                                                      //     in cVoucherEC) {
+                                                      //   Logger().d(array.text);
+                                                      //   voucherArray
+                                                      //       .add(array.text);
+                                                      // }
 
                                                       String stepString =
                                                           cStepsEC.text;
@@ -472,9 +458,7 @@ class _AdminEditChallengeState extends State<AdminEditChallenge> {
                                                         'description':
                                                             cDescriptionEC.text,
                                                         'stepGoal': stepGoal,
-                                                        'voucher': FieldValue
-                                                            .arrayUnion(
-                                                                voucherArray),
+                                                        'voucher': voucher,
                                                         'imageUrl':
                                                             imageChallenge,
                                                       };

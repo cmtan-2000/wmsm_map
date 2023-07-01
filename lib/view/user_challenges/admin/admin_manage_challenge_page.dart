@@ -8,6 +8,8 @@ import 'package:wmsm_flutter/model/new_challenge.dart';
 import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/user_challenges/join_challenge_details.dart';
 
+import '../../../viewmodel/voucher/voucher_view_model.dart';
+
 class AdminJoinChallengePage extends StatefulWidget {
   const AdminJoinChallengePage({super.key, required this.user});
 
@@ -168,6 +170,9 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                                             });
                                       },
                                       onDismissed: (direction) {
+                                        // Remove all the voucher first
+                                        processVouchers(
+                                            challenge.newChallengeVoucher);
                                         //* Remove the challenge from list
                                         db
                                             .collection('challenges')
@@ -257,6 +262,8 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                                     );
                                   }),
                             ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.1,)
                           ],
                         ),
                       ),
@@ -282,5 +289,24 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
           }
           return const Center(child: CircularProgressIndicator());
         });
+  }
+
+  Future<void> processVouchers(List<String> voucherArray) async {
+    for (String voucherid in voucherArray) {
+      deleteVoucher(voucherid);
+    }
+  }
+
+  void deleteVoucher(String voucherid) async {
+    Logger().wtf("voucher id: $voucherid");
+    // final voucher = Voucher(
+    //   name: voucherEC[0].text,
+    //   type: voucherEC[1].text,
+    //   quantity: int.parse(voucherEC[2].text),
+    //   expirationDate: voucherEC[3].text,
+    //   price: voucherEC[4].text,
+    // );
+    VoucherViewModel vm = VoucherViewModel();
+    vm.deleteVoucher(voucherid).then((value) => Logger().wtf(value));
   }
 }

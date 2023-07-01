@@ -24,11 +24,21 @@ class VoucherViewModel {
       .then((value) => Future.value(vid))
       .catchError((error) => Future.value(error.toString()));
 
-  Future<void> deleteVoucher(String id) async => voucherRef
+  Future<String> deleteVoucher(String id) async => voucherRef
       .doc(id)
       .delete()
-      .then((value) => Future.value("Delete Successfilly"))
+      .then((value) => deleteUserVoucher(id))
+      .then((value) => Future.value("Voucher $id Delete Successfully"))
       .catchError((error) => Future.value(error.toString()));
+
+  Future<String> deleteUserVoucher(String vid) async => userVoucherRef
+      .where("vid", isEqualTo: vid)
+      .get()
+      // ignore: avoid_function_literals_in_foreach_calls
+      .then((value) => value.docs.forEach((element) {
+            userVoucherRef.doc(element.id).delete();
+            Logger().wtf('${element.id} deleted');
+        })).then((value) => Future.value("Delete Successfully"));
 
   Future<void> get getVoucher async =>
       voucherRef.get().then((value) => value.docs.forEach((element) {
@@ -122,11 +132,11 @@ class VoucherViewModel {
   Future<bool> checkVoucher(String uid, List<String> vid) async =>
       userVoucherRef.get().then((value){
         bool check = false;
-        value.docs.forEach((element) {
+        for (var element in value.docs) {
           if(element.data()["uid"] == uid && vid.contains(element.data()["vid"])){
             check = true;
           }
-        });
+        }
         return check;
       });
 
