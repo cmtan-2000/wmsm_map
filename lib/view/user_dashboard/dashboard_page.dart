@@ -385,7 +385,10 @@ class _UserDashboardState extends State<UserDashboard> {
                                   title: 'Daily Goal',
                                   imgPath: 'assets/images/error2.png',
                                   infoCard: 'You must be authorized first!',
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    MyApp.navigatorKey.currentState!
+                                        .pushNamed('/intro');
+                                  },
                                 ),
                         ),
 
