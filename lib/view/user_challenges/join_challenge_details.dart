@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:wmsm_flutter/main.dart';
+import 'package:wmsm_flutter/model/new_challenge.dart';
 import 'package:wmsm_flutter/model/users.dart';
 import 'package:wmsm_flutter/view/custom/widgets/custom_outlinedbutton.dart';
 
@@ -29,6 +30,7 @@ class JoinChallengeDetails extends StatelessWidget {
   final String challengeEventDuration;
   final Users user;
   FirebaseFirestore db = FirebaseFirestore.instance;
+  late NewChallenge newChallenge;
 
   CustomOutlinedButton _outlineButton(String role) {
     if (role == 'user') {
@@ -44,7 +46,7 @@ class JoinChallengeDetails extends StatelessWidget {
           onPressed: () {
             Logger().v(role, 'admin edit challenge');
             MyApp.navigatorKey.currentState!
-                .pushNamed('/editChallenge', arguments: docid);
+                .pushNamed('/editChallenge', arguments: newChallenge);
           },
           iconData: LineAwesomeIcons.edit,
           text: 'Edit Challenge',
@@ -63,20 +65,15 @@ class JoinChallengeDetails extends StatelessWidget {
 
           if (snapshot.hasData) {
             var challenge = snapshot.data!.data();
-            // List<String> documentIds =
-            //     snapshot.data!.docs.map((doc) => doc.id).toList();
-            // var documentId = snapshot.data!.docs
-            //     .firstWhere((doc) => doc.id == documentIds[0])
-            //     .id;
 
-            // var data = snapshot.data!.docs
-            //     .firstWhere((doc) => doc.id == documentIds[0])
-            //     .data();
-            // Logger().wtf(data);
-
-            Logger().wtf(
-                'Voucher length in detail page: ${challengeVoucher.length}');
-
+            newChallenge = NewChallenge(
+              newChallengeDesc: challenge?['description'],
+              newChallengeImgPath: challenge?['imageUrl'],
+              newChallengeEventDuration: challenge?['duration'],
+              newChallengeSteps: challenge?['stepGoal'],
+              newChallengeTitle: challenge?['title'],
+              docid: docid,
+            );
             return Scaffold(
               body: Container(
                 color: user.role == 'admin'
@@ -138,7 +135,7 @@ class JoinChallengeDetails extends StatelessWidget {
                                               color: Colors.teal),
                                           const SizedBox(height: 20),
                                           Text(
-                                            challengeDesc,
+                                            challenge['description'],
                                             textAlign: TextAlign.justify,
                                           ),
                                           const SizedBox(height: 20),
@@ -154,25 +151,50 @@ class JoinChallengeDetails extends StatelessWidget {
                                                     challengeVoucher.length,
                                                 itemBuilder: (context, index) =>
                                                     FutureBuilder(
-                                                      future: FirebaseFirestore.instance.collection("vouchers").doc(challengeVoucher[index]).get(),
-                                                      builder: ( context, snapshot){
-                                                        if(snapshot.hasError){
-                                                          return const Text("Something went wrong");
-                                                        }
-                                                        if(snapshot.hasData && !snapshot.data!.exists){
-                                                          return const Text("Document does not exist");
-                                                            }
-                                                        if(snapshot.connectionState == ConnectionState.done){
-                                                          Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-                                                          return IconAndInfo(
-                                                              text: data['name'],
-                                                              icon: LineAwesomeIcons
-                                                                  .alternate_ticket,
-                                                              color: Colors.indigo);
-                                                        }
-                                                        return const Text("loading");
-                                                      })
-                                                ),
+                                                        future: FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                                "vouchers")
+                                                            .doc(
+                                                                challengeVoucher[
+                                                                    index])
+                                                            .get(),
+                                                        builder: (context,
+                                                            snapshot) {
+                                                          if (snapshot
+                                                              .hasError) {
+                                                            return const Text(
+                                                                "Something went wrong");
+                                                          }
+                                                          if (snapshot
+                                                                  .hasData &&
+                                                              !snapshot.data!
+                                                                  .exists) {
+                                                            return const Text(
+                                                                "Document does not exist");
+                                                          }
+                                                          if (snapshot
+                                                                  .connectionState ==
+                                                              ConnectionState
+                                                                  .done) {
+                                                            Map<String, dynamic>
+                                                                data = snapshot
+                                                                        .data!
+                                                                        .data()
+                                                                    as Map<
+                                                                        String,
+                                                                        dynamic>;
+                                                            return IconAndInfo(
+                                                                text: data[
+                                                                    'name'],
+                                                                icon: LineAwesomeIcons
+                                                                    .alternate_ticket,
+                                                                color: Colors
+                                                                    .indigo);
+                                                          }
+                                                          return const Text(
+                                                              "loading");
+                                                        })),
                                           ),
                                           const SizedBox(height: 20),
                                           const Text(
@@ -218,7 +240,6 @@ class IconAndInfo extends StatelessWidget {
       children: [
         Icon(icon, color: color),
         const SizedBox(width: 5),
-        //TODO: CHALLENGE DATE
         Text(
           text,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: color),

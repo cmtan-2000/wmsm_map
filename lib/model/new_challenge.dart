@@ -6,7 +6,8 @@ class NewChallenge {
   final String newChallengeEventDuration;
   final String newChallengeDesc;
   final int newChallengeSteps;
-  final List<String> newChallengeVoucher;
+  List<String>? newChallengeVoucher;
+  String? docid;
 
   NewChallenge({
     required this.newChallengeTitle,
@@ -14,7 +15,8 @@ class NewChallenge {
     required this.newChallengeEventDuration,
     required this.newChallengeDesc,
     required this.newChallengeSteps,
-    required this.newChallengeVoucher,
+    this.newChallengeVoucher,
+    this.docid,
   });
 
   NewChallenge.fromJson(Map<String, dynamic> json)

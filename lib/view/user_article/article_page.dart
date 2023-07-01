@@ -40,8 +40,6 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
   void initialGetSavedData() async {
-    // Users response = Users.fromJson(await sharedPref.read("user"));
-
     final response = Provider.of<UserViewModel>(context, listen: false).user;
     Provider.of<ArticleViewModel>(context, listen: false).getData();
 
@@ -73,12 +71,6 @@ class _ArticlePageState extends State<ArticlePage> {
 
   @override
   Widget build(BuildContext context) {
-    // for (var article in articles) {
-    //   Logger().i(article['title']);
-    //   Logger().i(article['author']);
-    //   Logger().i(article['publishDate']);
-    // }
-
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -112,7 +104,7 @@ class _ArticlePageState extends State<ArticlePage> {
                               top: 10, left: 20, right: 20),
                           itemCount: articleViewModel.articles.length,
                           itemBuilder: (context, index) {
-                            // Get list article from database
+                            //*Get list article from database
                             articles = articleViewModel.articles;
                             var article = articles[index];
 

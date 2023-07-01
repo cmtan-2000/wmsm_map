@@ -124,7 +124,7 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
 
                                     //* loop voucher length
                                     int voucherLength =
-                                        challenge.newChallengeVoucher.length;
+                                        challenge.newChallengeVoucher!.length;
 
                                     return Dismissible(
                                       //*cannot use the same key for dismissible, must be unique for each
@@ -172,7 +172,7 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                                       onDismissed: (direction) {
                                         // Remove all the voucher first
                                         processVouchers(
-                                            challenge.newChallengeVoucher);
+                                            challenge.newChallengeVoucher!);
                                         //* Remove the challenge from list
                                         db
                                             .collection('challenges')
@@ -225,7 +225,7 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                                                       .toString(),
 
                                                   challengeVoucher: challenge
-                                                      .newChallengeVoucher,
+                                                      .newChallengeVoucher!,
 
                                                   user: widget.user,
                                                 ),
@@ -263,7 +263,8 @@ class _AdminJoinChallengePageState extends State<AdminJoinChallengePage> {
                                   }),
                             ),
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.1,)
+                              height: MediaQuery.of(context).size.height * 0.1,
+                            )
                           ],
                         ),
                       ),

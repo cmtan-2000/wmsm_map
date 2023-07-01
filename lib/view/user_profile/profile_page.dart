@@ -279,6 +279,17 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         endIcon: true,
                         role: widget.user.role,
                       ),
+                      ProfileMenuWidget(
+                        titleText: 'Password',
+                        icon: LineAwesomeIcons.lock,
+                        color: Colors.black,
+                        onTap: () {
+                          MyApp.navigatorKey.currentState!
+                              .pushNamed('/editPwd', arguments: widget.user);
+                        },
+                        endIcon: true,
+                        role: widget.user.role,
+                      ),
                       Consumer<HealthConnViewModel>(
                         builder: (context, health, child) => health.authorize
                             ? ProfileMenuWidget(
@@ -291,22 +302,10 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                 titleText: 'No Sync App',
                                 icon: LineAwesomeIcons.shoe_prints,
                                 color: Colors.red,
-                                //TODO: sync google fit
                                 onTap: () {},
-                                endIcon: true,
+                                endIcon: false,
                                 role: widget.user.role,
                               ),
-                      ),
-                      ProfileMenuWidget(
-                        titleText: 'Password',
-                        icon: LineAwesomeIcons.lock,
-                        color: Colors.black,
-                        onTap: () {
-                          MyApp.navigatorKey.currentState!
-                              .pushNamed('/editPwd', arguments: widget.user);
-                        },
-                        endIcon: true,
-                        role: widget.user.role,
                       ),
                       ProfileMenuWidget(
                         titleText: widget.user.email,

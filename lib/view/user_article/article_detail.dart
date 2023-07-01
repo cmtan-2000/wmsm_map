@@ -40,14 +40,13 @@ class _ArticleDetailsState extends State<ArticleDetails> {
   final TextEditingController aEventDate = TextEditingController();
   final TextEditingController aContent = TextEditingController();
   final TextEditingController aAuthor = TextEditingController();
+  final TextEditingController aPublishDate = TextEditingController();
   //date format
   var dateFormat = DateFormat('yyyy-MM-dd');
   String imageChallenge = '';
-  String publishDate = '';
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -79,6 +78,7 @@ class _ArticleDetailsState extends State<ArticleDetails> {
     aTitle.text = widget.article.title;
     aAuthor.text = widget.article.author;
     aEventDate.text = widget.article.eventDate;
+    aPublishDate.text = widget.article.publishDate;
     aContent.text = widget.article.content;
     imageChallenge = widget.article.imgPath;
   }
@@ -390,7 +390,7 @@ class _ArticleDetailsState extends State<ArticleDetails> {
                                                 aAuthor.text,
                                                 aTitle.text,
                                                 imageChallenge,
-                                                publishDate,
+                                                aPublishDate.text,
                                                 aContent.text,
                                                 aEventDate.text);
 
